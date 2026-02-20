@@ -1,0 +1,73 @@
+package com.daw.cinemadaw.domain.cinema;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+
+@Entity
+public class Room {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    private Long id;
+
+    @Column
+    private String name;
+
+    @Column
+    private int capacity;
+
+    @ManyToOne
+    private Cinema cinema; //Relació ManyToOne amb Cinema, ja que una sala (Room) pertany a un cinema (Cinema). Aquesta relació es pot implementar utilitzant anotacions de JPA com @ManyToOne i @JoinColumn per establir la clau forana que connecta la sala amb el cinema corresponent a la base de dades.
+
+    //Constructor buit
+
+    public Room() {
+    }
+
+    //Constructor amb paràmetres
+
+    public Room(String name, int capacity) {
+        this.name = name;
+        this.capacity = capacity;
+    }
+
+    //Getters i Setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+
+    @Override
+
+    public String toString() {
+        return "Room [id=" + id + ", name=" + name + ", capacity=" + capacity + "]";
+    }
+
+
+}

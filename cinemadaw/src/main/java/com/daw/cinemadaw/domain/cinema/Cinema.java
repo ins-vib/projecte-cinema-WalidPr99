@@ -76,6 +76,14 @@ public class Cinema {
     public void setId(Long id) {
         this.id = id;
     } 
+
+    @Override
+
+    public String toString() {
+
+        return "Cinema [id=" + id + ", name=" + name + ", address=" + address + ", city=" + city + ", postalCode=" + postalCode + "]";
+
+    }
     
     
 }
