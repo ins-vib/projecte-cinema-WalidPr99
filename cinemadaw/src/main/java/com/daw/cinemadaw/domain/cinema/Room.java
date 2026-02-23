@@ -62,12 +62,21 @@ public class Room {
         this.capacity = capacity;
     }
 
+     public Cinema getCinema() {
+        return cinema;
+    }
+
+    public void setCinema(Cinema cinema) {
+        this.cinema = cinema;
+    }
 
     @Override
 
     public String toString() {
         return "Room [id=" + id + ", name=" + name + ", capacity=" + capacity + "]";
     }
+
+
 
 
 }
