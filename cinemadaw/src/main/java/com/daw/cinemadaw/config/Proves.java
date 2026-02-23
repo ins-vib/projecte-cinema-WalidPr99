@@ -1,16 +1,26 @@
 package com.daw.cinemadaw.config;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import com.daw.cinemadaw.domain.cinema.Cinema;
 import com.daw.cinemadaw.domain.cinema.Room;
+import com.daw.cinemadaw.domain.cinema.Seat;
+
 import com.daw.cinemadaw.repository.CinemaRepository;
 import com.daw.cinemadaw.repository.RoomRepository;
+import com.daw.cinemadaw.repository.SeatRepository;
+
 import jakarta.transaction.Transactional;
 
-import java.util.Optional;
-import java.util.List;
+import com.daw.cinemadaw.domain.cinema.SeatType;
+
+
+
+
 
 
 
@@ -20,13 +30,15 @@ public class Proves implements CommandLineRunner { //La classe Proves implementa
 
     private CinemaRepository cinemaRepository; //Atribut cinemaRepository de tipus CinemaRepository, que és un repositori de Spring Data JPA per a l'entitat Cinema. Aquest atribut serà utilitzat per interactuar amb la base de dades i realitzar operacions relacionades amb els cinemes.
     private RoomRepository roomRepository; //Atribut roomRepository de tipus RoomRepository, que és un repositori de Spring Data JPA per a l'entitat Room. Aquest atribut serà utilitzat per interactuar amb la base de dades i realitzar operacions relacionades amb les sales de cinema.
+    private SeatRepository seatRepository; //Atribut seatRepository de tipus SeatRepository, que és un repositori de Spring Data JPA per a l'entitat Seat. Aquest atribut serà utilitzat per interactuar amb la base de dades i realitzar operacions relacionades amb els seients.
 
-    public Proves(CinemaRepository cinemaRepository, RoomRepository roomRepository) { //Constructor de la classe Proves que rep un CinemaRepository com a paràmetre. Aquest constructor és utilitzat per a la injecció de dependències, on Spring injectarà automàticament una instància de CinemaRepository quan es creï una instància de Proves. Això permet que Proves pugui utilitzar el cinemaRepository per realitzar operacions a la base de dades.
+    public Proves(CinemaRepository cinemaRepository, RoomRepository roomRepository, SeatRepository seatRepository) { //Constructor de la classe Proves que rep un CinemaRepository com a paràmetre. Aquest constructor és utilitzat per a la injecció de dependències, on Spring injectarà automàticament una instància de CinemaRepository quan es creï una instància de Proves. Això permet que Proves pugui utilitzar el cinemaRepository per realitzar operacions a la base de dades.
         this.cinemaRepository = cinemaRepository;
         this.roomRepository = roomRepository;
+        this.seatRepository = seatRepository;
     }
 
-    @Transactional //Anotació @Transactional que indica que el mètode run() serà executat dins d'una transacció. Això significa que totes les operacions realitzades dins d'aquest mètode seran atòmiques, és a dir, o bé es completaran totes amb èxit o bé es revertiran en cas d'error. Aquesta anotació és útil per garantir la integritat de les dades a la base de dades i evitar problemes de concurrència.
+    @Transactional //Anotació @Transactional que indica que el mètode run() serà executat dins d'una transacció. Això significa que totes les operacions realitzades dins d'aquest mètode seran atòmiques, és a dir, o bé es completaran totes amb èxit o bé es revertiran en cas d'error. Aquesta anotació és útil per garantir la integritat de les dades a la base de dades i evitar problemes de concurrència. g
     @Override
     public void run(String... args) throws Exception { //Implementació del mètode run() de la interfície CommandLineRunner. Aquest mètode serà executat automàticament per Spring Boot després que l'aplicació s'hagi iniciat. El paràmetre args és un array de Strings que pot contenir arguments de línia de comandes, però en aquest cas no s'estan utilitzant.
         System.out.println("Proves de Spring Boot");
@@ -66,7 +78,32 @@ public class Proves implements CommandLineRunner { //La classe Proves implementa
 
             System.out.println("No trobbat"); //Si el cinema no existeix, es imprimeix un missatge a la consola indicant que el cinema amb l'id indicat no existeix a la base de dades.
         }
-/* 
+
+        for(Room room: roomRepository.findAll()){ 
+
+            room1.getId();
+            room1.getCapacity();
+
+            int totalCapacity = room1.getCapacity();
+            int roomRow = room1.getCapacity()/10;
+
+            String [] leterSeat = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+
+            for(int i = 0; i < roomRow; i++){
+                
+                for(int j = 0; j < totalCapacity; j++){
+
+                Seat seat1 = new Seat(true, leterSeat[i], i+1 , j, i, room1);
+                seatRepository.save(seat1);
+
+            }
+        }
+
+/*
+        Seat seat1 = new Seat(true, "A", 1, 0, 0);
+        seat1.setType(SeatType.Premium);
+        seatRepository.save(seat1);
+/*
 //READ-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
         //per imprimir TOTS els cinemes a la consola
@@ -122,7 +159,9 @@ public class Proves implements CommandLineRunner { //La classe Proves implementa
 
     /* */
     
+        }
     }
+
 }
 
     
