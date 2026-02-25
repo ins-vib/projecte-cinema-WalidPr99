@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
 
 @Entity //Indica que aquesta classe és una entitat JPA (Java Persistence API) i que serà mapejada a una taula a la base de dades. Aquesta anotació és essencial per a que el framework de persistència (com Hibernate) pugui gestionar aquesta classe com una entitat de base de dades.
 public class Cinema {
@@ -32,7 +33,7 @@ public class Cinema {
     @Column
     private String postalCode;
 
-    @OneToMany (mappedBy = "cinema") //Indica que hi ha una relació OneToMany entre Cinema i Room, on un cinema pot tenir moltes sales (rooms). El paràmetre mappedBy especifica que la relació està mapejada per l'atribut "cinema" a la classe Room, el que significa que la classe Room és la propietària de la relació i conté la clau forana que connecta les sales amb el cinema corresponent a la base de dades.
+    @OneToMany (mappedBy = "cinema", cascade = CascadeType.ALL, orphanRemoval=true) //Indica que hi ha una relació OneToMany entre Cinema i Room, on un cinema pot tenir moltes sales (rooms). El paràmetre mappedBy especifica que la relació està mapejada per l'atribut "cinema" a la classe Room, el que significa que la classe Room és la propietària de la relació i conté la clau forana que connecta les sales amb el cinema corresponent a la base de dades.
     private List<Room> rooms = new ArrayList<>(); //Atribut rooms que és una llista de Room, representant les sales associades a aquest cinema. Aquesta llista serà utilitzada per gestionar la relació entre Cinema i Room, permetent accedir a les sales d'un cinema i realitzar operacions relacionades amb elles. La inicialització amb new ArrayList<>() assegura que la llista no sigui null i estigui preparada per ser utilitzada.
 
     //Constructor buit

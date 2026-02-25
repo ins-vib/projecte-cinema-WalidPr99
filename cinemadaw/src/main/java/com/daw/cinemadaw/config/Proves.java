@@ -9,20 +9,11 @@ import org.springframework.stereotype.Component;
 import com.daw.cinemadaw.domain.cinema.Cinema;
 import com.daw.cinemadaw.domain.cinema.Room;
 import com.daw.cinemadaw.domain.cinema.Seat;
-
 import com.daw.cinemadaw.repository.CinemaRepository;
 import com.daw.cinemadaw.repository.RoomRepository;
 import com.daw.cinemadaw.repository.SeatRepository;
 
 import jakarta.transaction.Transactional;
-
-import com.daw.cinemadaw.domain.cinema.SeatType;
-
-
-
-
-
-
 
 @Component
 public class Proves implements CommandLineRunner { //La classe Proves implementa la interfície CommandLineRunner, que és una funcionalitat de Spring Boot que permet executar codi després que l'aplicació s'hagi iniciat completament. Aquesta classe està anotada amb @Component, el que significa que serà detectada i gestionada pel context de Spring com un component.
@@ -93,8 +84,44 @@ public class Proves implements CommandLineRunner { //La classe Proves implementa
                 
                 for(int j = 0; j < totalCapacity; j++){
 
-                Seat seat1 = new Seat(true, leterSeat[i], i+1 , j, i, room1);
+                Seat seat1 = new Seat(true, leterSeat[i], i+1 , j, i, room);
                 seatRepository.save(seat1);
+
+            }
+        
+        }
+
+        }   
+
+        Cinema cinema3D = new Cinema("Cine 3D", "Carrer Girona, 175", "Barcelona", "08037");
+        Room room3d1 = new Room("Sala 3D 1", 500);
+        room3d1.setCinema(cinema3D);
+        cinema3D.getRooms().add(room3d1); //Afegeix la sala room3d1 a la llista de sales (rooms) del cinema cinema3D utilitzant el mètode getRooms() de l'objecte Cinema. 
+        cinemaRepository.save(cinema3D); //Guarda el cinema cinema3D a la base de dades utilitzant el mètode save() del cinemaRepository.
+
+        Optional<Cinema> optionalC = cinemaRepository.findById(1L);
+
+        if(optionalC.isPresent()){
+
+            Cinema c = optionalC.get();
+            
+            System.out.println(c);
+
+            c.getRooms();
+
+            List<Room> sales = c.getRooms();
+
+            for(Room r: sales){
+
+                System.out.println(r);
+
+                List<Seat> seients = r.getSeats();
+                
+                for (Seat s: seients){
+
+                    System.out.println(s);
+
+                }
 
             }
         }
@@ -162,6 +189,6 @@ public class Proves implements CommandLineRunner { //La classe Proves implementa
         }
     }
 
-}
+
 
     

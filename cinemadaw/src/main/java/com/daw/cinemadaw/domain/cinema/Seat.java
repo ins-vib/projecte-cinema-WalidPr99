@@ -1,12 +1,12 @@
 package com.daw.cinemadaw.domain.cinema;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 
 
@@ -49,6 +49,7 @@ public class Seat {
         this.number = number;
         this.x = x;
         this.y = y;
+        this.room = room;
     }
 
     public Long getId() {
