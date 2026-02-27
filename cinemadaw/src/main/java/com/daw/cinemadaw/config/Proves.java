@@ -135,9 +135,9 @@ public class Proves implements CommandLineRunner { //La classe Proves implementa
 
         //per imprimir TOTS els cinemes a la consola
 
-        List<Cinema> cinemas = cinemaRepository.findAll(); //Utilitza el mètode findAll() del cinemaRepository per obtenir una llista de tots els cinemes emmagatzemats a la base de dades. Aquest mètode retorna una llista de Cinema, que es guarda a la variable cinemas.
+        List<Cinema> cinemes = cinemaRepository.findAll(); //Utilitza el mètode findAll() del cinemaRepository per obtenir una llista de tots els cinemes emmagatzemats a la base de dades. Aquest mètode retorna una llista de Cinema, que es guarda a la variable cinemes.
 
-        for (Cinema cinema : cinemas) { //Bucle for per recorrer la llista i imprimir cada cinema a la consola.
+        for (Cinema cinema : cinemes) { //Bucle for per recorrer la llista i imprimir cada cinema a la consola.
 
             System.out.println(cinema);
 
@@ -175,9 +175,9 @@ public class Proves implements CommandLineRunner { //La classe Proves implementa
         //Borrar un cinmea per posició a la llista
 
         cinemaRepository.delete(llista2.get(0)); //Utilitza el mètode delete() del cinemaRepository per eliminar un cinema de la base de dades. En aquest cas, es elimina el primer cinema de la llista de cinemes trobats per ciutat (llista2.get(0)). Aquest mètode eliminarà el registre corresponent a aquest cinema de la base de dades.
-        cinemas = cinemaRepository.findAll(); //Després d'eliminar el cinema, es torna a obtenir la llista de tots els cinemes a la base de dades utilitzant el mètode findAll() del cinemaRepository. Aquesta nova llista reflectirà els canvis després de l'eliminació.
+        cinemes = cinemaRepository.findAll(); //Després d'eliminar el cinema, es torna a obtenir la llista de tots els cinemes a la base de dades utilitzant el mètode findAll() del cinemaRepository. Aquesta nova llista reflectirà els canvis després de l'eliminació.
 
-        for (Cinema cinema : cinemas) { //Bucle for per recorrer la nova llista de cinemes trobats per ciutat després de l'eliminació i imprimir cada cinema a la consola.
+        for (Cinema cinema : cinemes) { //Bucle for per recorrer la nova llista de cinemes trobats per ciutat després de l'eliminació i imprimir cada cinema a la consola.
 
             System.out.println(cinema);
 
