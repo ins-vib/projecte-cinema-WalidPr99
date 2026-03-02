@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+
+<body>
+
+    <h1>Introdueix les dades del cinema</h1>
+
+    <nav>
+
+        <a href="/home">Home</a>
+        <a href="/cinemes">Cinemes</a>
+
+    </nav>
+
+<form th:action="@{/cinema/create}" method="post">
+
+<br>
+
+    <label for="name">Nom</label>
+
+<br>
+
+    <input type="text" id="name" name="name">
+
+<br>
+
+    <label for="city">Ciutat</label>
+
+<br>
+
+    <input type="text" id="city" name="city">
+<br>
+
+    <label for="address">Adreça</label>
+
+<br>
+
+    <input type="text" id="address" name="address">
+
+<br>
+
+    <label for="postalCode">Codi postal</label>
+
+<br>
+
+    <input type="text" id="postalCode" name="postalCode">
+    
+<br>
+
+    <button type="submit">Crear cinema</button>    
+
+</body>
+
+</html>

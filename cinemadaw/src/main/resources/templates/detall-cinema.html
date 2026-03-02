@@ -61,7 +61,20 @@
 
         </tr>
 
+        
     </tbody>
+
+</table>
+
+<table>
+
+    <h1>Sales</h1>
+
+        <ul>
+
+            <li  th:each="sala : ${cinema.rooms}" th:text="${sala.name} + ' - Capacitat: ' + ${sala.capacity}"></li>
+
+        </ul>
 
 </table>
     
