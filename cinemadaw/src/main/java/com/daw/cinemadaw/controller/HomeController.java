@@ -1,12 +1,14 @@
 package com.daw.cinemadaw.controller;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-
-import com.daw.cinemadaw.repository.CinemaRepository;
-import com.daw.cinemadaw.domain.cinema.Cinema;
-import org.springframework.ui.Model;
-
 import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.daw.cinemadaw.domain.cinema.Cinema;
+import com.daw.cinemadaw.repository.CinemaRepository;
+import java.util.Optional;
 
 @Controller
 public class HomeController {
@@ -17,7 +19,7 @@ public class HomeController {
         this.cinemaRepository = cinemaRepository;
     }
 
-    @GetMapping("/")
+    @GetMapping("/home")
     public String home() {
         return "home";
     }
@@ -27,12 +29,45 @@ public class HomeController {
 
         List<Cinema> cinemes = cinemaRepository.findAll();
         model.addAttribute("llista", cinemes);
-
-
-
-
-
         return "cinemes";
     }
 
+    //Detall de cinema
+
+    @GetMapping("/cinema/{id}")
+    public String detall(@PathVariable Long id, Model model) {
+
+        Optional<Cinema> optional = cinemaRepository.findById(id);
+
+        if(optional.isPresent()) {
+
+            Cinema cinema = optional.get();
+            model.addAttribute("cinema", cinema);
+            return "detall-cinema";
+
+        } else {
+
+            return "redirect:/home";
+
+        }
+    }
+
+    @GetMapping("/cinema/delete/{id}")
+    public String delete(@PathVariable Long id) {
+
+        Optional<Cinema> optional = cinemaRepository.findById(id);
+
+        if(optional.isPresent()) {
+
+           cinemaRepository.deleteById(id);
+
+        }
+
+        return "redirect:/cinemes";
+
+    }
+
+    
 }
+
+

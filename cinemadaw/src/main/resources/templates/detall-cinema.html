@@ -1,14 +1,25 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Detalls del cinema</title>
+
 </head>
+
 <body>
 
-<h1> llistat cinemes </h1>
+    <h1>Detalls del cinema: <span th:text="${cinema.name}"></span></h1> 
+    
+    <nav>
+
+        <a href="/home">Home</a>
+        <a href="/cinemes">Cinemes</a>
+
+    </nav>
 
 <table>
 
@@ -24,33 +35,36 @@
                 ciutat
             </th>
 
+            <th>
+                Adreça
+            </th>
+
+            <th>
+                Codi postal
+            </th>
+
         </tr>
 
     </thead>
 
     <tbody>
 
-        <tr th:each="cinema : ${llista}">
+        <tr>
 
             <td th:text="${cinema.name}">Nom</td>
 
             <td th:text="${cinema.city}">Ciutat</td>
 
-            <td>
-                
-                <a th:href="@{/cinema/{id}(id=${cinema.id})}">Veure detall</a>
-                <a th:href="@{/cinema/delete/{id}(id=${cinema.id})}">Esborrar</a>
+            <td th:text = "${cinema.address}">Adreça</td>
 
-            </td>
+            <td th:text = "${cinema.postalCode}">Codi postal</td>
 
         </tr>
 
     </tbody>
 
 </table>
-
-
     
 </body>
-</html>
 
+</html>
