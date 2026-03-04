@@ -10,7 +10,7 @@
 
 <body>
 
-    <h1>Introdueix les dades del cinema</h1>
+    <h1>Introdueix les dades que vols modificar del cinema</h1>
 
     <nav>
 
@@ -19,7 +19,9 @@
 
     </nav>
 
-<form th:action="@{/cinema/create}" th:object="${cinema}"  method="post">
+<form th:action="@{/cinema/edit}" th:object="${cinema}"  method="post">
+
+    <input type = "text" th:field="*{id}" hidden /><br>
 
 <br>
 
@@ -54,7 +56,7 @@
     
 <br>
 
-    <button type="submit">Crear cinema</button>    
+    <button type="submit">Editar cinema</button>    
 
 </body>
 

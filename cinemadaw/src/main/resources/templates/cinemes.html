@@ -10,6 +10,10 @@
 
 <h1> llistat cinemes </h1>
 
+<nav>
+    <a href="/home">Home</a>
+</nav>
+
 <a th:href="@{/cinema/create}">Afegir cinema</a>
 
 <table>
@@ -42,6 +46,7 @@
                 
                 <a th:href="@{/cinema/{id}(id=${cinema.id})}">Veure detall</a>
                 <a th:href="@{/cinema/delete/{id}(id=${cinema.id})}">Esborrar</a>
+                <a th:href="@{/cinema/edit/{id}(id=${cinema.id})}">Editar</a>
                 
 
                 
