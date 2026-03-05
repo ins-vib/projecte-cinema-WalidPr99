@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Crear pel·lícula</title>
+
+</head>
+
+<body>
+
+	<h1>Introdueix les dades de la pel·lícula</h1>
+
+	<nav>
+
+		<a href="/home">Inici</a>
+		<a href="/movies">Pel·lícules</a>
+
+	</nav>
+
+<form th:action="@{/movie/create}" th:object="${movie}" method="post">
+
+<br>
+
+	<label>Títol</label>
+
+<br>
+
+	<input type="text" th:field="*{title}">
+
+<br>
+
+	<label>Durada</label>
+
+<br>
+
+	<input type="number" th:field="*{duration}">
+
+<br>
+
+	<label>Gènere</label>
+
+<br>
+
+	<input type="text" th:field="*{genre}">
+
+<br>
+
+	<label>Descripció</label>
+
+<br>
+
+	<input type="text" th:field="*{description}">
+
+<br>
+
+	<label>Data d'estrena</label>
+
+<br>
+
+	<input type="date" th:field="*{releaseDate}">
+
+<br>
+
+	<button type="submit">Crear pel·lícula</button>
+
+</form>
+
+</body>
+
+</html>

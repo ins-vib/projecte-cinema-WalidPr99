@@ -1,0 +1,35 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Cinema {
+	- id: Long
+	- name: String
+	- address: String
+	- city: String
+	- postalCode: String
+	- rooms: List<Room>
+}
+
+class Room {
+	- id: Long
+	- name: String
+	- capacity: int
+	- cinema: Cinema
+	- seats: List<Seat>
+}
+
+class Seat {
+	- id: Long
+	- seatRow: String
+	- number: int
+	- x: int
+	- y: int
+	- type: SeatType
+	- state: boolean
+	- room: Room
+}
+
+Cinema "1" *-- "0..*" Room : rooms
+Room "1" *-- "0..*" Seat : seats
+
+@enduml

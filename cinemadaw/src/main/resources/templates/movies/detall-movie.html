@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalls de la pel·lícula</title>
+
+</head>
+
+<body>
+
+    <h1>Detalls de la pel·lícula: <span th:text="${movie.title}"></span></h1> 
+    
+    <nav>
+
+        <a href="/home">Inici</a>
+        <a href="/movies">Pel·lícules</a>
+
+    </nav>
+
+<table>
+
+    <thead>
+
+        <tr>
+
+            <th>
+                Títol
+            </th>
+
+            <th>
+                Durada
+            </th>
+
+            <th>
+                Gènere
+            </th>
+
+            <th>
+                Descripció
+            </th>
+
+            <th>
+                Data d'estrena
+            </th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        <tr>
+
+            <td th:text="${movie.title}">Títol</td>
+
+            <td th:text="${movie.duration}">Durada</td>
+
+            <td th:text = "${movie.genre}">Gènere</td>
+
+            <td th:text = "${movie.description}">Descripció</td>
+
+            <td th:text = "${movie.releaseDate}">Data d'estrena</td>
+
+        </tr>
+
+        
+    </tbody>
+
+</table>
+    
+</body>
+
+</html>

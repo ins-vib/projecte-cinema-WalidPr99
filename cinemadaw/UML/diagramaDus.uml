@@ -1,0 +1,20 @@
+@startuml
+
+left to right direction
+
+actor Admin
+actor Gestor
+actor Client
+
+rectangle "Cinema App"{
+
+Admin -- (Gestionar Cinemes)
+Admin -- (Gestionar Sales)
+Admin -- (Gestionar Seients)
+
+Gestor -- (Gestionar Screenings)
+Gestor -- (Gestionar Pel·lícules)
+
+}
+
+@enduml

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pel·lícules</title>
+
+</head>
+
+<body>
+
+    <h1>Llistat de pel·lícules</h1>
+
+    <nav>
+        <a href="/home">Inici</a>
+    </nav>
+
+    <a th:href="@{/movie/create}">Afegir pel·lícula</a>
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    Títol
+                </th>
+
+                <th>
+                    Gènere
+                </th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr th:each="movie : ${llista}">
+
+                <td th:text="${movie.title}">Títol</td>
+
+                <td th:text="${movie.genre}">Gènere</td>
+
+                <td>
+                    
+                    <a th:href="@{/movie/{id}(id=${movie.id})}">Veure detall</a>
+                    <a th:href="@{/movie/delete/{id}(id=${movie.id})}">Esborrar</a>
+                    <a th:href="@{/movie/edit/{id}(id=${movie.id})}">Editar</a>
+                    
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+
+
+
+    
+</body>
+
+</html>

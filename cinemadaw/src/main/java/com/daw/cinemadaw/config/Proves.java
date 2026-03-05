@@ -12,7 +12,8 @@ import com.daw.cinemadaw.domain.cinema.Seat;
 import com.daw.cinemadaw.repository.CinemaRepository;
 import com.daw.cinemadaw.repository.RoomRepository;
 import com.daw.cinemadaw.repository.SeatRepository;
-
+import com.daw.cinemadaw.repository.MovieRepository;
+import com.daw.cinemadaw.domain.cinema.Movie;
 import jakarta.transaction.Transactional;
 
 @Component
@@ -22,11 +23,13 @@ public class Proves implements CommandLineRunner { //La classe Proves implementa
     private CinemaRepository cinemaRepository; //Atribut cinemaRepository de tipus CinemaRepository, que és un repositori de Spring Data JPA per a l'entitat Cinema. Aquest atribut serà utilitzat per interactuar amb la base de dades i realitzar operacions relacionades amb els cinemes.
     private RoomRepository roomRepository; //Atribut roomRepository de tipus RoomRepository, que és un repositori de Spring Data JPA per a l'entitat Room. Aquest atribut serà utilitzat per interactuar amb la base de dades i realitzar operacions relacionades amb les sales de cinema.
     private SeatRepository seatRepository; //Atribut seatRepository de tipus SeatRepository, que és un repositori de Spring Data JPA per a l'entitat Seat. Aquest atribut serà utilitzat per interactuar amb la base de dades i realitzar operacions relacionades amb els seients.
+    private MovieRepository movieRepository; //Atribut movieRepository de tipus MovieRepository, que és un repositori de Spring Data JPA per a l'entitat Movie. Aquest atribut serà utilitzat per interactuar amb la base de dades i realitzar operacions relacionades amb les pel·lícules.
 
-    public Proves(CinemaRepository cinemaRepository, RoomRepository roomRepository, SeatRepository seatRepository) { //Constructor de la classe Proves que rep un CinemaRepository com a paràmetre. Aquest constructor és utilitzat per a la injecció de dependències, on Spring injectarà automàticament una instància de CinemaRepository quan es creï una instància de Proves. Això permet que Proves pugui utilitzar el cinemaRepository per realitzar operacions a la base de dades.
+    public Proves(CinemaRepository cinemaRepository, RoomRepository roomRepository, SeatRepository seatRepository, MovieRepository movieRepository) { //Constructor de la classe Proves que rep un CinemaRepository com a paràmetre. Aquest constructor és utilitzat per a la injecció de dependències, on Spring injectarà automàticament una instància de CinemaRepository quan es creï una instància de Proves. Això permet que Proves pugui utilitzar el cinemaRepository per realitzar operacions a la base de dades.
         this.cinemaRepository = cinemaRepository;
         this.roomRepository = roomRepository;
         this.seatRepository = seatRepository;
+        this.movieRepository = movieRepository;
     }
 
     @Transactional //Anotació @Transactional que indica que el mètode run() serà executat dins d'una transacció. Això significa que totes les operacions realitzades dins d'aquest mètode seran atòmiques, és a dir, o bé es completaran totes amb èxit o bé es revertiran en cas d'error. Aquesta anotació és útil per garantir la integritat de les dades a la base de dades i evitar problemes de concurrència. g
@@ -126,6 +129,11 @@ public class Proves implements CommandLineRunner { //La classe Proves implementa
             }
         }
 
+        movieRepository.save(new Movie("Una pel·lícula d'acció i aventura que segueix les aventures d'un grup de herois que lluiten contra forces malignes per salvar el món.", 120, "Acció", java.time.LocalDate.of(2023, 5, 15), "Aventura Épica"));
+        movieRepository.save(new Movie("Una comèdia romàntica que narra la història d'amor entre dos personatges que es troben en circumstàncies inesperades.", 90, "Comèdia Romàntica", java.time.LocalDate.of(2023, 6, 10), "Amor Inesperat"));
+        movieRepository.save(new Movie("Un thriller psicològic que explora els límits de la ment humana i les conseqüències de les decisions que es prenen en situacions extremes.", 110, "Thriller Psicològic", java.time.LocalDate.of(2023, 7, 20), "Ments Perverses"));
+        movieRepository.save(new Movie("Una pel·lícula de ciència ficció que presenta un futur distòpic on la tecnologia ha superat el control humà i els protagonistes lluiten per recuperar la llibertat.", 130, "Ciència Ficció", java.time.LocalDate.of(2023, 8, 5), "Futuro Distòpic"));
+        
 /*
         Seat seat1 = new Seat(true, "A", 1, 0, 0);
         seat1.setType(SeatType.Premium);
