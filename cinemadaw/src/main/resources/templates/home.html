@@ -36,6 +36,20 @@
 
     </section>
 
+    <section>
+
+        <h2>Notícies</h2>
+        
+        <div th:each="news : ${llista}">
+
+            <h3 th:text="${news.headline}"></h3>
+
+            <p th:text="${news.body}"></p>
+
+        </div>
+
+    </section>
+
     <footer>
 
         <p>2026 Cinema DAW.</p>
