@@ -1,11 +1,14 @@
 package com.daw.cinemadaw.domain.cinema;
 
+import java.time.LocalDate;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.time.LocalDate;
 
 @Entity
 public class Movie {
@@ -27,7 +30,8 @@ public class Movie {
     @Column
     private String description;
 
-    @Column
+    @Column(name = "release_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate releaseDate;
     
     public Movie() {
