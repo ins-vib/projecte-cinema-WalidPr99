@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear sala</title>
+
+</head>
+
+<body>
+
+    <h1>Introdueix les dades de la sala</h1>
+
+    <nav>
+
+        <a href="/home">Inici</a>
+        <a href="/cinemes">Cinemes</a>
+
+    </nav>
+
+<form th:action="@{/room/create/{id}(id=${room.cinema.id})}" th:object="${room}"  method="post">
+
+    <input type="hidden" th:field="*{cinema.id}" id="cinemaId" />
+<br>
+
+    <label> Nom </label>
+
+<br>
+
+    <input type="text" th:field="*{name}">
+
+<br>
+
+    <label> Capacitat </label>
+
+<br>
+
+    <input type="text" th:field="*{capacity}">
+<br>
+    
+<br>
+
+    <button type="submit">Crear sala</button>    
+<br>
+
+</body>
+
+</html>

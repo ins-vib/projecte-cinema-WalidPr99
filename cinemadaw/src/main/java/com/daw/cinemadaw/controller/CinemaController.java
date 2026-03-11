@@ -40,7 +40,7 @@ public class CinemaController {
 
             Cinema cinema = optional.get();
             model.addAttribute("cinema", cinema);
-            return "detall-cinema";
+            return "view-cinema";
 
         } else {
 

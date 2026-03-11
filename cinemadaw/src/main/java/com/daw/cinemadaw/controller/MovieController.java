@@ -47,7 +47,7 @@ public class MovieController {
 
             Movie movie = optional.get();
             model.addAttribute("movie", movie);
-            return "movies/detall-movie";
+            return "movies/view-movie";
 
         } else {
 

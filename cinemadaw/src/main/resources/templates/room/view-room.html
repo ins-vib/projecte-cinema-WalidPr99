@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalls de la sala</title>
+
+</head>
+
+<body>
+
+    <h1>Detalls de la sala: <span th:text="${room.name}"></span></h1> 
+    
+    <nav>
+
+        <a href="/home">Inici</a>
+        <a href="/cinemes">Cinemes</a>
+        <a th:href="@{/room/edit/{id}(id=${room.id})}">Editar sala</a>  
+
+    </nav>
+
+<table>
+
+    <thead>
+
+        <tr>
+
+            <th>
+                Nom
+            </th>
+
+            <th>
+                capacitat
+            </th>
+            
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        <tr>
+
+            <td th:text="${room.name}">Nom</td>
+
+            <td th:text="${room.capacity}">Capacitat</td>
+
+        </tr>
+
+        
+    </tbody>
+
+</table>
+
+
+
+   
+    
+</body>
+
+</html>

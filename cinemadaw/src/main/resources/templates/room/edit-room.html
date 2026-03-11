@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar sala</title>
+
+</head>
+
+<body>
+
+    <h1>Introdueix les dades de la sala</h1>
+
+    <nav>
+
+        <a href="/home">Inici</a>
+        <a href="/cinemes">Cinemes</a>
+
+    </nav>
+
+<form th:action="@{/room/edit}" th:object="${room}"  method="post">
+
+    <input type="hidden" th:field="*{id}" />
+    <input type="hidden" th:field="*{cinema.id}" />
+
+<br>
+
+    <label> Nom </label>
+
+<br>
+
+    <input type="text" th:field="*{name}">
+
+<br>
+
+    <label> Capacitat </label>
+
+<br>
+
+    <input type="text" th:field="*{capacity}">
+<br>
+    
+<br>
+
+    <button type="submit">Editar sala</button>    
+<br>
+
+</body>
+
+</html>

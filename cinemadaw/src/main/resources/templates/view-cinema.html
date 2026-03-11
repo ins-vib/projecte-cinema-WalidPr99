@@ -18,6 +18,7 @@
 
         <a href="/home">Inici</a>
         <a href="/cinemes">Cinemes</a>
+        <a th:href="@{/room/create/{id}(id=${cinema.id})}">Afegir sala</a>
 
     </nav>
 
@@ -72,7 +73,14 @@
 
         <ul>
 
-            <li  th:each="sala : ${cinema.rooms}" th:text="${sala.name} + ' - Capacitat: ' + ${sala.capacity}"></li>
+            <li th:each="sala : ${cinema.rooms}">
+
+                <span th:text="${sala.name} + ' - Capacitat: ' + ${sala.capacity}"></span>
+                <a th:href="@{/room/view/{id}(id=${sala.id})}"> Veure Detall</a>
+                <a th:href="@{/room/edit/{id}(id=${sala.id})}" th:text="'Editar '"></a>
+                <a th:href="@{/room/delete/{id}(id=${sala.id})}" th:text="'Esborrar '"></a>
+                
+            </li>
 
         </ul>
 

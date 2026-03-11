@@ -2,12 +2,12 @@ package com.daw.cinemadaw.service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Scanner;
 import java.util.ArrayList;
-import com.daw.cinemadaw.domain.cinema.New;
+import java.util.Scanner;
+
 import org.springframework.stereotype.Service;
 
-
+import com.daw.cinemadaw.domain.cinema.New;
 
 @Service 
 public class NewsService {
