@@ -5,6 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Crear pel·lícula</title>
+	<link rel="stylesheet" th:href="@{/CSS/styles.css}">
 
 </head>
 
@@ -28,6 +29,7 @@
 <br>
 
 	<input type="text" th:field="*{title}">
+	<div th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
 
 <br>
 
@@ -36,6 +38,7 @@
 <br>
 
 	<input type="number" th:field="*{duration}">
+	<div th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}"></div>
 
 <br>
 
@@ -44,6 +47,7 @@
 <br>
 
 	<input type="text" th:field="*{genre}">
+	<div th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}"></div>
 
 <br>
 
@@ -52,6 +56,7 @@
 <br>
 
 	<input type="text" th:field="*{description}">
+	<div th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
 
 <br>
 
@@ -60,6 +65,7 @@
 <br>
 
 	<input type="date" th:field="*{releaseDate}">
+	<div th:if="${#fields.hasErrors('releaseDate')}" th:errors="*{releaseDate}"></div>
 
 <br>
 

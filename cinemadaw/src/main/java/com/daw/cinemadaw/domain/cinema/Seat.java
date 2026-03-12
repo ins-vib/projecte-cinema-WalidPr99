@@ -8,6 +8,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 
 
@@ -21,9 +25,13 @@ public class Seat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "La fila del seient es obligatoria")
+    @Size(min = 1, max = 10, message = "La fila del seient no pot superar els 10 caràcters ni ser inferior a 1 caràcter")
     @Column
     private String seatRow;
 
+    @Min(value = 1, message = "El número del seient no puede ser inferior a 1")
+    @Max(value = 500, message = "El número del seient no puede superar los 500")
     @Column
     private int number;
 

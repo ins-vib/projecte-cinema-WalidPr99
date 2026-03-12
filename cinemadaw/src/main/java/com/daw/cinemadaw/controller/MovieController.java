@@ -1,16 +1,19 @@
 package com.daw.cinemadaw.controller;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-
-import com.daw.cinemadaw.repository.MovieRepository;
-import com.daw.cinemadaw.domain.cinema.Movie;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import com.daw.cinemadaw.domain.cinema.Movie;
+import com.daw.cinemadaw.repository.MovieRepository;
+
+import jakarta.validation.Valid;
 
 
 @Controller
@@ -69,9 +72,11 @@ public class MovieController {
     }
 
     @GetMapping("/movie/create")
-    public String showCreateMovieForm(Model model) {
+    public String showCreateMovieForm(@Valid Model model, @ModelAttribute Movie movie, BindingResult result) {
 
-        Movie movie = new Movie();
+        if (movie == null) {
+            movie = new Movie();
+        }
         model.addAttribute("movie", movie);
         return "movies/create-movie";
     }
@@ -102,7 +107,11 @@ public class MovieController {
     }
 
     @PostMapping("/movie/edit")
-    public String editMovie(@ModelAttribute Movie movie) {
+    public String editMovie(@Valid @ModelAttribute Movie movie, BindingResult result) {
+
+        if (result.hasErrors()) {
+            return "movies/edit-movie";
+        }
 
         movieRepository.save(movie);
         return "redirect:/movies";

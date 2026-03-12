@@ -1,5 +1,9 @@
 package com.daw.cinemadaw.domain.cinema;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,9 +11,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
-import jakarta.persistence.CascadeType;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 
 @Entity
@@ -20,9 +25,13 @@ public class Room {
 
     private Long id;
 
+    @NotBlank(message = "El nom de la sala es obligatori")
+    @Size(min = 2, max = 110, message = "El nom de la sala no pot superar els 150 caràcters ni ser inferiro a 5 caracters")
     @Column
     private String name;
 
+    @Min(value = 1, message = "La capacitat de la sala no pot ser inferior a 1")
+    @Max(value = 500, message = "La capacitat de la sala no pot ser superior a 500")
     @Column
     private int capacity;
 

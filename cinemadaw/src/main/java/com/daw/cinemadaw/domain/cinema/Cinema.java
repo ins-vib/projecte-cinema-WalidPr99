@@ -3,13 +3,16 @@ package com.daw.cinemadaw.domain.cinema;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.CascadeType;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Entity //Indica que aquesta classe és una entitat JPA (Java Persistence API) i que serà mapejada a una taula a la base de dades. Aquesta anotació és essencial per a que el framework de persistència (com Hibernate) pugui gestionar aquesta classe com una entitat de base de dades.
 public class Cinema {
@@ -20,16 +23,24 @@ public class Cinema {
     private Long id; //Atribut id per a la base de dades de tipus Long, ja que és comú utilitzar aquest tipus per a les claus primàries en bases de dades relacionals. Aquest atribut serà utilitzat per identificar de manera única cada cinema a la base de dades.
 
     //Atributs
-
+    
+    @NotBlank(message = "El nom del cinema es obligatori") //Indica que el camp name no pot estar vacío. Si se intenta guardar un objeto Cinema con el campo name vacío, se lanzará una excepción de validación con el mensaje especificado.
+    @Size (min = 2, max = 110, message = "El nom del cinema no pot superar els 150 caràcters ni ser inferiro a 5 caracters") //Indica que el campo name no puede tener más de 100 caracteres. Si se intenta guardar un objeto Cinema con un campo name que exceda los 100 caracteres, se lanzará una excepción de validación con el mensaje especificado.
     @Column
     private String name;
 
+    @NotBlank(message = "L'adreça del cinema es obligatoria")
+    @Size (min = 5, max = 150, message = "L'adreça del cinema no pot superar els 150 caràcters ni ser inferiro a 5 caracters")
     @Column
     private String address;
 
+    @NotBlank(message = "La ciutat del cinema es obligatòria")
+    @Size (min = 2, max = 150, message = "La ciutat del cinema no pot superar els 150 caràcters ni ser inferiro a 5 caracters")
     @Column
     private String city;
 
+    @NotBlank(message = "El codi postal del cinema es obligatori")
+    @Pattern(regexp = "\\d{5}", message = "El codi postal del cinema ha de ser un número de 5 dígitos") //Indica que el campo postalCode debe seguir un patrón específico, en este caso, debe ser un número de 5 dígitos. Si se intenta guardar un objeto Cinema con un campo postalCode que no cumpla con este patrón, se lanzará una excepción de validación con el mensaje especificado.
     @Column
     private String postalCode;
 

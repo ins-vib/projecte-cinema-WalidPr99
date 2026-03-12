@@ -1,33 +1,39 @@
+-- =============================================
+-- CINEMAS (name: 2-110 chars, address: 5-150 chars, city: 2-150 chars, postalCode: 5 dígits)
+-- =============================================
 INSERT INTO CINEMA(ADDRESS,CITY,NAME,POSTAL_CODE) VALUES
-('Major,15','Tarragona','Osacrs','43100');
+('Carrer Major, 15','Tarragona','Oscars Cinema','43100');
 
 INSERT INTO CINEMA(ADDRESS,CITY,NAME,POSTAL_CODE) VALUES
-('Gran Via,25','Barcelona','Cineplex','08001');
+('Gran Via, 25','Barcelona','Cineplex','08001');
 
 INSERT INTO CINEMA(ADDRESS,CITY,NAME,POSTAL_CODE) VALUES
-('Calle Mayor,8','Madrid','Cinema Palace','28013');
+('Calle Mayor, 8','Madrid','Cinema Palace','28013');
 
 INSERT INTO CINEMA(ADDRESS,CITY,NAME,POSTAL_CODE) VALUES
-('Rambla Nova,30','Tarragona','Multicines Odeon','43001');
+('Rambla Nova, 30','Tarragona','Multicines Odeon','43001');
 
 INSERT INTO CINEMA(ADDRESS,CITY,NAME,POSTAL_CODE) VALUES
-('Paseo de Gracia,42','Barcelona','Royal Cinema','08007');
+('Paseo de Gracia, 42','Barcelona','Royal Cinema','08007');
 
 INSERT INTO CINEMA(ADDRESS,CITY,NAME,POSTAL_CODE) VALUES
-('Calle Colón,18','Valencia','Cines Capitol','46004');
+('Calle Colón, 18','Valencia','Cines Capitol','46004');
 
 INSERT INTO CINEMA(ADDRESS,CITY,NAME,POSTAL_CODE) VALUES
-('Alameda Principal,50','Málaga','Cines Albéniz','29001');
+('Alameda Principal, 50','Málaga','Cines Albéniz','29001');
 
 INSERT INTO CINEMA(ADDRESS,CITY,NAME,POSTAL_CODE) VALUES
-('Gran Vía,33','Madrid','Callao City Lights','28013');
+('Gran Vía, 33','Madrid','Callao City Lights','28013');
 
 INSERT INTO CINEMA(ADDRESS,CITY,NAME,POSTAL_CODE) VALUES
-('Calle Sierpes,12','Sevilla','Cines Avenida','41004');
+('Calle Sierpes, 12','Sevilla','Cines Avenida','41004');
 
 INSERT INTO CINEMA(ADDRESS,CITY,NAME,POSTAL_CODE) VALUES
-('Ronda Universitat,7','Barcelona','Verdi Park','08007');
+('Ronda Universitat, 7','Barcelona','Verdi Park','08007');
 
+-- =============================================
+-- ROOMS (name: 2-110 chars, capacity: 1-500)
+-- =============================================
 INSERT INTO ROOM(NAME,CAPACITY,CINEMA_ID) VALUES
 ('Sala 1',120,1);
 INSERT INTO ROOM(NAME,CAPACITY,CINEMA_ID) VALUES
@@ -36,16 +42,80 @@ INSERT INTO ROOM(NAME,CAPACITY,CINEMA_ID) VALUES
 ('Sala 3',120,1);
 
 INSERT INTO ROOM(NAME,CAPACITY,CINEMA_ID) VALUES
-('Sala 1',120,2);
+('Sala 1',150,2);
 INSERT INTO ROOM(NAME,CAPACITY,CINEMA_ID) VALUES
-('Sala 2',120,2);
+('Sala 2',100,2);
 INSERT INTO ROOM(NAME,CAPACITY,CINEMA_ID) VALUES
-('Sala 3',120,2);
+('Sala 3',80,2);
 
 INSERT INTO ROOM(NAME,CAPACITY,CINEMA_ID) VALUES
-('Sala 1',120,3);
+('Sala 1',200,3);
 INSERT INTO ROOM(NAME,CAPACITY,CINEMA_ID) VALUES
-('Sala 2',120,3);
+('Sala 2',180,3);
 INSERT INTO ROOM(NAME,CAPACITY,CINEMA_ID) VALUES
-('Sala 3',120,3);
+('Sala 3',90,3);
+
+-- =============================================
+-- MOVIES (title: 2-110 chars, duration: 1-500, genre: 2-110 chars, description: 10-500 chars, releaseDate: yyyy-MM-dd)
+-- =============================================
+INSERT INTO MOVIE(TITLE,DURATION,GENRE,DESCRIPTION,RELEASE_DATE) VALUES
+('El Padrino',175,'Drama','La historia de la familia Corleone en el mundo de la mafia de Nueva York','1972-03-24');
+
+INSERT INTO MOVIE(TITLE,DURATION,GENRE,DESCRIPTION,RELEASE_DATE) VALUES
+('Inception',148,'Ciencia ficción','Un ladrón que roba secretos corporativos a través de la tecnología de los sueños compartidos','2010-07-16');
+
+INSERT INTO MOVIE(TITLE,DURATION,GENRE,DESCRIPTION,RELEASE_DATE) VALUES
+('Interstellar',169,'Ciencia ficción','Un grupo de exploradores viaja a través de un agujero de gusano en busca de un nuevo hogar para la humanidad','2014-11-07');
+
+INSERT INTO MOVIE(TITLE,DURATION,GENRE,DESCRIPTION,RELEASE_DATE) VALUES
+('Pulp Fiction',154,'Thriller','Las vidas de dos mafiosos, un boxeador y una pareja de ladrones se entrelazan en historias de violencia y redención','1994-10-14');
+
+INSERT INTO MOVIE(TITLE,DURATION,GENRE,DESCRIPTION,RELEASE_DATE) VALUES
+('The Dark Knight',152,'Acción','Batman se enfrenta al Joker, un criminal que siembra el caos y la destrucción en la ciudad de Gotham','2008-07-18');
+
+-- =============================================
+-- SEATS (seatRow: 1-10 chars, number: 1-500, type: Standard/Premium/Adapted, state: true/false)
+-- =============================================
+INSERT INTO SEAT(SEAT_ROW,NUMBER,X,Y,TYPE,STATE,ROOM_ID) VALUES
+('A',1,0,0,'Standard',true,1);
+INSERT INTO SEAT(SEAT_ROW,NUMBER,X,Y,TYPE,STATE,ROOM_ID) VALUES
+('A',2,1,0,'Standard',true,1);
+INSERT INTO SEAT(SEAT_ROW,NUMBER,X,Y,TYPE,STATE,ROOM_ID) VALUES
+('A',3,2,0,'Standard',true,1);
+INSERT INTO SEAT(SEAT_ROW,NUMBER,X,Y,TYPE,STATE,ROOM_ID) VALUES
+('A',4,3,0,'Premium',true,1);
+INSERT INTO SEAT(SEAT_ROW,NUMBER,X,Y,TYPE,STATE,ROOM_ID) VALUES
+('A',5,4,0,'Premium',true,1);
+INSERT INTO SEAT(SEAT_ROW,NUMBER,X,Y,TYPE,STATE,ROOM_ID) VALUES
+('B',1,0,1,'Standard',true,1);
+INSERT INTO SEAT(SEAT_ROW,NUMBER,X,Y,TYPE,STATE,ROOM_ID) VALUES
+('B',2,1,1,'Standard',true,1);
+INSERT INTO SEAT(SEAT_ROW,NUMBER,X,Y,TYPE,STATE,ROOM_ID) VALUES
+('B',3,2,1,'Adapted',true,1);
+INSERT INTO SEAT(SEAT_ROW,NUMBER,X,Y,TYPE,STATE,ROOM_ID) VALUES
+('B',4,3,1,'Standard',true,1);
+INSERT INTO SEAT(SEAT_ROW,NUMBER,X,Y,TYPE,STATE,ROOM_ID) VALUES
+('B',5,4,1,'Standard',true,1);
+
+INSERT INTO SEAT(SEAT_ROW,NUMBER,X,Y,TYPE,STATE,ROOM_ID) VALUES
+('A',1,0,0,'Standard',true,2);
+INSERT INTO SEAT(SEAT_ROW,NUMBER,X,Y,TYPE,STATE,ROOM_ID) VALUES
+('A',2,1,0,'Standard',true,2);
+INSERT INTO SEAT(SEAT_ROW,NUMBER,X,Y,TYPE,STATE,ROOM_ID) VALUES
+('A',3,2,0,'Premium',true,2);
+INSERT INTO SEAT(SEAT_ROW,NUMBER,X,Y,TYPE,STATE,ROOM_ID) VALUES
+('B',1,0,1,'Standard',true,2);
+INSERT INTO SEAT(SEAT_ROW,NUMBER,X,Y,TYPE,STATE,ROOM_ID) VALUES
+('B',2,1,1,'Adapted',true,2);
+
+INSERT INTO SEAT(SEAT_ROW,NUMBER,X,Y,TYPE,STATE,ROOM_ID) VALUES
+('A',1,0,0,'Standard',true,3);
+INSERT INTO SEAT(SEAT_ROW,NUMBER,X,Y,TYPE,STATE,ROOM_ID) VALUES
+('A',2,1,0,'Standard',true,3);
+INSERT INTO SEAT(SEAT_ROW,NUMBER,X,Y,TYPE,STATE,ROOM_ID) VALUES
+('A',3,2,0,'Standard',true,3);
+INSERT INTO SEAT(SEAT_ROW,NUMBER,X,Y,TYPE,STATE,ROOM_ID) VALUES
+('B',1,0,1,'Premium',true,3);
+INSERT INTO SEAT(SEAT_ROW,NUMBER,X,Y,TYPE,STATE,ROOM_ID) VALUES
+('B',2,1,1,'Standard',true,3);
 
