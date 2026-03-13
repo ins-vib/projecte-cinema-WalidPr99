@@ -1,67 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cinema DAW</title>
-    <link rel="stylesheet" th:href="@{/CSS/styles.css}">
-</head>
 <body>
 
-<h1>Llistat de cinemes</h1>
+<div th:replace="~{layout :: layout(~{::content})}">
 
-<nav>
-    <a href="/home">Inici</a>
-</nav>
+    <div th:fragment="content">
 
-<a th:href="@{/cinema/create}">Afegir cinema</a>
+        <h1>Llistat de cinemes</h1>
 
-<table>
+        <a th:href="@{/cinema/create}">Afegir cinema</a>
 
-    <thead>
+        <table>
 
-        <tr>
+            <thead>
 
-            <th>
-                Nom
-            </th>
+                <tr>
 
-            <th>
-                ciutat
-            </th>
+                    <th>Nom</th>
 
-        </tr>
+                    <th>Ciutat</th>
 
-    </thead>
+                </tr>
 
-    <tbody>
+            </thead>
 
-        <tr th:each="cinema : ${llista}">
+            <tbody>
 
-            <td th:text="${cinema.name}">Nom</td>
+                <tr th:each="cinema : ${llista}">
 
-            <td th:text="${cinema.city}">Ciutat</td>
+                    <td th:text="${cinema.name}">Nom</td>
 
-            <td>
-                
-                <a th:href="@{/cinema/{id}(id=${cinema.id})}">Veure detall</a>
-                <a th:href="@{/cinema/delete/{id}(id=${cinema.id})}">Esborrar</a>
-                <a th:href="@{/cinema/edit/{id}(id=${cinema.id})}">Editar</a>
-                
+                    <td th:text="${cinema.city}">Ciutat</td>
 
-                
+                    <td>
 
-            </td>
+                        <a th:href="@{/cinema/{id}(id=${cinema.id})}">Veure detall</a>
+                        <a th:href="@{/cinema/delete/{id}(id=${cinema.id})}">Esborrar</a>
+                        <a th:href="@{/cinema/edit/{id}(id=${cinema.id})}">Editar</a>
 
-        </tr>
+                    </td>
 
-    </tbody>
+                </tr>
 
-</table>
+            </tbody>
 
+        </table>
 
-    
+    </div>
+
+</div>
+
 </body>
 </html>
-

@@ -1,78 +1,57 @@
-<!DOCTYPE html>
-
-<html lang="en">
-
-<head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalls de la pel·lícula</title>
-    <link rel="stylesheet" th:href="@{/CSS/styles.css}">
-
-</head>
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <body>
 
-    <h1>Detalls de la pel·lícula: <span th:text="${movie.title}"></span></h1> 
-    
-    <nav>
+<div th:replace="~{layout :: layout(~{::content})}">
 
-        <a href="/home">Inici</a>
-        <a href="/movies">Pel·lícules</a>
+    <div th:fragment="content">
 
-    </nav>
+        <h1>Detalls de la pel·lícula: <span th:text="${movie.title}"></span></h1>
 
-<table>
+        <table>
 
-    <thead>
+            <thead>
 
-        <tr>
+                <tr>
 
-            <th>
-                Títol
-            </th>
+                    <th>Títol</th>
 
-            <th>
-                Durada
-            </th>
+                    <th>Durada</th>
 
-            <th>
-                Gènere
-            </th>
+                    <th>Gènere</th>
 
-            <th>
-                Descripció
-            </th>
+                    <th>Descripció</th>
 
-            <th>
-                Data d'estrena
-            </th>
+                    <th>Data d'estrena</th>
 
-        </tr>
+                </tr>
 
-    </thead>
+            </thead>
 
-    <tbody>
+            <tbody>
 
-        <tr>
+                <tr>
 
-            <td th:text="${movie.title}">Títol</td>
+                    <td th:text="${movie.title}">Títol</td>
 
-            <td th:text="${movie.duration}">Durada</td>
+                    <td th:text="${movie.duration}">Durada</td>
 
-            <td th:text = "${movie.genre}">Gènere</td>
+                    <td th:text="${movie.genre}">Gènere</td>
 
-            <td th:text = "${movie.description}">Descripció</td>
+                    <td th:text="${movie.description}">Descripció</td>
 
-            <td th:text = "${movie.releaseDate}">Data d'estrena</td>
+                    <td th:text="${movie.releaseDate}">Data d'estrena</td>
 
-        </tr>
+                </tr>
 
-        
-    </tbody>
+            </tbody>
 
-</table>
-    
+        </table>
+
+    </div>
+
+</div>
+
 </body>
-
 </html>

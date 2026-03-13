@@ -1,53 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear sala</title>
-    <link rel="stylesheet" th:href="@{/CSS/styles.css}">
-
-</head>
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <body>
 
-    <h1>Introdueix les dades de la sala</h1>
+<div th:replace="~{layout :: layout(~{::content})}">
 
-    <nav>
+    <div th:fragment="content">
 
-        <a href="/home">Inici</a>
-        <a href="/cinemes">Cinemes</a>
+        <h1>Introdueix les dades de la sala</h1>
 
-    </nav>
+        <form th:action="@{/room/create/{cinemaId}(cinemaId=${room.cinema.id})}" th:object="${room}" method="post">
 
-<form th:action="@{/room/create/{cinemaId}(cinemaId=${room.cinema.id})}" th:object="${room}"  method="post">
+            <input type="hidden" th:field="*{cinema.id}" id="cinemaId" />
 
-    <input type="hidden" th:field="*{cinema.id}" id="cinemaId" />
-<br>
+            <br>
 
-    <label> Nom </label>
+            <label>Nom</label>
 
-<br>
+            <br>
 
-    <input type="text" th:field="*{name}">
-    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            <input type="text" th:field="*{name}">
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
 
-<br>
+            <br>
 
-    <label> Capacitat </label>
+            <label>Capacitat</label>
 
-<br>
+            <br>
 
-    <input type="text" th:field="*{capacity}">
-    <div th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}"></div>
-    
-<br>
-    
-<br>
+            <input type="text" th:field="*{capacity}">
+            <div th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}"></div>
 
-    <button type="submit">Crear sala</button>    
-<br>
+            <br>
+
+            <button type="submit">Crear sala</button>
+
+        </form>
+
+    </div>
+
+</div>
 
 </body>
-
 </html>

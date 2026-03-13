@@ -1,65 +1,47 @@
-<!DOCTYPE html>
-
-<html lang="en">
-
-<head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalls de la sala</title>
-    <link rel="stylesheet" th:href="@{/CSS/styles.css}">
-
-</head>
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <body>
 
-    <h1>Detalls de la sala: <span th:text="${room.name}"></span></h1> 
-    
-    <nav>
+<div th:replace="~{layout :: layout(~{::content})}">
 
-        <a href="/home">Inici</a>
-        <a href="/cinemes">Cinemes</a>
-        <a th:href="@{/room/edit/{id}(id=${room.id})}">Editar sala</a>  
+    <div th:fragment="content">
 
-    </nav>
+        <h1>Detalls de la sala: <span th:text="${room.name}"></span></h1>
 
-<table>
+        <a th:href="@{/room/edit/{id}(id=${room.id})}">Editar sala</a>
 
-    <thead>
+        <table>
 
-        <tr>
+            <thead>
 
-            <th>
-                Nom
-            </th>
+                <tr>
 
-            <th>
-                capacitat
-            </th>
-            
-        </tr>
+                    <th>Nom</th>
 
-    </thead>
+                    <th>Capacitat</th>
 
-    <tbody>
+                </tr>
 
-        <tr>
+            </thead>
 
-            <td th:text="${room.name}">Nom</td>
+            <tbody>
 
-            <td th:text="${room.capacity}">Capacitat</td>
+                <tr>
 
-        </tr>
+                    <td th:text="${room.name}">Nom</td>
 
-        
-    </tbody>
+                    <td th:text="${room.capacity}">Capacitat</td>
 
-</table>
+                </tr>
 
+            </tbody>
 
+        </table>
 
-   
-    
+    </div>
+
+</div>
+
 </body>
-
 </html>

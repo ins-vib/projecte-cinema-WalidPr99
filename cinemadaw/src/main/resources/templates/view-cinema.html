@@ -1,92 +1,70 @@
-<!DOCTYPE html>
-
-<html lang="en">
-
-<head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalls del cinema</title>
-    <link rel="stylesheet" th:href="@{/CSS/styles.css}">
-
-</head>
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <body>
 
-    <h1>Detalls del cinema: <span th:text="${cinema.name}"></span></h1> 
-    
-    <nav>
+<div th:replace="~{layout :: layout(~{::content})}">
 
-        <a href="/home">Inici</a>
-        <a href="/cinemes">Cinemes</a>
+    <div th:fragment="content">
+
+        <h1>Detalls del cinema: <span th:text="${cinema.name}"></span></h1>
+
         <a th:href="@{/room/create/{id}(id=${cinema.id})}">Afegir sala</a>
 
-    </nav>
+        <table>
 
-<table>
+            <thead>
 
-    <thead>
+                <tr>
 
-        <tr>
+                    <th>Nom</th>
 
-            <th>
-                Nom
-            </th>
+                    <th>Ciutat</th>
 
-            <th>
-                ciutat
-            </th>
+                    <th>Adreça</th>
 
-            <th>
-                Adreça
-            </th>
+                    <th>Codi postal</th>
 
-            <th>
-                Codi postal
-            </th>
+                </tr>
 
-        </tr>
+            </thead>
 
-    </thead>
+            <tbody>
 
-    <tbody>
+                <tr>
 
-        <tr>
+                    <td th:text="${cinema.name}">Nom</td>
 
-            <td th:text="${cinema.name}">Nom</td>
+                    <td th:text="${cinema.city}">Ciutat</td>
 
-            <td th:text="${cinema.city}">Ciutat</td>
+                    <td th:text="${cinema.address}">Adreça</td>
 
-            <td th:text = "${cinema.address}">Adreça</td>
+                    <td th:text="${cinema.postalCode}">Codi postal</td>
 
-            <td th:text = "${cinema.postalCode}">Codi postal</td>
+                </tr>
 
-        </tr>
+            </tbody>
 
-        
-    </tbody>
+        </table>
 
-</table>
-
-<table>
-
-    <h1>Sales</h1>
+        <h2>Sales</h2>
 
         <ul>
 
             <li th:each="sala : ${cinema.rooms}">
 
                 <span th:text="${sala.name} + ' - Capacitat: ' + ${sala.capacity}"></span>
-                <a th:href="@{/room/view/{id}(id=${sala.id})}"> Veure Detall</a>
-                <a th:href="@{/room/edit/{id}(id=${sala.id})}" th:text="'Editar '"></a>
-                <a th:href="@{/room/delete/{id}(id=${sala.id})}" th:text="'Esborrar '"></a>
-                
+                <a th:href="@{/room/view/{id}(id=${sala.id})}">Veure Detall</a>
+                <a th:href="@{/room/edit/{id}(id=${sala.id})}">Editar</a>
+                <a th:href="@{/room/delete/{id}(id=${sala.id})}">Esborrar</a>
+
             </li>
 
         </ul>
 
-</table>
-    
-</body>
+    </div>
 
+</div>
+
+</body>
 </html>

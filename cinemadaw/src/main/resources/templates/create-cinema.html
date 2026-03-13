@@ -1,66 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear cinema</title>
-    <link rel="stylesheet" th:href="@{/CSS/styles.css}">
-
-</head>
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <body>
 
-    <h1>Introdueix les dades del cinema</h1>
+<div th:replace="~{layout :: layout(~{::content})}">
 
-    <nav>
+    <div th:fragment="content">
 
-        <a href="/home">Inici</a>
-        <a href="/cinemes">Cinemes</a>
+        <h1>Introdueix les dades del cinema</h1>
 
-    </nav>
+        <form th:action="@{/cinema/create}" th:object="${cinema}" method="post">
 
-<form th:action="@{/cinema/create}" th:object="${cinema}"  method="post">
+            <br>
 
-<br>
+            <label>Nom</label>
 
-    <label> Nom</label>
+            <br>
 
-<br>
+            <input type="text" th:field="*{name}">
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
 
-    <input type="text" th:field="*{name}">
-    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            <br>
 
-<br>
+            <label>Ciutat</label>
 
-    <label> Ciutat</label>
+            <br>
 
-<br>
+            <input type="text" th:field="*{city}">
+            <div th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></div>
 
-    <input type="text" th:field="*{city}">
-    <div th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></div>
-<br>
+            <br>
 
-    <label>Adreça</label>
+            <label>Adreça</label>
 
-<br>
+            <br>
 
-    <input type="text" th:field="*{address}">
-    <div th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
+            <input type="text" th:field="*{address}">
+            <div th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
 
-<br>
+            <br>
 
-    <label>Codi postal</label>
+            <label>Codi postal</label>
 
-<br>
+            <br>
 
-    <input type="text" th:field="*{postalCode}">
-    <div th:if="${#fields.hasErrors('postalCode')}" th:errors="*{postalCode}"></div>
-    
-<br>
+            <input type="text" th:field="*{postalCode}">
+            <div th:if="${#fields.hasErrors('postalCode')}" th:errors="*{postalCode}"></div>
 
-    <button type="submit">Crear cinema</button>    
+            <br>
+
+            <button type="submit">Crear cinema</button>
+
+        </form>
+
+    </div>
+
+</div>
 
 </body>
-
 </html>

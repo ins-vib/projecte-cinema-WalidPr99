@@ -1,80 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Editar pel·lícula</title>
-	<link rel="stylesheet" th:href="@{/CSS/styles.css}">
-
-</head>
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <body>
 
-	<h1>Introdueix les dades de la pel·lícula que vols modificar</h1>
+<div th:replace="~{layout :: layout(~{::content})}">
 
-	<nav>
+    <div th:fragment="content">
 
-		<a href="/home">Inici</a>
-		<a href="/movies">Pel·lícules</a>
+        <h1>Introdueix les dades de la pel·lícula que vols modificar</h1>
 
-	</nav>
+        <form th:action="@{/movie/edit}" th:object="${movie}" method="post">
 
-<form th:action="@{/movie/edit}" th:object="${movie}" method="post">
+            <input type="text" th:field="*{id}" hidden /><br>
 
-	<input type="text" th:field="*{id}" hidden /><br>
+            <br>
 
-<br>
+            <label>Títol</label>
 
-	<label>Títol</label>
+            <br>
 
-<br>
+            <input type="text" th:field="*{title}">
+            <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
 
-	<input type="text" th:field="*{title}">
-	<div th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+            <br>
 
-<br>
+            <label>Durada</label>
 
-	<label>Durada</label>
+            <br>
 
-<br>
+            <input type="number" th:field="*{duration}">
+            <div th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}"></div>
 
-	<input type="number" th:field="*{duration}">
-	<div th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}"></div>
+            <br>
 
-<br>
+            <label>Gènere</label>
 
-	<label>Gènere</label>
+            <br>
 
-<br>
+            <input type="text" th:field="*{genre}">
+            <div th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}"></div>
 
-	<input type="text" th:field="*{genre}">
-	<div th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}"></div>
+            <br>
 
-<br>
+            <label>Descripció</label>
 
-	<label>Descripció</label>
+            <br>
 
-<br>
+            <input type="text" th:field="*{description}">
+            <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
 
-	<input type="text" th:field="*{description}">
-	<div th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+            <br>
 
-<br>
+            <label>Data d'estrena</label>
 
-	<label>Data d'estrena</label>
+            <br>
 
-<br>
+            <input type="date" th:field="*{releaseDate}">
+            <div th:if="${#fields.hasErrors('releaseDate')}" th:errors="*{releaseDate}"></div>
 
-	<input type="date" th:field="*{releaseDate}">
-	<div th:if="${#fields.hasErrors('releaseDate')}" th:errors="*{releaseDate}"></div>
+            <br>
 
-<br>
+            <button type="submit">Editar pel·lícula</button>
 
-	<button type="submit">Editar pel·lícula</button>
+        </form>
 
-</form>
+    </div>
+
+</div>
 
 </body>
-
 </html>

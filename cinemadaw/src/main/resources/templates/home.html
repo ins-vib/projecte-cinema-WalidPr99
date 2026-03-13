@@ -1,60 +1,36 @@
-<!DOCTYPE html>
-
-<html xmlns:th="http://www.thymeleaf.org"></html>
-
-<html lang="en"></html>
-
-<head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cinema DAW</title>
-    <link rel="stylesheet" th:href="@{/CSS/styles.css}">
-
-</head>
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <body>
 
-    <header>
+<div th:replace="~{layout :: layout(~{::content})}">
 
-        <h1>Cinema</h1>
-        
-        <nav>
+    <div th:fragment="content">
 
-                <a href="/home">Inici</a>
-                <a href="/cinemes">Cinemes</a>
-                <a href="/movies">Pel·lícules</a>  
-                
-        </nav>
+        <section>
 
-    </header> 
-    
-    <section>
+            <h2>Benvingut a Cinema DAW</h2>
+            <p>Descobreix les últimes pel·lícules, horaris i molt més!</p>
 
-        <h2>Benvingut a Cinema DAW</h2>
-        <p>Descobreix les últimes pel·lícules, horaris i molt més!</p>
+        </section>
 
-    </section>
+        <section>
 
-    <section>
+            <h2>Notícies</h2>
 
-        <h2>Notícies</h2>
-        
-        <div th:each="news : ${llista}">
+            <div th:each="news : ${llista}">
 
-            <h3 th:text="${news.headline}"></h3>
+                <h3 th:text="${news.headline}"></h3>
 
-            <p th:text="${news.body}"></p>
+                <p th:text="${news.body}"></p>
 
-        </div>
+            </div>
 
-    </section>
+        </section>
 
-    <footer>
+    </div>
 
-        <p>2026 Cinema DAW.</p>
+</div>
 
-    </footer>
-    
 </body>
 </html>

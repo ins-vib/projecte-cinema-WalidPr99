@@ -1,70 +1,55 @@
-<!DOCTYPE html>
-
-<html lang="en">
-
-<head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pel·lícules</title>
-    <link rel="stylesheet" th:href="@{/CSS/styles.css}">
-
-</head>
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <body>
 
-    <h1>Llistat de pel·lícules</h1>
+<div th:replace="~{layout :: layout(~{::content})}">
 
-    <nav>
-        <a href="/home">Inici</a>
-    </nav>
+    <div th:fragment="content">
 
-    <a th:href="@{/movie/create}">Afegir pel·lícula</a>
+        <h1>Llistat de pel·lícules</h1>
 
-    <table>
+        <a th:href="@{/movie/create}">Afegir pel·lícula</a>
 
-        <thead>
+        <table>
 
-            <tr>
+            <thead>
 
-                <th>
-                    Títol
-                </th>
+                <tr>
 
-                <th>
-                    Gènere
-                </th>
+                    <th>Títol</th>
 
-            </tr>
+                    <th>Gènere</th>
 
-        </thead>
+                </tr>
 
-        <tbody>
+            </thead>
 
-            <tr th:each="movie : ${llista}">
+            <tbody>
 
-                <td th:text="${movie.title}">Títol</td>
+                <tr th:each="movie : ${llista}">
 
-                <td th:text="${movie.genre}">Gènere</td>
+                    <td th:text="${movie.title}">Títol</td>
 
-                <td>
-                    
-                    <a th:href="@{/movie/{id}(id=${movie.id})}">Veure detall</a>
-                    <a th:href="@{/movie/delete/{id}(id=${movie.id})}">Esborrar</a>
-                    <a th:href="@{/movie/edit/{id}(id=${movie.id})}">Editar</a>
-                    
-                </td>
+                    <td th:text="${movie.genre}">Gènere</td>
 
-            </tr>
+                    <td>
 
-        </tbody>
+                        <a th:href="@{/movie/{id}(id=${movie.id})}">Veure detall</a>
+                        <a th:href="@{/movie/delete/{id}(id=${movie.id})}">Esborrar</a>
+                        <a th:href="@{/movie/edit/{id}(id=${movie.id})}">Editar</a>
 
-    </table>
+                    </td>
 
+                </tr>
 
+            </tbody>
 
+        </table>
 
-    
+    </div>
+
+</div>
+
 </body>
-
 </html>

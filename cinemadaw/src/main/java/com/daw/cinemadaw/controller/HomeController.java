@@ -22,7 +22,7 @@ public class HomeController {
         this.newsService = newsService;
     }
 
-    @GetMapping({"/home"})
+    @GetMapping({"/", "/home"})
     public String home(Model model) {
 
         ArrayList<New> llista = new ArrayList<>();
