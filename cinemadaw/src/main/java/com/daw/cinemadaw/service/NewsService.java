@@ -1,60 +1,47 @@
 package com.daw.cinemadaw.service;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Scanner;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import com.daw.cinemadaw.domain.cinema.New;
 
-@Service 
+@Service
 public class NewsService {
 
-    public ArrayList<New> getNews() throws FileNotFoundException {
+    public ArrayList<New> getNews() {
 
         ArrayList<New> news = new ArrayList<>();
+        ClassPathResource resource = new ClassPathResource("news.txt");
 
-        // Llegir un fitxer de text línia a línia
+        if (!resource.exists()) {
+            return news;
+        }
 
-        File f = new File("news.txt");
+        try (InputStream inputStream = resource.getInputStream();
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
-        if (f.exists()) {
+            String line;
 
-                // llegir l'arxiu
+            while ((line = reader.readLine()) != null) {
+                String[] fields = line.split(":", 2);
 
-                Scanner lectorFitxer = new Scanner(f);
-                String linia;
-
-                while(lectorFitxer.hasNextLine()) {                                                               
-
-                    linia = lectorFitxer.nextLine();
-                    String[] camps = linia.split(":");
-
-
-                    if(camps.length == 2) {
-                        
-                    New n = new New(camps[0], camps[1]);
-                    news.add(n);
-
-                    System.out.println(linia);
-
-                    }
-                    
+                if (fields.length == 2) {
+                    news.add(new New(fields[0].trim(), fields[1].trim()));
                 }
+            }
 
-                return news;
+            return news;
+        } catch (IOException exception) {
+            throw new IllegalStateException("No s'han pogut carregar les noticies.", exception);
         }
-
-        else {
-
-                System.out.println("No existeix l'arxiu");
-                return null;
-        }
-    
     }
-
 }
 
 

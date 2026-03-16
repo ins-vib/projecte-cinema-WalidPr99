@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:replace="~{layout :: layout(~{::content})}">
+
+    <div th:fragment="content">
+
+        <h1>Detalls del seient</h1>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+                    <th>Fila</th>
+                    <th>Numero</th>
+                    <th>Posicio X</th>
+                    <th>Posicio Y</th>
+                    <th>Tipus</th>
+                    <th>Estat</th>
+                    <th>Sala</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+
+                    <td th:text="${seat.id}">ID</td>
+                    <td th:text="${seat.seatRow}">Fila</td>
+                    <td th:text="${seat.number}">Numero</td>
+                    <td th:text="${seat.x}">Posicio X</td>
+                    <td th:text="${seat.y}">Posicio Y</td>
+                    <td th:text="${seat.type}">Tipus</td>
+                    <td th:text="${seat.state ? 'Disponible' : 'No disponible'}">Estat</td>
+                    <td th:text="${seat.room != null ? seat.room.name : 'Sense sala'}">Sala</td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+        <a th:if="${seat.room != null}" th:href="@{/seats/{id}(id=${seat.room.id})}">Tornar als seients de la sala</a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,18 +1,17 @@
 package com.daw.cinemadaw.controller;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.daw.cinemadaw.domain.cinema.Room;
+import com.daw.cinemadaw.domain.cinema.Seat;
 import com.daw.cinemadaw.repository.CinemaRepository;
 import com.daw.cinemadaw.repository.RoomRepository;
 import com.daw.cinemadaw.repository.SeatRepository;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import java.util.Optional;
-import com.daw.cinemadaw.domain.cinema.Seat;
-import java.util.List;
-import com.daw.cinemadaw.domain.cinema.Cinema;
 
 @Controller
 public class SeatController {
@@ -31,11 +30,11 @@ public class SeatController {
     @GetMapping("/seats/{id}")
     public String viewSeats(@PathVariable Long id, Model model) {
 
-        List<Seat> listSeats = seatRepository.findByRoomId(id);
+        Optional<List<Seat>> optionalSeats = seatRepository.findByRoomId(id);
 
-        if (!listSeats.isEmpty()) {
+        if (optionalSeats.isPresent() && !optionalSeats.get().isEmpty()) {
 
-            model.addAttribute("llista", listSeats);
+            model.addAttribute("llista", optionalSeats.get());
             return "seats/view-seat";
 
         } else {
@@ -44,5 +43,24 @@ public class SeatController {
 
         }
     }
+
+    @GetMapping("/seat/{id}")
+    public String detailSeat(@PathVariable Long id, Model model) {
+
+        Optional<Seat> optionalSeat = seatRepository.findById(id);
+
+        if (optionalSeat.isPresent()) {
+
+            model.addAttribute("seat", optionalSeat.get());
+            return "seats/detail-seat";
+
+        } else {
+
+            return "redirect:/home";
+
+        }
+    }
+
+    
 
 }
