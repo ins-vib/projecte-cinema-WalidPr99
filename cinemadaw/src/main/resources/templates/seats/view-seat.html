@@ -14,6 +14,10 @@
 			<li th:each="seat : ${llista}">
 
 				<span th:text="'Fila: ' + ${seat.seatRow} + ' | Numero: ' + ${seat.number} + ' |  ' + ${seat.x} + ' |  ' +${seat.y}"></span>
+				 |
+				<a th:href="@{/seat/edit/{id}(id=${seat.id})}">Editar</a>
+				 |
+				<a th:href="@{/seat/delete/{id}(id=${seat.id})}" onclick="return confirm('Vols eliminar aquest seient?');">Eliminar</a>
 
 			</li>
 

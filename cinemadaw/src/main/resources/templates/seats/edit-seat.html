@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:replace="~{layout :: layout(~{::content})}">
+
+	<div th:fragment="content">
+
+		<h1>Editar seient</h1>
+
+		<form th:action="@{/seat/edit/{id}(id=${seat.id})}" th:object="${seat}" method="post">
+
+			<label>Fila</label>
+			<br>
+			<input type="text" th:field="*{seatRow}" required>
+
+			<br>
+
+			<label>Numero</label>
+			<br>
+			<input type="number" th:field="*{number}" min="1" max="500" required>
+
+			<br>
+
+			<label>Posicio X</label>
+			<br>
+			<input type="number" th:field="*{x}" required>
+
+			<br>
+
+			<label>Posicio Y</label>
+			<br>
+			<input type="number" th:field="*{y}" required>
+
+			<br>
+
+			<label>Tipus</label>
+			<br>
+			<select th:field="*{type}">
+				<option th:each="seatType : ${types}" th:value="${seatType}" th:text="${seatType}"></option>
+			</select>
+
+			<br>
+
+			<label>
+				<input type="checkbox" th:field="*{state}">
+				Disponible
+			</label>
+
+			<br><br>
+
+			<button type="submit">Guardar canvis</button>
+
+		</form>
+
+	</div>
+
+</div>
+
+</body>
+</html>

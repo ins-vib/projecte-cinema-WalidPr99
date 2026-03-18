@@ -47,6 +47,14 @@
 
         </table>
 
+        <br>
+
+        <a th:href="@{/seat/edit/{id}(id=${seat.id})}">Editar seient</a>
+        |
+        <a th:href="@{/seat/delete/{id}(id=${seat.id})}" onclick="return confirm('Vols eliminar aquest seient?');">Eliminar seient</a>
+
+        <br><br>
+
         <a th:if="${seat.room != null}" th:href="@{/seats/{id}(id=${seat.room.id})}">Tornar als seients de la sala</a>
 
     </div>
