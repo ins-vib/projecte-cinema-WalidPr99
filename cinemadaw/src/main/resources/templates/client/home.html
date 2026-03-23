@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:replace="~{layout :: layout(~{::content})}">
+    <div th:fragment="content">
+        <section>
+            <h1>Pellicules disponibles</h1>
+
+            <div th:if="${#lists.isEmpty(movies)}">
+                <p>No hi ha pellicules disponibles.</p>
+            </div>
+
+            <div th:each="movie : ${movies}">
+                <h3 th:text="${movie.title}"></h3>
+            </div>
+
+            <a href="/logout">Logout</a>
+        </section>
+    </div>
+</div>
+
+</body>
+</html>

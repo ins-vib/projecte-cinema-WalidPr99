@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:replace="~{layout :: layout(~{::content})}">
+    <div th:fragment="content">
+        <section>
+            <h2>Login</h2>
+
+            <p th:if="${param.error}" style="color: #b00020;">Usuari o contrasenya incorrectes.</p>
+            <p th:if="${param.logout}" style="color: #2e7d32;">Has tancat sessio correctament.</p>
+
+            <form th:action="@{/login}" method="post">
+                <label for="username">Usuari</label>
+                <input id="username" type="text" name="username" required />
+
+                <label for="password">Contrasenya</label>
+                <input id="password" type="password" name="password" required />
+
+                <button type="submit">Entrar</button>
+            </form>
+        </section>
+    </div>
+</div>
+
+</body>
+</html>

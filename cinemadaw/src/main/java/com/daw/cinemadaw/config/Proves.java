@@ -4,16 +4,21 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.daw.cinemadaw.domain.cinema.Cinema;
+import com.daw.cinemadaw.domain.cinema.Movie;
 import com.daw.cinemadaw.domain.cinema.Room;
 import com.daw.cinemadaw.domain.cinema.Seat;
+import com.daw.cinemadaw.domain.cinema.user.Role;
+import com.daw.cinemadaw.domain.cinema.user.User;
 import com.daw.cinemadaw.repository.CinemaRepository;
+import com.daw.cinemadaw.repository.MovieRepository;
 import com.daw.cinemadaw.repository.RoomRepository;
 import com.daw.cinemadaw.repository.SeatRepository;
-import com.daw.cinemadaw.repository.MovieRepository;
-import com.daw.cinemadaw.domain.cinema.Movie;
+import com.daw.cinemadaw.repository.UserRepository;
+
 import jakarta.transaction.Transactional;
 
 @Component
@@ -24,12 +29,17 @@ public class Proves implements CommandLineRunner { //La classe Proves implementa
     private RoomRepository roomRepository; //Atribut roomRepository de tipus RoomRepository, que és un repositori de Spring Data JPA per a l'entitat Room. Aquest atribut serà utilitzat per interactuar amb la base de dades i realitzar operacions relacionades amb les sales de cinema.
     private SeatRepository seatRepository; //Atribut seatRepository de tipus SeatRepository, que és un repositori de Spring Data JPA per a l'entitat Seat. Aquest atribut serà utilitzat per interactuar amb la base de dades i realitzar operacions relacionades amb els seients.
     private MovieRepository movieRepository; //Atribut movieRepository de tipus MovieRepository, que és un repositori de Spring Data JPA per a l'entitat Movie. Aquest atribut serà utilitzat per interactuar amb la base de dades i realitzar operacions relacionades amb les pel·lícules.
+    private UserRepository userRepository;
+    private BCryptPasswordEncoder passwordEncoder;
 
-    public Proves(CinemaRepository cinemaRepository, RoomRepository roomRepository, SeatRepository seatRepository, MovieRepository movieRepository) { //Constructor de la classe Proves que rep un CinemaRepository com a paràmetre. Aquest constructor és utilitzat per a la injecció de dependències, on Spring injectarà automàticament una instància de CinemaRepository quan es creï una instància de Proves. Això permet que Proves pugui utilitzar el cinemaRepository per realitzar operacions a la base de dades.
+    public Proves(CinemaRepository cinemaRepository, RoomRepository roomRepository, SeatRepository seatRepository,
+            MovieRepository movieRepository, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) { //Constructor de la classe Proves que rep un CinemaRepository com a paràmetre. Aquest constructor és utilitzat per a la injecció de dependències, on Spring injectarà automàticament una instància de CinemaRepository quan es creï una instància de Proves. Això permet que Proves pugui utilitzar el cinemaRepository per realitzar operacions a la base de dades.
         this.cinemaRepository = cinemaRepository;
         this.roomRepository = roomRepository;
         this.seatRepository = seatRepository;
         this.movieRepository = movieRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional //Anotació @Transactional que indica que el mètode run() serà executat dins d'una transacció. Això significa que totes les operacions realitzades dins d'aquest mètode seran atòmiques, és a dir, o bé es completaran totes amb èxit o bé es revertiran en cas d'error. Aquesta anotació és útil per garantir la integritat de les dades a la base de dades i evitar problemes de concurrència. g
@@ -37,7 +47,18 @@ public class Proves implements CommandLineRunner { //La classe Proves implementa
     public void run(String... args) throws Exception { //Implementació del mètode run() de la interfície CommandLineRunner. Aquest mètode serà executat automàticament per Spring Boot després que l'aplicació s'hagi iniciat. El paràmetre args és un array de Strings que pot contenir arguments de línia de comandes, però en aquest cas no s'estan utilitzant.
         System.out.println("Proves de Spring Boot");
 
-        
+        User admin = userRepository.findByUsername("admin").orElseGet(User::new);
+        admin.setUsername("admin");
+        admin.setPassword(passwordEncoder.encode("admin123"));
+        admin.setRole(Role.ADMIN);
+        userRepository.save(admin);
+
+        User client = userRepository.findByUsername("client").orElseGet(User::new);
+        client.setUsername("client");
+        client.setPassword(passwordEncoder.encode("client123"));
+        client.setRole(Role.CLIENT);
+        userRepository.save(client);
+
         Cinema cinema1 = new Cinema("Cinemes Girona", "Carrer Girona, 175", "Barcelona", "08037");
         cinemaRepository.save(cinema1);
 

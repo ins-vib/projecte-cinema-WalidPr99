@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:replace="~{layout :: layout(~{::content})}">
+    <div th:fragment="content">
+        <section>
+            <h1>Panell d'Administracio</h1>
+            <p>Benvingut administrador</p>
+            <a href="/logout">Logout</a>
+        </section>
+    </div>
+</div>
+
+</body>
+</html>
