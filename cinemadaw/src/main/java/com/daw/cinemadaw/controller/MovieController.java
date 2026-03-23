@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.daw.cinemadaw.domain.cinema.Movie;
 import com.daw.cinemadaw.repository.MovieRepository;
+import com.daw.cinemadaw.repository.ScreeningRepository;
 
 import jakarta.validation.Valid;
 
@@ -19,10 +20,12 @@ import jakarta.validation.Valid;
 @Controller
 public class MovieController {
 
-    private MovieRepository movieRepository;
+    private final MovieRepository movieRepository;
+    private final ScreeningRepository screeningRepository;
 
-    public MovieController(MovieRepository movieRepository) {
+    public MovieController(MovieRepository movieRepository, ScreeningRepository screeningRepository) {
         this.movieRepository = movieRepository;
+        this.screeningRepository = screeningRepository;
     }
 
     @GetMapping("/movies")
@@ -50,6 +53,7 @@ public class MovieController {
 
             Movie movie = optional.get();
             model.addAttribute("movie", movie);
+            model.addAttribute("screenings", screeningRepository.findByMovieId(id));
             return "movies/view-movie";
 
         } else {
@@ -65,6 +69,7 @@ public class MovieController {
         Optional<Movie> optional = movieRepository.findById(id);
 
         if(optional.isPresent()) {
+            screeningRepository.deleteByMovieId(id);
             movieRepository.deleteById(id);
         }
 

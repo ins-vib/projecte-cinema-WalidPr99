@@ -36,6 +36,7 @@
                     <td>
 
                         <a th:href="@{/movie/{id}(id=${movie.id})}">Veure detall</a>
+                        <a th:href="@{/movie/{movieId}/screenings(movieId=${movie.id})}">Projeccions</a>
                         <a th:href="@{/movie/delete/{id}(id=${movie.id})}">Esborrar</a>
                         <a th:href="@{/movie/edit/{id}(id=${movie.id})}">Editar</a>
 

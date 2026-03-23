@@ -49,6 +49,53 @@
 
         </table>
 
+        <h2>Projeccions</h2>
+
+        <a th:href="@{/movie/{movieId}/screening/create(movieId=${movie.id})}">Afegir projeccio</a>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Data i hora</th>
+
+                    <th>Preu</th>
+
+                    <th>Sala</th>
+
+                    <th>Accions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr th:if="${#lists.isEmpty(screenings)}">
+                    <td colspan="4">No hi ha projeccions per a aquesta pel-licula.</td>
+                </tr>
+
+                <tr th:each="screening : ${screenings}">
+
+                    <td th:text="${#temporals.format(screening.dateTime, 'yyyy-MM-dd HH:mm')}">Data i hora</td>
+
+                    <td th:text="${screening.price}">Preu</td>
+
+                    <td th:text="${screening.room != null ? screening.room.name : '-'}">Sala</td>
+
+                    <td>
+                        <a th:href="@{/screening/edit/{id}(id=${screening.id})}">Editar</a>
+                        <a th:href="@{/screening/delete/{id}(id=${screening.id})}">Esborrar</a>
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
     </div>
 
 </div>

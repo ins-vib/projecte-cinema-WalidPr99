@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:replace="~{layout :: layout(~{::content})}">
+
+	<div th:fragment="content">
+
+		<h1>Projeccions de la pel-licula: <span th:text="${movie.title}"></span></h1>
+
+		<a th:href="@{/movie/{movieId}/screening/create(movieId=${movie.id})}">Afegir projeccio</a>
+		<a th:href="@{/movies}">Tornar al llistat de pel-licules</a>
+
+		<table>
+
+			<thead>
+
+				<tr>
+
+					<th>Data i hora</th>
+
+					<th>Preu</th>
+
+					<th>Sala</th>
+
+					<th>Accions</th>
+
+				</tr>
+
+			</thead>
+
+			<tbody>
+
+				<tr th:if="${#lists.isEmpty(screenings)}">
+					<td colspan="4">No hi ha projeccions per a aquesta pel-licula.</td>
+				</tr>
+
+				<tr th:each="screening : ${screenings}">
+
+					<td th:text="${#temporals.format(screening.dateTime, 'yyyy-MM-dd HH:mm')}">Data i hora</td>
+
+					<td th:text="${screening.price}">Preu</td>
+
+					<td th:text="${screening.room != null ? screening.room.name : '-'}">Sala</td>
+
+					<td>
+						<a th:href="@{/screening/edit/{id}(id=${screening.id})}">Editar</a>
+						<a th:href="@{/screening/delete/{id}(id=${screening.id})}">Esborrar</a>
+					</td>
+
+				</tr>
+
+			</tbody>
+
+		</table>
+
+	</div>
+
+</div>
+
+</body>
+</html>
