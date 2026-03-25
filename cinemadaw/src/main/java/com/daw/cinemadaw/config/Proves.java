@@ -30,16 +30,16 @@ public class Proves implements CommandLineRunner { //La classe Proves implementa
     private SeatRepository seatRepository; //Atribut seatRepository de tipus SeatRepository, que és un repositori de Spring Data JPA per a l'entitat Seat. Aquest atribut serà utilitzat per interactuar amb la base de dades i realitzar operacions relacionades amb els seients.
     private MovieRepository movieRepository; //Atribut movieRepository de tipus MovieRepository, que és un repositori de Spring Data JPA per a l'entitat Movie. Aquest atribut serà utilitzat per interactuar amb la base de dades i realitzar operacions relacionades amb les pel·lícules.
     private UserRepository userRepository;
-    private BCryptPasswordEncoder passwordEncoder;
+    private BCryptPasswordEncoder encoder;
 
     public Proves(CinemaRepository cinemaRepository, RoomRepository roomRepository, SeatRepository seatRepository,
-            MovieRepository movieRepository, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) { //Constructor de la classe Proves que rep un CinemaRepository com a paràmetre. Aquest constructor és utilitzat per a la injecció de dependències, on Spring injectarà automàticament una instància de CinemaRepository quan es creï una instància de Proves. Això permet que Proves pugui utilitzar el cinemaRepository per realitzar operacions a la base de dades.
+            MovieRepository movieRepository, UserRepository userRepository, BCryptPasswordEncoder encoder) { //Constructor de la classe Proves que rep un CinemaRepository com a paràmetre. Aquest constructor és utilitzat per a la injecció de dependències, on Spring injectarà automàticament una instància de CinemaRepository quan es creï una instància de Proves. Això permet que Proves pugui utilitzar el cinemaRepository per realitzar operacions a la base de dades.
         this.cinemaRepository = cinemaRepository;
         this.roomRepository = roomRepository;
         this.seatRepository = seatRepository;
         this.movieRepository = movieRepository;
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.encoder = encoder;
     }
 
     @Transactional //Anotació @Transactional que indica que el mètode run() serà executat dins d'una transacció. Això significa que totes les operacions realitzades dins d'aquest mètode seran atòmiques, és a dir, o bé es completaran totes amb èxit o bé es revertiran en cas d'error. Aquesta anotació és útil per garantir la integritat de les dades a la base de dades i evitar problemes de concurrència. g
@@ -49,13 +49,13 @@ public class Proves implements CommandLineRunner { //La classe Proves implementa
 
         User admin = userRepository.findByUsername("admin").orElseGet(User::new);
         admin.setUsername("admin");
-        admin.setPassword(passwordEncoder.encode("admin123"));
+        admin.setPassword(encoder.encode("admin123"));
         admin.setRole(Role.ADMIN);
         userRepository.save(admin);
 
         User client = userRepository.findByUsername("client").orElseGet(User::new);
         client.setUsername("client");
-        client.setPassword(passwordEncoder.encode("client123"));
+        client.setPassword(encoder.encode("client123"));
         client.setRole(Role.CLIENT);
         userRepository.save(client);
 

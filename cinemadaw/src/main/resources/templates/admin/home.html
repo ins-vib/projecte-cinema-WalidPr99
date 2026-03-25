@@ -7,7 +7,9 @@
         <section>
             <h1>Panell d'Administracio</h1>
             <p>Benvingut administrador</p>
-            <a href="/logout">Logout</a>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit">Tancar sessio</button>
+            </form>
         </section>
     </div>
 </div>

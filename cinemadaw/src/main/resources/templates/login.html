@@ -1,27 +1,267 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
+<style>
+    :root {
+        --bg-1: #f6f8fb;
+        --bg-2: #e8eef7;
+        --card: #ffffff;
+        --line: #d4dce7;
+        --text: #1f2a37;
+        --muted: #5f6b7a;
+        --accent: #0f766e;
+        --accent-2: #115e59;
+        --danger: #b91c1c;
+        --ok: #166534;
+    }
 
-<div th:replace="~{layout :: layout(~{::content})}">
-    <div th:fragment="content">
-        <section>
-            <h2>Login</h2>
+    * {
+        box-sizing: border-box;
+    }
 
-            <p th:if="${param.error}" style="color: #b00020;">Usuari o contrasenya incorrectes.</p>
-            <p th:if="${param.logout}" style="color: #2e7d32;">Has tancat sessio correctament.</p>
+    body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        color: var(--text);
+        background: radial-gradient(circle at 0% 0%, #ffffff, var(--bg-1) 35%, var(--bg-2) 100%);
+        min-height: 100vh;
+    }
 
-            <form th:action="@{/login}" method="post">
-                <label for="username">Usuari</label>
-                <input id="username" type="text" name="username" required />
+    .wrapper {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 24px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
 
-                <label for="password">Contrasenya</label>
-                <input id="password" type="password" name="password" required />
+    .hero {
+        background: linear-gradient(120deg, #ffffff 20%, #edf4ff 100%);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 24px;
+    }
 
-                <button type="submit">Entrar</button>
-            </form>
-        </section>
-    </div>
-</div>
+    .hero h1 {
+        margin: 0;
+        font-size: 2rem;
+    }
+
+    .hero p {
+        margin: 10px 0 0;
+        color: var(--muted);
+    }
+
+    .content {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 20px;
+    }
+
+    .auth-widget > input {
+        display: none;
+    }
+
+    .tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    .tabs label {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 8px 14px;
+        cursor: pointer;
+        color: var(--muted);
+        font-weight: 600;
+    }
+
+    #tab-login:checked ~ .tabs label[for="tab-login"],
+    #tab-register:checked ~ .tabs label[for="tab-register"] {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: #ecfdf5;
+    }
+
+    .panel {
+        display: none;
+    }
+
+    #tab-login:checked ~ .panels .panel-login,
+    #tab-register:checked ~ .panels .panel-register {
+        display: block;
+    }
+
+    .message {
+        border-radius: 10px;
+        padding: 10px 12px;
+        margin-bottom: 12px;
+        border: 1px solid;
+        font-size: 0.95rem;
+    }
+
+    .error {
+        color: var(--danger);
+        background: #fef2f2;
+        border-color: #fecaca;
+    }
+
+    .ok {
+        color: var(--ok);
+        background: #f0fdf4;
+        border-color: #bbf7d0;
+    }
+
+    form {
+        display: grid;
+        gap: 10px;
+    }
+
+    label {
+        font-size: 0.95rem;
+        font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 1rem;
+        color: var(--text);
+    }
+
+    button {
+        margin-top: 4px;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 14px;
+        color: #fff;
+        background: var(--accent);
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: var(--accent-2);
+    }
+
+    .news-list {
+        display: grid;
+        gap: 10px;
+    }
+
+    .news-item {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 12px;
+        background: #f9fbff;
+    }
+
+    .news-item h3 {
+        margin: 0 0 6px;
+        font-size: 1rem;
+    }
+
+    .news-item p {
+        margin: 0;
+        color: var(--muted);
+    }
+
+    @media (min-width: 900px) {
+        .content {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+</style>
+
+<main class="wrapper">
+    <section class="hero">
+        <h1>Cinema DAW</h1>
+        <p>Inicia sessio com administrador o registra't com client per consultar pel licules i sessions.</p>
+    </section>
+
+    <section class="content">
+        <article class="card">
+            <h2>Iniciar sessio i registrar't</h2>
+
+            <div class="auth-widget">
+                <input id="tab-login" type="radio" name="authTab" checked>
+                <input id="tab-register" type="radio" name="authTab">
+
+                <div class="tabs">
+                    <label for="tab-login">Iniciar sessio</label>
+                    <label for="tab-register">Registrar't</label>
+                </div>
+
+                <div class="panels">
+                    <div class="panel panel-login">
+                        <p th:if="${param.error}" class="message error">Usuari o contrasenya incorrectes.</p>
+                        <p th:if="${param.logout}" class="message ok">Has tancat sessio correctament.</p>
+                        <p th:if="${param.registered}" class="message ok">Client registrat correctament. Ja pots iniciar sessio.</p>
+
+                        <form th:action="@{/login}" method="post">
+                            <label for="login-username">Usuari</label>
+                            <input id="login-username" type="text" name="username" required>
+
+                            <label for="login-password">Contrasenya</label>
+                            <input id="login-password" type="password" name="password" required>
+
+                            <button type="submit">Entrar</button>
+                        </form>
+                    </div>
+
+                    <div class="panel panel-register">
+                        <p th:if="${param.registerError == 'exists'}" class="message error">Aquest usuari ja existeix.</p>
+                        <p th:if="${param.registerError == 'empty'}" class="message error">Usuari i contrasenya son obligatoris.</p>
+
+                        <form th:action="@{/register}" method="post">
+                            <label for="register-username">Nom d'usuari</label>
+                            <input id="register-username" type="text" name="username" required>
+
+                            <label for="register-password">Contrasenya</label>
+                            <input id="register-password" type="password" name="password" required>
+
+                            <button type="submit">Registrar't</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="card">
+            <h2>Noticies</h2>
+            <div class="news-list">
+                <div class="news-item" th:each="news : ${llista}">
+                    <h3 th:text="${news.headline}"></h3>
+                    <p th:text="${news.body}"></p>
+                </div>
+            </div>
+        </article>
+    </section>
+</main>
+
+<script>
+    (function () {
+        var params = new URLSearchParams(window.location.search);
+        if (params.has("registerError")) {
+            var registerTab = document.getElementById("tab-register");
+            if (registerTab) {
+                registerTab.checked = true;
+            }
+        }
+    })();
+</script>
 
 </body>
 </html>

@@ -15,7 +15,9 @@
                 <h3 th:text="${movie.title}"></h3>
             </div>
 
-            <a href="/logout">Logout</a>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit">Tancar sessio</button>
+            </form>
         </section>
     </div>
 </div>
