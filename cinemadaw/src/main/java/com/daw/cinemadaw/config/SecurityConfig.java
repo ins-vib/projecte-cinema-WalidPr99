@@ -37,6 +37,9 @@ public class SecurityConfig {
             // Panell de client visible per CLIENT i ADMIN
             .requestMatchers("/client", "/client/**").hasAnyRole("CLIENT", "ADMIN")
 
+            
+            .requestMatchers("/cookies", "/cookies/**").hasAnyRole("CLIENT", "ADMIN")
+
             // Rutes de manteniment (crear/editar/esborrar) només ADMIN
             .requestMatchers(
                 "/cinema/create",
@@ -98,6 +101,8 @@ public class SecurityConfig {
         );
 
         return http.build();
+
+
     }
 
     // Bean per encriptar contrasenyes amb BCrypt
