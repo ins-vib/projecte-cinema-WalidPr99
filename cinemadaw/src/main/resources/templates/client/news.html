@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:replace="~{layout :: layout(~{::content})}">
+    <div th:fragment="content">
+
+        <section>
+            <h1>Noticies</h1>
+
+            <div th:if="${#lists.isEmpty(llista)}">
+                <p>No hi ha noticies disponibles.</p>
+            </div>
+
+            <div th:each="news : ${llista}">
+                <h3 th:text="${news.headline}">Titular</h3>
+                <p th:text="${news.body}">Cos de la noticia</p>
+            </div>
+
+        </section>
+
+    </div>
+</div>
+
+</body>
+</html>

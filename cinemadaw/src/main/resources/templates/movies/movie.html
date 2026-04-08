@@ -9,7 +9,7 @@
 
         <h1>Llistat de pel·lícules</h1>
 
-        <a th:href="@{/movie/create}">Afegir pel·lícula</a>
+        <a th:if="${isAdmin}" th:href="@{/movie/create}">Afegir pel·lícula</a>
 
         <table>
 
@@ -37,8 +37,8 @@
 
                         <a th:href="@{/movie/{id}(id=${movie.id})}">Veure detall</a>
                         <a th:href="@{/movie/{movieId}/screenings(movieId=${movie.id})}">Projeccions</a>
-                        <a th:href="@{/movie/delete/{id}(id=${movie.id})}">Esborrar</a>
-                        <a th:href="@{/movie/edit/{id}(id=${movie.id})}">Editar</a>
+                        <a th:if="${isAdmin}" th:href="@{/movie/delete/{id}(id=${movie.id})}">Esborrar</a>
+                        <a th:if="${isAdmin}" th:href="@{/movie/edit/{id}(id=${movie.id})}">Editar</a>
 
                     </td>
 

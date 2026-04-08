@@ -9,7 +9,7 @@
 
         <h1>Llistat de cinemes</h1>
 
-        <a th:href="@{/cinema/create}">Afegir cinema</a>
+        <a th:if="${isAdmin}" th:href="@{/cinema/create}">Afegir cinema</a>
 
         <table>
 
@@ -36,8 +36,8 @@
                     <td>
 
                         <a th:href="@{/cinema/{id}(id=${cinema.id})}">Veure detall</a>
-                        <a th:href="@{/cinema/delete/{id}(id=${cinema.id})}">Esborrar</a>
-                        <a th:href="@{/cinema/edit/{id}(id=${cinema.id})}">Editar</a>
+                        <a th:if="${isAdmin}" th:href="@{/cinema/delete/{id}(id=${cinema.id})}">Esborrar</a>
+                        <a th:if="${isAdmin}" th:href="@{/cinema/edit/{id}(id=${cinema.id})}">Editar</a>
 
                     </td>
 

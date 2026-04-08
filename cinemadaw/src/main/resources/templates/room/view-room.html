@@ -9,7 +9,7 @@
 
         <h1>Detalls de la sala: <span th:text="${room.name}"></span></h1>
 
-        <a th:href="@{/room/edit/{id}(id=${room.id})}">Editar sala</a>
+        <a th:if="${isAdmin}" th:href="@{/room/edit/{id}(id=${room.id})}">Editar sala</a>
 
         <table>
 

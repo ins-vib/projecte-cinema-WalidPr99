@@ -5,15 +5,31 @@
 <div th:replace="~{layout :: layout(~{::content})}">
     <div th:fragment="content">
         <section>
-            <h1>Pellicules disponibles</h1>
+            <h1>Cartelera</h1>
 
             <div th:if="${#lists.isEmpty(movies)}">
                 <p>No hi ha pellicules disponibles.</p>
             </div>
 
-            <div th:each="movie : ${movies}">
-                <h3 th:text="${movie.title}"></h3>
-            </div>
+            <table th:if="${not #lists.isEmpty(movies)}">
+                <thead>
+                    <tr>
+                        <th>Titol</th>
+                        <th>Genere</th>
+                        <th>Consulta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="movie : ${movies}">
+                        <td th:text="${movie.title}">Titol</td>
+                        <td th:text="${movie.genre}">Genere</td>
+                        <td>
+                            <a th:href="@{/movie/{id}(id=${movie.id})}">Detall</a>
+                            <a th:href="@{/movie/{movieId}/screenings(movieId=${movie.id})}">Projeccions</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
             <form th:action="@{/logout}" method="post">
                 <button type="submit">Tancar sessio</button>

@@ -69,6 +69,12 @@ public class HomeController {
         return "client/home";
     }
 
+    @GetMapping("/client/news")
+    public String clientNews(Model model) {
+        model.addAttribute("llista", new ArrayList<>(newsService.getNews()));
+        return "client/news";
+    }
+
     
 
 }

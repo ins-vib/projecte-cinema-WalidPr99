@@ -49,9 +49,19 @@
 
         <br>
 
-        <a th:href="@{/seat/edit/{id}(id=${seat.id})}">Editar seient</a>
-        |
-        <a th:href="@{/seat/delete/{id}(id=${seat.id})}" onclick="return confirm('Vols eliminar aquest seient?');">Eliminar seient</a>
+        <p th:if="${alreadyReserved}">Aquest seient ja ha sigut reservat per un altre usuari.</p>
+
+        <form th:if="${isClient and !isAdmin and seat.state}" th:action="@{/seat/{id}/reserve(id=${seat.id})}" method="post">
+            <button type="submit">Reservar seient</button>
+        </form>
+
+        <p th:if="${isClient and !isAdmin and !seat.state}">Aquest seient no esta disponible.</p>
+
+        <span th:if="${isAdmin}">
+            <a th:href="@{/seat/edit/{id}(id=${seat.id})}">Editar seient</a>
+            |
+            <a th:href="@{/seat/delete/{id}(id=${seat.id})}" onclick="return confirm('Vols eliminar aquest seient?');">Eliminar seient</a>
+        </span>
 
         <br><br>
 
