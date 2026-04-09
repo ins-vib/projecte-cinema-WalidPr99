@@ -10,35 +10,48 @@
 		<h1>Mapa de seients</h1>
 		<h2 th:text="${room.name} + ' - Capacitat: ' + ${room.capacity}">Sala i capacitat</h2>
 
-		<p th:if="${reserveSuccess}">Reserva completada. El seient reservat ja no es pot seleccionar.</p>
+		<p th:if="${reservedCount > 0}">
+			Reserva completada: <strong th:text="${reservedCount}">0</strong> seients reservats.
+		</p>
+		<p th:if="${skippedCount > 0}">
+			<strong th:text="${skippedCount}">0</strong> seients no s'han pogut reservar perque ja no estaven disponibles.
+		</p>
+		<p th:if="${noSelection}">Has de seleccionar almenys un seient abans de confirmar la reserva.</p>
 
-		<svg xmlns="http://www.w3.org/2000/svg"
-			 th:attr="viewBox='0 0 ' + ${svgWidth} + ' ' + ${svgHeight}"
-			 style="width: 100%; max-width: 420px; height: auto; border: 1px solid #ddd; border-radius: 6px; padding: 8px; background-color: #fff;">
+		<form class="seat-reservation-form" th:action="@{/seats/{id}/reserve(id=${room.id})}" method="post">
+			<div class="seat-map"
+				 th:style="'grid-template-columns: repeat(' + ${seatsPerRow} + ', minmax(44px, 1fr));'">
 
-			<g th:each="seat : ${llista}">
+				<label th:each="seat : ${llista}"
+					   class="seat-option"
+					   th:classappend="${!seat.state} ? ' is-reserved' : (${isClient and !isAdmin} ? ' is-selectable' : ' is-readonly')"
+					   th:style="'grid-column:' + (${seat.x} + 1) + ';grid-row:' + (${seat.y} + 1) + ';'">
 
-				<a th:if="${seat.state}" th:href="@{/seat/{id}(id=${seat.id})}">
-					<svg class="seat" viewBox="0 0 491.5 491.5" width="16" height="16"
-						 th:x="${seat.x * 34 + 8}" th:y="${seat.y * 34 + 8}"
-						 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-						<title th:text="'Fila ' + ${seat.seatRow} + ' Seient ' + ${seat.number} + ' Disponible'"></title>
-						<path d="M449.149,216.2v-99c0-64.7-53.4-117.2-119.1-117.2h-168.4c-65.6,0-119.1,52.6-119.1,117.2v99c-25,12.1-42.5,37.5-42.5,67.1v208.2h163.8V471h163.8v20.5h163.8V283.3C491.649,253.7,474.149,228.2,449.149,216.2z M122.949,307.2v41v102.4h-81.9V283.3c0-16,11.2-29.4,26.2-32.8h0.2c2.6-0.6,5-0.9,7.3-0.9h14.4c18.6,0,33.8,15.1,33.8,33.8V307.2z M327.749,348.1h-163.8v-41h163.8V348.1z M368.749,450.5V348.1v-41v-23.9c0-18.6,15.1-33.8,33.8-33.8h14.3c2.3,0,4.7,0.3,7.3,0.9h0.2c15,3.4,26.2,16.8,26.2,32.8v167.4H368.749z" fill="#5d7f5f"/>
+					<input class="seat-checkbox"
+						   type="checkbox"
+						   name="seatIds"
+						   th:value="${seat.id}"
+						   th:disabled="${!seat.state or !isClient or isAdmin}"
+						   th:attr="aria-label='Seient ' + ${seat.number}" />
+
+					<svg class="seat-shape" viewBox="0 0 491.5 491.5" width="22" height="22" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+						<title th:text="'Seient ' + ${seat.number} + (${seat.state} ? ' Disponible' : ' Reservat')"></title>
+						<path class="seat-path" d="M449.149,216.2v-99c0-64.7-53.4-117.2-119.1-117.2h-168.4c-65.6,0-119.1,52.6-119.1,117.2v99c-25,12.1-42.5,37.5-42.5,67.1v208.2h163.8V471h163.8v20.5h163.8V283.3C491.649,253.7,474.149,228.2,449.149,216.2z M122.949,307.2v41v102.4h-81.9V283.3c0-16,11.2-29.4,26.2-32.8h0.2c2.6-0.6,5-0.9,7.3-0.9h14.4c18.6,0,33.8,15.1,33.8,33.8V307.2z M327.749,348.1h-163.8v-41h163.8V348.1z M368.749,450.5V348.1v-41v-23.9c0-18.6,15.1-33.8,33.8-33.8h14.3c2.3,0,4.7,0.3,7.3,0.9h0.2c15,3.4,26.2,16.8,26.2,32.8v167.4H368.749z"/>
 					</svg>
-				</a>
 
-				<svg th:if="${!seat.state}" class="seat" viewBox="0 0 491.5 491.5" width="16" height="16"
-					 th:x="${seat.x * 34 + 8}" th:y="${seat.y * 34 + 8}"
-					 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-					<title th:text="'Fila ' + ${seat.seatRow} + ' Seient ' + ${seat.number} + ' Reservat'"></title>
-					<path d="M449.149,216.2v-99c0-64.7-53.4-117.2-119.1-117.2h-168.4c-65.6,0-119.1,52.6-119.1,117.2v99c-25,12.1-42.5,37.5-42.5,67.1v208.2h163.8V471h163.8v20.5h163.8V283.3C491.649,253.7,474.149,228.2,449.149,216.2z M122.949,307.2v41v102.4h-81.9V283.3c0-16,11.2-29.4,26.2-32.8h0.2c2.6-0.6,5-0.9,7.3-0.9h14.4c18.6,0,33.8,15.1,33.8,33.8V307.2z M327.749,348.1h-163.8v-41h163.8V348.1z M368.749,450.5V348.1v-41v-23.9c0-18.6,15.1-33.8,33.8-33.8h14.3c2.3,0,4.7,0.3,7.3,0.9h0.2c15,3.4,26.2,16.8,26.2,32.8v167.4H368.749z" fill="#b5b5b5"/>
-				</svg>
+					<span class="seat-code" th:text="${seat.number}">1</span>
+				</label>
+			</div>
 
-			</g>
+			<div class="seat-actions">
+				<button th:if="${isClient and !isAdmin}" type="submit">Confirmar reserva</button>
+				<a th:if="${isClient and !isAdmin}" class="seat-back-link" th:href="@{/client}">Tornar a Cartelera</a>
+				<a th:if="${isAdmin and room.cinema != null}" class="seat-back-link" th:href="@{/cinema/{id}(id=${room.cinema.id})}">Tornar al cinema</a>
+				<a th:if="${isAdmin and room.cinema == null}" class="seat-back-link" th:href="@{/home}">Tornar</a>
+			</div>
+		</form>
 
-		</svg>
-
-		<p>Verd: disponible | Gris: reservat</p>
+		<p>Verd: disponible | Taronja: seleccionat | Gris: reservat o no seleccionable</p>
 
 		<div th:if="${isAdmin}">
 			<h3>Gestio de seients</h3>
@@ -54,6 +67,114 @@
 				</li>
 			</ul>
 		</div>
+
+		<style>
+			.seat-reservation-form {
+				display: flex;
+				flex-direction: column;
+				gap: 14px;
+				max-width: min(96vw, 980px);
+			}
+
+			.seat-map {
+				display: grid;
+				gap: 6px;
+				padding: 12px;
+				border: 1px solid #ddd;
+				border-radius: 8px;
+				background-color: #fff;
+				overflow-x: auto;
+			}
+
+			.seat-option {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: 2px;
+				padding: 3px 1px;
+				border-radius: 8px;
+				border: 1px solid transparent;
+			}
+
+			.seat-option.is-selectable {
+				cursor: pointer;
+			}
+
+			.seat-option.is-selectable:hover {
+				background-color: #f3faf3;
+				border-color: #8ab58f;
+			}
+
+			.seat-option.is-reserved,
+			.seat-option.is-readonly {
+				opacity: 0.95;
+			}
+
+			.seat-checkbox {
+				margin: 0;
+				width: 12px;
+				height: 12px;
+				accent-color: #4f8253;
+			}
+
+			.seat-checkbox:disabled {
+				cursor: not-allowed;
+			}
+
+			.seat-path {
+				fill: #5d7f5f;
+				transition: fill 0.18s ease-in-out;
+			}
+
+			.seat-option.is-reserved .seat-path,
+			.seat-option.is-readonly .seat-path {
+				fill: #b5b5b5;
+			}
+
+			.seat-checkbox:checked + .seat-shape .seat-path {
+				fill: #ca7a1a;
+			}
+
+			.seat-code {
+				font-size: 10px;
+				line-height: 1;
+			}
+
+			.seat-actions button {
+				padding: 8px 14px;
+				border: 1px solid #2f6a34;
+				border-radius: 6px;
+				background-color: #3f8245;
+				color: #fff;
+				cursor: pointer;
+			}
+
+			.seat-actions button:hover {
+				background-color: #346a38;
+			}
+
+			.seat-actions {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				flex-wrap: wrap;
+			}
+
+			.seat-back-link {
+				padding: 8px 12px;
+				border: 1px solid #aaa;
+				border-radius: 6px;
+				background-color: #f7f7f7;
+				text-decoration: none;
+				color: #333;
+			}
+
+			.seat-back-link:hover {
+				background-color: #ececec;
+				text-decoration: none;
+			}
+		</style>
 
         
 	</div>

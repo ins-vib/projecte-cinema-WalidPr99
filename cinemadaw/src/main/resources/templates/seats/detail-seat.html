@@ -51,11 +51,9 @@
 
         <p th:if="${alreadyReserved}">Aquest seient ja ha sigut reservat per un altre usuari.</p>
 
-        <form th:if="${isClient and !isAdmin and seat.state}" th:action="@{/seat/{id}/reserve(id=${seat.id})}" method="post">
-            <button type="submit">Reservar seient</button>
-        </form>
-
-        <p th:if="${isClient and !isAdmin and !seat.state}">Aquest seient no esta disponible.</p>
+        <p th:if="${isClient and !isAdmin}">
+            La reserva es fa des del mapa de seients, on pots seleccionar-ne diversos al mateix temps.
+        </p>
 
         <span th:if="${isAdmin}">
             <a th:href="@{/seat/edit/{id}(id=${seat.id})}">Editar seient</a>

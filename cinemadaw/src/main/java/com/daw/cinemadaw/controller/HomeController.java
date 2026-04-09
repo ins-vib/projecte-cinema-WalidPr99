@@ -1,5 +1,8 @@
 package com.daw.cinemadaw.controller;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -8,9 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.daw.cinemadaw.domain.cinema.Movie;
+import com.daw.cinemadaw.domain.cinema.Screening;
 import com.daw.cinemadaw.domain.cinema.user.Role;
 import com.daw.cinemadaw.domain.cinema.user.User;
 import com.daw.cinemadaw.repository.MovieRepository;
+import com.daw.cinemadaw.repository.ScreeningRepository;
 import com.daw.cinemadaw.repository.UserRepository;
 import com.daw.cinemadaw.service.NewsService;
 
@@ -19,13 +25,15 @@ public class HomeController {
 
     private final NewsService newsService;
     private final MovieRepository movieRepository;
+    private final ScreeningRepository screeningRepository;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
 
-    public HomeController(NewsService newsService, MovieRepository movieRepository, UserRepository userRepository,
-            BCryptPasswordEncoder encoder) {
+    public HomeController(NewsService newsService, MovieRepository movieRepository, ScreeningRepository screeningRepository,
+            UserRepository userRepository, BCryptPasswordEncoder encoder) {
         this.newsService = newsService;
         this.movieRepository = movieRepository;
+        this.screeningRepository = screeningRepository;
         this.userRepository = userRepository;
         this.encoder = encoder;
     }
@@ -65,7 +73,15 @@ public class HomeController {
 
     @GetMapping("/client")
     public String client(Model model) {
-        model.addAttribute("movies", movieRepository.findAll());
+        List<Movie> movies = movieRepository.findAll();
+        Map<Long, List<Screening>> screeningsByMovie = new LinkedHashMap<>();
+
+        for (Movie movie : movies) {
+            screeningsByMovie.put(movie.getId(), screeningRepository.findByMovieId(movie.getId()));
+        }
+
+        model.addAttribute("movies", movies);
+        model.addAttribute("screeningsByMovie", screeningsByMovie);
         return "client/home";
     }
 

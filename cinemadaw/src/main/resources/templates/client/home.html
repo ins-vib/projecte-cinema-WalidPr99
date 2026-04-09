@@ -16,6 +16,7 @@
                     <tr>
                         <th>Titol</th>
                         <th>Genere</th>
+                        <th>Cinemes i reserva</th>
                         <th>Consulta</th>
                     </tr>
                 </thead>
@@ -24,12 +25,33 @@
                         <td th:text="${movie.title}">Titol</td>
                         <td th:text="${movie.genre}">Genere</td>
                         <td>
+                            <span th:if="${#lists.isEmpty(screeningsByMovie[movie.id])}">No hi ha projeccions disponibles.</span>
+
+                            <p th:each="screening : ${screeningsByMovie[movie.id]}" class="screening-inline">
+                                <span th:text="${screening.room != null and screening.room.cinema != null ? screening.room.cinema.name : 'Cinema no disponible'}">Cinema</span>
+                                <span th:if="${screening.room != null}" th:text="' - ' + ${screening.room.name}"> - Sala</span>
+                                <span th:if="${screening.dateTime != null}" th:text="' (' + ${#temporals.format(screening.dateTime, 'dd/MM HH:mm')} + ')'">(00/00 00:00)</span>
+                                <a th:if="${screening.room != null}" th:href="@{/seats/{id}(id=${screening.room.id})}">Reservar</a>
+                            </p>
+                        </td>
+                        <td>
                             <a th:href="@{/movie/{id}(id=${movie.id})}">Detall</a>
                             <a th:href="@{/movie/{movieId}/screenings(movieId=${movie.id})}">Projeccions</a>
                         </td>
                     </tr>
                 </tbody>
             </table>
+
+            <style>
+                .screening-inline {
+                    margin: 0 0 6px 0;
+                    font-size: 0.9em;
+                }
+
+                .screening-inline:last-child {
+                    margin-bottom: 0;
+                }
+            </style>
 
             <form th:action="@{/logout}" method="post">
                 <button type="submit">Tancar sessio</button>

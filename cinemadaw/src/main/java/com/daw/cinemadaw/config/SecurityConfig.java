@@ -38,7 +38,7 @@ public class SecurityConfig {
             .requestMatchers("/client", "/client/**").hasAnyRole("CLIENT", "ADMIN")
 
             // Reserva de seients només per CLIENT
-            .requestMatchers("/seat/*/reserve").hasRole("CLIENT")
+            .requestMatchers("/seat/*/reserve", "/seats/*/reserve").hasRole("CLIENT")
 
             
             .requestMatchers("/cookies", "/cookies/**").hasAnyRole("CLIENT", "ADMIN")
