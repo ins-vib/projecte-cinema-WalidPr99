@@ -29,7 +29,7 @@ public class SecurityConfig {
 
             // Accés públic
             .requestMatchers("/h2-console/**").permitAll()
-            .requestMatchers("/", "/home", "/login", "/register", "/css/**", "/CSS/**").permitAll()
+            .requestMatchers("/", "/home", "/login", "/register", "/css/**", "/CSS/**", "/session", "/session/**").permitAll()
 
             // Panell d'administració només per ADMIN
             .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")

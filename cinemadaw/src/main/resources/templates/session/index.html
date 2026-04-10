@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestio de la Sessio</title>
+</head>
+<body>
+
+    <h1>Introduir Nom d'Usuari</h1>
+    <form th:action="@{/session/setSessionData}" method="get">
+        <label for="username">Nom d'usuari:</label>
+        <input type="text" id="username" name="username" required>
+        <button type="submit">Desar a la sessio</button>
+    </form>
+
+</body>
+</html>
