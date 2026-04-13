@@ -1,5 +1,6 @@
 package com.daw.cinemadaw.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -16,9 +17,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.daw.cinemadaw.domain.cinema.Comanda;
+import com.daw.cinemadaw.domain.cinema.OrderStatus;
 import com.daw.cinemadaw.domain.cinema.Screening;
 import com.daw.cinemadaw.domain.cinema.Seat;
+import com.daw.cinemadaw.domain.cinema.Ticket;
 import com.daw.cinemadaw.dto.CartEntryDTO;
+import com.daw.cinemadaw.repository.ComandaRepository;
 import com.daw.cinemadaw.repository.ScreeningRepository;
 import com.daw.cinemadaw.repository.SeatRepository;
 import com.daw.cinemadaw.service.CartSessionService;
@@ -31,12 +36,14 @@ public class CartController {
     private final ScreeningRepository screeningRepository;
     private final SeatRepository seatRepository;
     private final CartSessionService cartSessionService;
+    private final ComandaRepository comandaRepository;
 
     public CartController(ScreeningRepository screeningRepository, SeatRepository seatRepository,
-                          CartSessionService cartSessionService) {
+                          CartSessionService cartSessionService, ComandaRepository comandaRepository) {
         this.screeningRepository = screeningRepository;
         this.seatRepository = seatRepository;
         this.cartSessionService = cartSessionService;
+        this.comandaRepository = comandaRepository;
     }
 
     @GetMapping("/client/cart")
@@ -118,6 +125,15 @@ public class CartController {
         int reservedCount = 0;
         int skippedCount = 0;
 
+        Comanda comanda = new Comanda();
+        comanda.setDateTime(LocalDateTime.now());
+        comanda.setClientName(authentication.getName());
+        comanda.setEmail(authentication.getName());
+        comanda.setStatus(OrderStatus.CONFIRMADA);
+        comanda.setTotalAmount(0);
+
+        List<Ticket> tickets = new ArrayList<>();
+
         for (Map.Entry<Long, ArrayList<Long>> cartEntry : cart.entrySet()) {
             Long screeningId = cartEntry.getKey();
             ArrayList<Long> seatIds = new ArrayList<>(new LinkedHashSet<>(cartEntry.getValue()));
@@ -132,23 +148,30 @@ public class CartController {
                 continue;
             }
 
-            Long roomId = optionalScreening.get().getRoom().getId();
+            Screening screening = optionalScreening.get();
+            Long roomId = screening.getRoom().getId();
             List<Seat> seats = seatRepository.findByRoomIdAndIdIn(roomId, seatIds);
 
-            List<Seat> seatsToReserve = new ArrayList<>();
             for (Seat seat : seats) {
                 if (seat.isState()) {
                     seat.setState(false);
-                    seatsToReserve.add(seat);
+                    Ticket ticket = new Ticket(screening.getPrice(), seat, screening, comanda);
+                    tickets.add(ticket);
+                    reservedCount++;
+                } else {
+                    skippedCount++;
                 }
             }
 
-            if (!seatsToReserve.isEmpty()) {
-                seatRepository.saveAll(seatsToReserve);
-            }
+            seatRepository.saveAll(seats);
+        }
 
-            reservedCount += seatsToReserve.size();
-            skippedCount += seatIds.size() - seatsToReserve.size();
+        if (reservedCount > 0) {
+            double total = tickets.stream().mapToDouble(Ticket::getPrice).sum();
+            comanda.setTotalAmount(total);
+            comanda.setTickets(tickets);
+            tickets.forEach(t -> t.setComanda(comanda));
+            comandaRepository.save(comanda);
         }
 
         cartSessionService.clearCart(session);

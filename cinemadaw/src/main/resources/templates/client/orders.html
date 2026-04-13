@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:replace="~{layout :: layout(~{::content})}">
+    <div th:fragment="content">
+        <section>
+            <h1>Les meves comandes</h1>
+
+            <div th:if="${#lists.isEmpty(orders)}">
+                <p>No tens cap comanda encara.</p>
+                <a th:href="@{/client}">Anar a la cartelera</a>
+            </div>
+
+            <div th:if="${not #lists.isEmpty(orders)}">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Data i hora</th>
+                            <th>Import total</th>
+                            <th>Entrades</th>
+                            <th>Estat</th>
+                            <th>Accio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="order : ${orders}">
+                            <td th:text="${order.id}">1</td>
+                            <td th:text="${order.dateTime != null ? #temporals.format(order.dateTime, 'dd/MM/yyyy HH:mm') : '-'}">00/00/0000 00:00</td>
+                            <td th:text="${#numbers.formatDecimal(order.totalAmount, 1, 2)} + ' EUR'">0.00 EUR</td>
+                            <td th:text="${#lists.size(order.tickets)}">0</td>
+                            <td th:text="${order.status}">CONFIRMADA</td>
+                            <td>
+                                <a th:href="@{/client/order/{id}(id=${order.id})}">Veure detall</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <a th:href="@{/client}">Tornar a cartelera</a>
+        </section>
+    </div>
+</div>
+
+</body>
+</html>

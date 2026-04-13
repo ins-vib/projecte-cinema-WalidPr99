@@ -228,6 +228,7 @@ section div {
             <a th:if="${isAdmin}" href="/movies">Pellicules</a>
             <a th:if="${isClient and !isAdmin}" href="/client">Cartelera</a>
             <a th:if="${isClient and !isAdmin}" href="/client/cart">Carret</a>
+            <a th:if="${isClient and !isAdmin}" href="/client/orders">Les meves comandes</a>
             <a th:if="${isClient and !isAdmin}" href="/client/news">Noticies</a>
         </nav>
         <hr>

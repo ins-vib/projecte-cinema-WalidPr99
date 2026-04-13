@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:replace="~{layout :: layout(~{::content})}">
+    <div th:fragment="content">
+        <section>
+            <h1>Comanda #<span th:text="${comanda.id}">1</span></h1>
+
+            <div>
+                <p><strong>Client:</strong> <span th:text="${comanda.clientName}">client</span></p>
+                <p><strong>Correu:</strong> <span th:text="${comanda.email}">email</span></p>
+                <p><strong>Data i hora:</strong>
+                    <span th:text="${comanda.dateTime != null ? #temporals.format(comanda.dateTime, 'dd/MM/yyyy HH:mm') : '-'}">00/00/0000 00:00</span>
+                </p>
+                <p><strong>Import total:</strong>
+                    <span th:text="${#numbers.formatDecimal(comanda.totalAmount, 1, 2)} + ' EUR'">0.00 EUR</span>
+                </p>
+                <p><strong>Estat:</strong> <span th:text="${comanda.status}">CONFIRMADA</span></p>
+            </div>
+
+            <h2>Entrades</h2>
+
+            <div th:if="${#lists.isEmpty(comanda.tickets)}">
+                <p>Aquesta comanda no te entrades.</p>
+            </div>
+
+            <table th:if="${not #lists.isEmpty(comanda.tickets)}">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Pel·licula</th>
+                        <th>Projecci&oacute;</th>
+                        <th>Cinema</th>
+                        <th>Sala</th>
+                        <th>Fila</th>
+                        <th>Seient</th>
+                        <th>Tipus</th>
+                        <th>Preu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="ticket : ${comanda.tickets}">
+                        <td th:text="${ticket.id}">1</td>
+                        <td th:text="${ticket.screening != null and ticket.screening.movie != null ? ticket.screening.movie.title : '-'}">Pellicula</td>
+                        <td th:text="${ticket.screening != null and ticket.screening.dateTime != null ? #temporals.format(ticket.screening.dateTime, 'dd/MM/yyyy HH:mm') : '-'}">00/00/0000</td>
+                        <td th:text="${ticket.screening != null and ticket.screening.room != null and ticket.screening.room.cinema != null ? ticket.screening.room.cinema.name : '-'}">Cinema</td>
+                        <td th:text="${ticket.screening != null and ticket.screening.room != null ? ticket.screening.room.name : '-'}">Sala</td>
+                        <td th:text="${ticket.seat != null ? ticket.seat.seatRow : '-'}">A</td>
+                        <td th:text="${ticket.seat != null ? ticket.seat.number : '-'}">1</td>
+                        <td th:text="${ticket.seat != null ? ticket.seat.type : '-'}">Standard</td>
+                        <td th:text="${#numbers.formatDecimal(ticket.price, 1, 2)} + ' EUR'">0.00 EUR</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <a th:href="@{/client/orders}">Tornar a les meves comandes</a>
+        </section>
+    </div>
+</div>
+
+</body>
+</html>
