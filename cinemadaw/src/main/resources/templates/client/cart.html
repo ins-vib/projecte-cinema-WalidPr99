@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:replace="~{layout :: layout(~{::content})}">
+    <div th:fragment="content">
+        <section>
+            <h1>Carret de compres</h1>
+
+            <p th:if="${addedCount > 0}">
+                S'han afegit <strong th:text="${addedCount}">0</strong> seients al carret.
+            </p>
+            <p th:if="${alreadyInCartCount > 0}">
+                <strong th:text="${alreadyInCartCount}">0</strong> seients ja estaven dins del carret.
+            </p>
+            <p th:if="${skippedCount > 0}">
+                <strong th:text="${skippedCount}">0</strong> seients no s'han afegit perque ja no estaven disponibles.
+            </p>
+            <p th:if="${seatRemoved}">S'ha eliminat un seient del carret.</p>
+            <p th:if="${screeningRemoved}">S'ha eliminat una projeccio del carret.</p>
+            <p th:if="${reservedCount > 0}">
+                Compra completada: <strong th:text="${reservedCount}">0</strong> seients reservats.
+            </p>
+            <p th:if="${checkoutSkippedCount > 0}">
+                <strong th:text="${checkoutSkippedCount}">0</strong> seients no s'han pogut reservar en el checkout.
+            </p>
+
+            <div th:if="${#lists.isEmpty(entries)}">
+                <p>El carret esta buit.</p>
+                <a th:href="@{/client}">Tornar a cartelera</a>
+            </div>
+
+            <div th:if="${not #lists.isEmpty(entries)}">
+                <p>
+                    Seients totals al carret: <strong th:text="${seatCount}">0</strong>
+                    |
+                    Total estimat: <strong th:text="${#numbers.formatDecimal(totalPrice, 1, 2)} + ' EUR'">0.00 EUR</strong>
+                </p>
+
+                <div th:each="entry : ${entries}" class="cart-entry">
+                    <h2 th:text="${entry.movieTitle}">Pelicula</h2>
+                    <p>
+                        <strong>Cinema:</strong> <span th:text="${entry.cinemaName}">Cinema</span>
+                        |
+                        <strong>Sala:</strong> <span th:text="${entry.roomName}">Sala</span>
+                        |
+                        <strong>Projeccio:</strong>
+                        <span th:text="${entry.dateTime != null ? #temporals.format(entry.dateTime, 'dd/MM/yyyy HH:mm') : 'No disponible'}">00/00/0000 00:00</span>
+                        |
+                        <strong>Preu:</strong> <span th:text="${#numbers.formatDecimal(entry.pricePerSeat, 1, 2)} + ' EUR'">0.00 EUR</span>
+                    </p>
+
+                    <p th:if="${entry.unavailableCount > 0}" class="warning-row">
+                        Atencio: <strong th:text="${entry.unavailableCount}">0</strong> seients d'aquesta projeccio ja no estan disponibles.
+                    </p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fila</th>
+                                <th>Numero</th>
+                                <th>Tipus</th>
+                                <th>Disponibilitat</th>
+                                <th>Accio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="seat : ${entry.seats}">
+                                <td th:text="${seat.seatRow}">A</td>
+                                <td th:text="${seat.number}">1</td>
+                                <td th:text="${seat.type}">Standard</td>
+                                <td th:text="${seat.state ? 'Disponible' : 'No disponible'}">Disponible</td>
+                                <td>
+                                    <form th:action="@{/client/cart/remove-seat}" method="post" class="inline-form">
+                                        <input type="hidden" name="screeningId" th:value="${entry.screeningId}" />
+                                        <input type="hidden" name="seatId" th:value="${seat.id}" />
+                                        <button type="submit">Treure</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>
+                        Subtotal projeccio:
+                        <strong th:text="${#numbers.formatDecimal(entry.subtotal, 1, 2)} + ' EUR'">0.00 EUR</strong>
+                    </p>
+
+                    <div class="entry-actions">
+                        <a th:href="@{/seats/{id}(id=${entry.seats[0].room.id}, screeningId=${entry.screeningId})}">Afegir mes seients</a>
+                        <form th:action="@{/client/cart/remove-screening}" method="post" class="inline-form">
+                            <input type="hidden" name="screeningId" th:value="${entry.screeningId}" />
+                            <button type="submit">Eliminar projeccio</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="checkout-box">
+                    <form th:action="@{/client/cart/checkout}" method="post">
+                        <button type="submit">Confirmar compra del carret</button>
+                    </form>
+                    <a th:href="@{/client}">Continuar comprant</a>
+                </div>
+            </div>
+        </section>
+
+        <style>
+            .cart-entry {
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                padding: 14px;
+                margin: 14px 0;
+                background-color: #fff;
+            }
+
+            .warning-row {
+                color: #8a2f2f;
+                font-weight: 600;
+            }
+
+            .inline-form {
+                display: inline;
+                background: transparent;
+                border: none;
+                padding: 0;
+                margin: 0;
+                max-width: none;
+            }
+
+            .inline-form button {
+                margin-top: 0;
+                padding: 6px 10px;
+                font-size: 0.85em;
+            }
+
+            .entry-actions {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            .checkout-box {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex-wrap: wrap;
+                margin-top: 20px;
+            }
+
+            .checkout-box form {
+                background: transparent;
+                border: none;
+                padding: 0;
+                margin: 0;
+                max-width: none;
+            }
+        </style>
+    </div>
+</div>
+
+</body>
+</html>

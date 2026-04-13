@@ -45,7 +45,7 @@
 					<td th:text="${screening.price}">Preu</td>
 
 					<td>
-						<a th:if="${screening.room != null}" th:href="@{/seats/{id}(id=${screening.room.id})}" th:text="${screening.room.name}">Sala</a>
+						<a th:if="${screening.room != null}" th:href="@{/seats/{id}(id=${screening.room.id}, screeningId=${screening.id})}" th:text="${screening.room.name}">Sala</a>
 						<span th:if="${screening.room == null}">-</span>
 					</td>
 

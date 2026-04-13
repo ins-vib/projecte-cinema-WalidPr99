@@ -9,6 +9,14 @@
 
 		<h1>Mapa de seients</h1>
 		<h2 th:text="${room.name} + ' - Capacitat: ' + ${room.capacity}">Sala i capacitat</h2>
+		<p th:if="${screening != null}">
+			Projeccio:
+			<strong th:text="${screening.movie != null ? screening.movie.title : 'Pellicula'}">Pellicula</strong>
+			|
+			<span th:text="${screening.dateTime != null ? #temporals.format(screening.dateTime, 'dd/MM/yyyy HH:mm') : 'Data no disponible'}">00/00/0000 00:00</span>
+			|
+			<span th:text="'Preu seient: ' + ${#numbers.formatDecimal(screening.price, 1, 2)} + ' EUR'">Preu</span>
+		</p>
 
 		<p th:if="${reservedCount > 0}">
 			Reserva completada: <strong th:text="${reservedCount}">0</strong> seients reservats.
@@ -17,8 +25,10 @@
 			<strong th:text="${skippedCount}">0</strong> seients no s'han pogut reservar perque ja no estaven disponibles.
 		</p>
 		<p th:if="${noSelection}">Has de seleccionar almenys un seient abans de confirmar la reserva.</p>
+		<p th:if="${screeningRequired}">Per afegir entrades al carret, has d'entrar al mapa des d'una projeccio concreta.</p>
 
-		<form class="seat-reservation-form" th:action="@{/seats/{id}/reserve(id=${room.id})}" method="post">
+		<form class="seat-reservation-form" th:action="@{/seats/{id}/reserve/preview(id=${room.id})}" method="post">
+			<input th:if="${screeningId != null}" type="hidden" name="screeningId" th:value="${screeningId}" />
 			<div class="seat-map"
 				 th:style="'grid-template-columns: repeat(' + ${seatsPerRow} + ', minmax(44px, 1fr));'">
 
@@ -44,8 +54,9 @@
 			</div>
 
 			<div class="seat-actions">
-				<button th:if="${isClient and !isAdmin}" type="submit">Confirmar reserva</button>
+				<button th:if="${isClient and !isAdmin}" type="submit">Continuar a confirmacio</button>
 				<a th:if="${isClient and !isAdmin}" class="seat-back-link" th:href="@{/client}">Tornar a Cartelera</a>
+				<a th:if="${isClient and !isAdmin}" class="seat-back-link" th:href="@{/client/cart}">Veure carret</a>
 				<a th:if="${isAdmin and room.cinema != null}" class="seat-back-link" th:href="@{/cinema/{id}(id=${room.cinema.id})}">Tornar al cinema</a>
 				<a th:if="${isAdmin and room.cinema == null}" class="seat-back-link" th:href="@{/home}">Tornar</a>
 			</div>

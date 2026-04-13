@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:replace="~{layout :: layout(~{::content})}">
+
+    <div th:fragment="content">
+
+        <h1>Confirmacio d'entrades</h1>
+
+        <p>
+            Revisa la informacio abans d'afegir les entrades al carret.
+            <strong th:text="'Seients seleccionats: ' + ${selectedCount}">Seients seleccionats: 0</strong>
+        </p>
+
+        <p th:if="${skippedCount > 0}">
+            <strong th:text="${skippedCount}">0</strong> seients no s'inclouen perque ja estaven reservats.
+        </p>
+
+        <div class="reservation-summary">
+            <p><strong>Sala:</strong> <span th:text="${room.name}">Sala</span></p>
+            <p><strong>Cinema:</strong> <span th:text="${room.cinema != null ? room.cinema.name : 'No disponible'}">Cinema</span></p>
+            <p><strong>Capacitat sala:</strong> <span th:text="${room.capacity}">0</span></p>
+
+            <p th:if="${screening != null}">
+                <strong>Pelicula:</strong>
+                <span th:text="${screening.movie != null ? screening.movie.title : 'No disponible'}">Pelicula</span>
+            </p>
+            <p th:if="${screening != null}">
+                <strong>Projeccio:</strong>
+                <span th:text="${screening.dateTime != null ? #temporals.format(screening.dateTime, 'dd/MM/yyyy HH:mm') : 'No disponible'}">00/00/0000 00:00</span>
+            </p>
+            <p th:if="${screening != null}">
+                <strong>Preu per seient:</strong>
+                <span th:text="${#numbers.formatDecimal(pricePerSeat, 1, 2)} + ' EUR'">0.00 EUR</span>
+            </p>
+            <p th:if="${screening != null}">
+                <strong>Total:</strong>
+                <span th:text="${#numbers.formatDecimal(totalPrice, 1, 2)} + ' EUR'">0.00 EUR</span>
+            </p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Fila</th>
+                    <th>Numero</th>
+                    <th>Tipus</th>
+                    <th>Estat</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="seat : ${selectedSeats}">
+                    <td th:text="${seat.seatRow}">A</td>
+                    <td th:text="${seat.number}">1</td>
+                    <td th:text="${seat.type}">Standard</td>
+                    <td>Disponible per reservar</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <form class="confirm-form" th:action="@{/seats/{id}/reserve(id=${room.id})}" method="post">
+            <input th:if="${screeningId != null}" type="hidden" name="screeningId" th:value="${screeningId}" />
+            <input type="hidden" name="seatIds" th:each="seatId : ${seatSelection.seatIds}" th:value="${seatId}" />
+
+            <div class="confirm-actions">
+                <button type="submit">Afegir al carret</button>
+                <a th:if="${screeningId != null}" class="cancel-link" th:href="@{/seats/{id}(id=${room.id}, screeningId=${screeningId})}">Tornar al mapa</a>
+                <a th:if="${screeningId == null}" class="cancel-link" th:href="@{/seats/{id}(id=${room.id})}">Tornar al mapa</a>
+            </div>
+        </form>
+
+        <style>
+            .reservation-summary {
+                border: 1px solid #d8d8d8;
+                border-radius: 8px;
+                background-color: #fbfbfb;
+                padding: 12px 14px;
+                margin: 12px 0;
+            }
+
+            .reservation-summary p {
+                margin: 0 0 6px 0;
+            }
+
+            .reservation-summary p:last-child {
+                margin-bottom: 0;
+            }
+
+            .confirm-form {
+                max-width: 100%;
+            }
+
+            .confirm-actions {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                align-items: center;
+            }
+
+            .cancel-link {
+                display: inline-block;
+                margin-top: 18px;
+                padding: 10px 16px;
+                border: 1px solid #bbb;
+                border-radius: 4px;
+                background-color: #f5f5f5;
+                text-decoration: none;
+                color: #333;
+            }
+
+            .cancel-link:hover {
+                background-color: #eaeaea;
+                text-decoration: none;
+            }
+        </style>
+
+    </div>
+
+</div>
+
+</body>
+</html>
