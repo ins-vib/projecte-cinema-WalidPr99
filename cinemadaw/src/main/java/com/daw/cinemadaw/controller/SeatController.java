@@ -1,5 +1,6 @@
 package com.daw.cinemadaw.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
@@ -396,6 +397,10 @@ public class SeatController {
 
         Screening screening = optionalScreening.get();
         if (screening.getRoom() == null || !roomId.equals(screening.getRoom().getId())) {
+            return Optional.empty();
+        }
+
+        if (screening.getDateTime() == null || screening.getDateTime().isBefore(LocalDateTime.now())) {
             return Optional.empty();
         }
 

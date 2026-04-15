@@ -1,4 +1,5 @@
 package com.daw.cinemadaw.controller;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -82,6 +83,7 @@ public class HomeController {
 
         model.addAttribute("movies", movies);
         model.addAttribute("screeningsByMovie", screeningsByMovie);
+        model.addAttribute("now", LocalDateTime.now());
         return "client/home";
     }
 

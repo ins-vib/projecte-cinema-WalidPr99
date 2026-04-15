@@ -31,7 +31,9 @@
                                 <span th:text="${screening.room != null and screening.room.cinema != null ? screening.room.cinema.name : 'Cinema no disponible'}">Cinema</span>
                                 <span th:if="${screening.room != null}" th:text="' - ' + ${screening.room.name}"> - Sala</span>
                                 <span th:if="${screening.dateTime != null}" th:text="' (' + ${#temporals.format(screening.dateTime, 'dd/MM HH:mm')} + ')'">(00/00 00:00)</span>
-                                <a th:if="${screening.room != null}" th:href="@{/seats/{id}(id=${screening.room.id}, screeningId=${screening.id})}">Reservar</a>
+                                <a th:if="${screening.room != null and screening.dateTime != null and !screening.dateTime.isBefore(now)}"
+                                   th:href="@{/seats/{id}(id=${screening.room.id}, screeningId=${screening.id})}">Reservar</a>
+                                <span th:if="${screening.dateTime == null or screening.dateTime.isBefore(now)}" class="expired-screening">Caducada</span>
                             </p>
                         </td>
                         <td>
@@ -50,6 +52,12 @@
 
                 .screening-inline:last-child {
                     margin-bottom: 0;
+                }
+
+                .expired-screening {
+                    color: #666;
+                    font-style: italic;
+                    margin-left: 4px;
                 }
             </style>
 
