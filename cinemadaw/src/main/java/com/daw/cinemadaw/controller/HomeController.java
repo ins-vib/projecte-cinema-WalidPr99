@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,7 @@ import com.daw.cinemadaw.domain.cinema.user.User;
 import com.daw.cinemadaw.repository.MovieRepository;
 import com.daw.cinemadaw.repository.ScreeningRepository;
 import com.daw.cinemadaw.repository.UserRepository;
+import com.daw.cinemadaw.service.CustomUserDetails;
 import com.daw.cinemadaw.service.NewsService;
 
 @Controller
@@ -91,6 +93,17 @@ public class HomeController {
     public String clientNews(Model model) {
         model.addAttribute("llista", new ArrayList<>(newsService.getNews()));
         return "client/news";
+    }
+
+    @GetMapping("/perfil")
+    public String perfil(@AuthenticationPrincipal CustomUserDetails user, Model model) {
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("role", user.getUser().getRole());
+        return "profile";
     }
 
     

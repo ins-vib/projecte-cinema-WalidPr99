@@ -3,14 +3,16 @@ package com.daw.cinemadaw.controller;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.daw.cinemadaw.domain.cinema.Comanda;
+import com.daw.cinemadaw.domain.cinema.user.Role;
 import com.daw.cinemadaw.repository.ComandaRepository;
+import com.daw.cinemadaw.service.CustomUserDetails;
 
 @Controller
 public class OrderController {
@@ -22,13 +24,13 @@ public class OrderController {
     }
 
     @GetMapping("/client/orders")
-    public String listOrders(Authentication authentication, Model model) {
+    public String listOrders(@AuthenticationPrincipal CustomUserDetails user, Model model) {
 
-        if (!isClient(authentication)) {
+        if (!isClient(user)) {
             return "redirect:/home";
         }
 
-        String username = authentication.getName();
+        String username = user.getUsername();
         List<Comanda> orders = comandaRepository.findByClientNameOrderByDateTimeDesc(username);
 
         model.addAttribute("orders", orders);
@@ -36,9 +38,9 @@ public class OrderController {
     }
 
     @GetMapping("/client/order/{id}")
-    public String orderDetail(@PathVariable Long id, Authentication authentication, Model model) {
+    public String orderDetail(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails user, Model model) {
 
-        if (!isClient(authentication)) {
+        if (!isClient(user)) {
             return "redirect:/home";
         }
 
@@ -49,7 +51,7 @@ public class OrderController {
 
         Comanda comanda = optional.get();
 
-        if (!comanda.getClientName().equals(authentication.getName())) {
+        if (!comanda.getClientName().equals(user.getUsername())) {
             return "redirect:/client/orders";
         }
 
@@ -57,11 +59,9 @@ public class OrderController {
         return "client/order-detail";
     }
 
-    private boolean isClient(Authentication authentication) {
-        if (authentication == null || authentication.getAuthorities() == null) {
-            return false;
-        }
-        return authentication.getAuthorities().stream()
-                .anyMatch(authority -> "ROLE_CLIENT".equals(authority.getAuthority()));
+    private boolean isClient(CustomUserDetails user) {
+        return user != null
+                && user.getUser() != null
+                && Role.CLIENT.equals(user.getUser().getRole());
     }
 }

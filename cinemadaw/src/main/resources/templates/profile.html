@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:replace="~{layout :: layout(~{::content})}">
+    <div th:fragment="content">
+        <section>
+            <h1>Perfil d'usuari</h1>
+            <p><strong>Nom d'usuari:</strong> <span th:text="${username}">username</span></p>
+            <p><strong>Rol:</strong> <span th:text="${role}">CLIENT</span></p>
+
+            <a th:if="${isClient and !isAdmin}" th:href="@{/client}">Tornar a la cartelera</a>
+            <a th:if="${isAdmin}" th:href="@{/admin}">Tornar al panell admin</a>
+
+            <form th:action="@{/logout}" method="post">
+                <button type="submit">Tancar sessio</button>
+            </form>
+        </section>
+    </div>
+</div>
+
+</body>
+</html>

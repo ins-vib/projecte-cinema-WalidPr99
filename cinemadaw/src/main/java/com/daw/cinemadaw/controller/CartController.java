@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -22,11 +22,13 @@ import com.daw.cinemadaw.domain.cinema.OrderStatus;
 import com.daw.cinemadaw.domain.cinema.Screening;
 import com.daw.cinemadaw.domain.cinema.Seat;
 import com.daw.cinemadaw.domain.cinema.Ticket;
+import com.daw.cinemadaw.domain.cinema.user.Role;
 import com.daw.cinemadaw.dto.CartEntryDTO;
 import com.daw.cinemadaw.repository.ComandaRepository;
 import com.daw.cinemadaw.repository.ScreeningRepository;
 import com.daw.cinemadaw.repository.SeatRepository;
 import com.daw.cinemadaw.service.CartSessionService;
+import com.daw.cinemadaw.service.CustomUserDetails;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -54,11 +56,11 @@ public class CartController {
                            @RequestParam(value = "checkoutSkippedCount", required = false, defaultValue = "0") int checkoutSkippedCount,
                            @RequestParam(value = "screeningRemoved", required = false, defaultValue = "false") boolean screeningRemoved,
                            @RequestParam(value = "seatRemoved", required = false, defaultValue = "false") boolean seatRemoved,
-                           Authentication authentication,
+                           @AuthenticationPrincipal CustomUserDetails user,
                            HttpSession session,
                            Model model) {
 
-        if (!isClient(authentication)) {
+        if (!isClient(user)) {
             return "redirect:/home";
         }
 
@@ -88,10 +90,10 @@ public class CartController {
     @PostMapping("/client/cart/remove-seat")
     public String removeSeatFromCart(@RequestParam("screeningId") Long screeningId,
                                      @RequestParam("seatId") Long seatId,
-                                     Authentication authentication,
+                                     @AuthenticationPrincipal CustomUserDetails user,
                                      HttpSession session) {
 
-        if (!isClient(authentication)) {
+        if (!isClient(user)) {
             return "redirect:/home";
         }
 
@@ -101,10 +103,10 @@ public class CartController {
 
     @PostMapping("/client/cart/remove-screening")
     public String removeScreeningFromCart(@RequestParam("screeningId") Long screeningId,
-                                          Authentication authentication,
+                                          @AuthenticationPrincipal CustomUserDetails user,
                                           HttpSession session) {
 
-        if (!isClient(authentication)) {
+        if (!isClient(user)) {
             return "redirect:/home";
         }
 
@@ -114,9 +116,9 @@ public class CartController {
 
     @PostMapping("/client/cart/checkout")
     @Transactional
-    public String checkout(Authentication authentication, HttpSession session) {
+    public String checkout(@AuthenticationPrincipal CustomUserDetails user, HttpSession session) {
 
-        if (!isClient(authentication)) {
+        if (!isClient(user)) {
             return "redirect:/home";
         }
 
@@ -127,8 +129,8 @@ public class CartController {
 
         Comanda comanda = new Comanda();
         comanda.setDateTime(LocalDateTime.now());
-        comanda.setClientName(authentication.getName());
-        comanda.setEmail(authentication.getName());
+        comanda.setClientName(user.getUsername());
+        comanda.setEmail(user.getUsername());
         comanda.setStatus(OrderStatus.CONFIRMADA);
         comanda.setTotalAmount(0);
 
@@ -263,13 +265,9 @@ public class CartController {
         return entries;
     }
 
-    private boolean isClient(Authentication authentication) {
-
-        if (authentication == null || authentication.getAuthorities() == null) {
-            return false;
-        }
-
-        return authentication.getAuthorities().stream()
-                .anyMatch(authority -> "ROLE_CLIENT".equals(authority.getAuthority()));
+    private boolean isClient(CustomUserDetails user) {
+        return user != null
+                && user.getUser() != null
+                && Role.CLIENT.equals(user.getUser().getRole());
     }
 }
