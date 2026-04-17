@@ -1,19 +1,49 @@
 @startuml
 
 left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
 
-actor Admin
-actor Gestor
-actor Client
+actor "Visitant" as Visitor
+actor "Usuari autenticat" as Auth
+actor "Admin" as Admin
+actor "Client" as Client
+
+Auth <|-- Admin
+Auth <|-- Client
 
 rectangle "Cinema App"{
 
-Admin -- (Gestionar Cinemes)
-Admin -- (Gestionar Sales)
-Admin -- (Gestionar Seients)
+Visitor -- (Iniciar sessio)
+Visitor -- (Registrar-se)
+Visitor -- (Consultar noticies publiques)
 
-Gestor -- (Gestionar Screenings)
-Gestor -- (Gestionar Pel·lícules)
+Auth -- (Veure perfil)
+Auth -- (Consultar cinemes)
+Auth -- (Consultar pellicules)
+Auth -- (Consultar screenings)
+Auth -- (Gestionar cookies)
+Auth -- (Proves de sessio)
+
+Admin -- (Gestionar cinemes)
+Admin -- (Gestionar sales)
+Admin -- (Gestionar seients)
+Admin -- (Gestionar pellicules)
+Admin -- (Gestionar screenings)
+
+Client -- (Veure cartellera client)
+Client -- (Seleccionar seients)
+Client -- (Previsualitzar reserva)
+Client -- (Afegir seients al carret)
+Client -- (Gestionar carret)
+Client -- (Finalitzar compra)
+Client -- (Consultar comandes)
+Client -- (Veure detall comanda)
+
+(Previsualitzar reserva) .> (Seleccionar seients) : <<include>>
+(Afegir seients al carret) .> (Seleccionar seients) : <<include>>
+(Finalitzar compra) .> (Gestionar carret) : <<include>>
+(Veure detall comanda) .> (Consultar comandes) : <<extend>>
 
 }
 

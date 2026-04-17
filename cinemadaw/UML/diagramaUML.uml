@@ -1,5 +1,8 @@
 @startuml
 skinparam classAttributeIconSize 0
+hide empty members
+
+title Cinemadaw - Diagrama de classes
 
 class Cinema {
 	- id: Long
@@ -29,7 +32,79 @@ class Seat {
 	- room: Room
 }
 
+class Movie {
+	- id: Long
+	- title: String
+	- duration: int
+	- genre: String
+	- description: String
+	- releaseDate: LocalDate
+}
+
+class Screening {
+	- id: Long
+	- dateTime: LocalDateTime
+	- price: double
+	- movie: Movie
+	- room: Room
+}
+
+class Comanda {
+	- id: Long
+	- dateTime: LocalDateTime
+	- totalAmount: double
+	- clientName: String
+	- email: String
+	- status: OrderStatus
+	- tickets: List<Ticket>
+}
+
+class Ticket {
+	- id: Long
+	- price: double
+	- seat: Seat
+	- screening: Screening
+	- comanda: Comanda
+}
+
+class User {
+	- id: Long
+	- username: String
+	- password: String
+	- role: Role
+}
+
+class New {
+	- headline: String
+	- body: String
+}
+
+enum SeatType {
+	Standard
+	Premium
+	Adapted
+}
+
+enum OrderStatus {
+	PENDENT
+	CONFIRMADA
+	CANCELADA
+}
+
+enum Role {
+	ADMIN
+	CLIENT
+}
+
 Cinema "1" *-- "0..*" Room : rooms
 Room "1" *-- "0..*" Seat : seats
+Movie "1" <-- "0..*" Screening : movie
+Room "1" <-- "0..*" Screening : room
+Comanda "1" *-- "0..*" Ticket : tickets
+Seat "1" <-- "0..*" Ticket : seat
+Screening "1" <-- "0..*" Ticket : screening
+Role "1" <-- "0..*" User : role
+SeatType "1" <-- "0..*" Seat : type
+OrderStatus "1" <-- "0..*" Comanda : status
 
 @enduml
