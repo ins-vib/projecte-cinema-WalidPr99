@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -173,16 +174,24 @@ public class CartController {
             comanda.setTotalAmount(total);
             comanda.setTickets(tickets);
             tickets.forEach(t -> t.setComanda(comanda));
-            comandaRepository.save(comanda);
+            try {
+                comandaRepository.saveAndFlush(comanda);
+            } catch (DataIntegrityViolationException ex) {
+                System.out.println("[CHECKOUT ERROR] Compra rechazada por conflicto de concurrencia: asiento ya vendido.");
+                System.out.println("[CHECKOUT ERROR] " + ex.getMessage());
+                return "redirect:/client/cart";
+            }
+        } else if (skippedCount > 0) {
+            System.out.println("[CHECKOUT ERROR] No se han podido reservar asientos: ya estaban vendidos o no disponibles.");
         }
 
         cartSessionService.clearCart(session);
 
-        String redirect = "redirect:/client/cart?reservedCount=" + reservedCount;
-        if (skippedCount > 0) {
-            redirect += "&checkoutSkippedCount=" + skippedCount;
+        if (reservedCount > 0) {
+            return "redirect:/client/cart?reservedCount=" + reservedCount;
         }
-        return redirect;
+
+        return "redirect:/client/cart";
     }
 
     private List<CartEntryDTO> buildCartEntries(HttpSession session) {

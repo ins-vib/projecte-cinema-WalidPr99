@@ -6,217 +6,598 @@
 <div th:fragment="layout(content)">
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+    --bg-top: #f5f0e6;
+    --bg-bottom: #dce8ef;
+    --surface: #fffefb;
+    --surface-soft: #f7fbfc;
+    --line: #d2dbe2;
+    --text: #1d2f3d;
+    --muted: #5e6e7b;
+    --brand: #0f766e;
+    --brand-dark: #0b5d56;
+    --accent: #d97706;
+    --danger: #b42318;
+    --ok: #1a7f3c;
+    --radius-xl: 20px;
+    --radius-md: 14px;
+    --shadow-soft: 0 18px 40px -30px rgba(20, 35, 49, 0.55);
+    --max-width: 1200px;
+}
+
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
 }
 
+html,
 body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background-color: #f5f5f5;
-    color: #333;
-    line-height: 1.6;
-    padding: 20px 40px;
+    min-height: 100%;
 }
 
-h1 {
-    color: #222;
-    margin-bottom: 16px;
-    font-weight: 600;
+body {
+    margin: 0;
+    padding: 24px clamp(12px, 3vw, 34px) 36px;
+    font-family: 'Manrope', 'Trebuchet MS', sans-serif;
+    color: var(--text);
+    line-height: 1.55;
+    background:
+        radial-gradient(circle at 10% 0%, rgba(217, 119, 6, 0.18), transparent 40%),
+        radial-gradient(circle at 88% 2%, rgba(15, 118, 110, 0.2), transparent 35%),
+        linear-gradient(165deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
 }
 
-h2 {
-    color: #444;
-    margin-bottom: 12px;
-    font-weight: 500;
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.24;
+    background-image: linear-gradient(transparent 24px, rgba(16, 63, 76, 0.08) 25px);
+    background-size: 100% 26px;
 }
 
-h3 {
-    color: #555;
-    margin-bottom: 8px;
+div[th\:fragment="layout(content)"] {
+    position: relative;
+    z-index: 1;
+}
+
+header,
+main,
+footer {
+    max-width: var(--max-width);
+    margin-inline: auto;
 }
 
 header {
-    background-color: #fff;
-    padding: 20px 30px;
-    margin: -20px -40px 24px -40px;
-    border-bottom: 1px solid #ddd;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(237, 247, 250, 0.9));
+    box-shadow: var(--shadow-soft);
+    padding: clamp(16px, 2.3vw, 28px);
+}
+
+header::after {
+    content: '';
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    right: -90px;
+    bottom: -120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(217, 119, 6, 0.36), transparent 68%);
 }
 
 header h1 {
-    margin-bottom: 10px;
+    margin: 0;
+    font-family: 'Space Grotesk', 'Trebuchet MS', sans-serif;
+    font-size: clamp(1.6rem, 3.4vw, 2.5rem);
+    letter-spacing: 0.01em;
+}
+
+header hr,
+footer hr {
+    display: none;
 }
 
 nav {
-    margin-bottom: 20px;
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 nav a {
-    display: inline-block;
-    color: #555;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 15px;
+    border-radius: 999px;
+    border: 1px solid #bfd1dd;
+    background: linear-gradient(180deg, #ffffff, #f1f6fa);
+    color: var(--text);
     text-decoration: none;
-    padding: 6px 14px;
-    margin-right: 6px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    transition: background-color 0.2s, color 0.2s;
+    font-weight: 700;
+    font-size: 0.92rem;
+    letter-spacing: 0.01em;
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
 nav a:hover {
-    background-color: #e8e8e8;
-    color: #222;
+    transform: translateY(-1px);
+    border-color: #8eb0c4;
+    box-shadow: 0 10px 20px -18px rgba(18, 54, 79, 0.65);
+    text-decoration: none;
 }
 
-section {
-    background-color: #fff;
-    padding: 20px 24px;
-    margin-bottom: 20px;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
+main {
+    margin-top: 24px;
+}
+
+main > div[th\:fragment="content"] {
+    display: grid;
+    gap: 18px;
+    background: linear-gradient(180deg, var(--surface) 0%, var(--surface-soft) 100%);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-soft);
+    padding: clamp(16px, 2.2vw, 28px);
+    animation: fade-up 0.42s ease;
+}
+
+main > div[th\:fragment="content"] > section {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+
+main > div[th\:fragment="content"] > section + section {
+    padding-top: 16px;
+    border-top: 1px dashed #cad5df;
+}
+
+h1,
+h2,
+h3 {
+    margin: 0 0 10px;
+    color: #102838;
+    line-height: 1.2;
+}
+
+h1,
+h2 {
+    font-family: 'Space Grotesk', 'Trebuchet MS', sans-serif;
+}
+
+h1 {
+    font-size: clamp(1.45rem, 2.8vw, 2.15rem);
+}
+
+h2 {
+    font-size: clamp(1.16rem, 2.1vw, 1.55rem);
+}
+
+h3 {
+    font-size: 1.04rem;
+}
+
+p {
+    margin: 0 0 12px;
+    color: var(--muted);
+}
+
+strong {
+    color: var(--text);
+}
+
+a {
+    color: var(--brand-dark);
+    text-underline-offset: 2px;
+}
+
+main > div[th\:fragment="content"] > a,
+td a,
+li a,
+.entry-actions a,
+.checkout-box a,
+.confirm-actions a,
+.seat-actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+    padding: 8px 13px;
+    border: 1px solid #b9c9d5;
+    border-radius: 999px;
+    background: #f4f9fc;
+    color: #13415a;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.16s ease, border-color 0.16s ease, background-color 0.16s ease;
+}
+
+main > div[th\:fragment="content"] > a:hover,
+td a:hover,
+li a:hover,
+.entry-actions a:hover,
+.checkout-box a:hover,
+.confirm-actions a:hover,
+.seat-actions a:hover {
+    transform: translateY(-1px);
+    border-color: #8eb0c4;
+    background: #eaf4fa;
+    text-decoration: none;
 }
 
 table {
     width: 100%;
-    border-collapse: collapse;
-    margin: 16px 0;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 6px;
+    margin: 14px 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: #ffffff;
     overflow: hidden;
 }
 
-thead {
-    background-color: #eee;
-}
-
-th {
+thead th {
     text-align: left;
-    padding: 10px 14px;
-    color: #444;
-    font-weight: 600;
-    border-bottom: 2px solid #ccc;
+    padding: 12px 14px;
+    border-bottom: 1px solid #cad5df;
+    background: linear-gradient(180deg, #f7fcfe, #ecf3f7);
+    color: #244457;
+    font-size: 0.83rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
-td {
-    padding: 10px 14px;
-    border-bottom: 1px solid #eee;
+tbody td {
+    padding: 11px 14px;
+    border-bottom: 1px solid #e6edf2;
+    color: #264152;
+    vertical-align: top;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #fcfeff;
 }
 
 tbody tr:hover {
-    background-color: #fafafa;
+    background-color: #eff7f8;
 }
 
-a {
-    color: #555;
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-a:hover {
-    color: #000;
-    text-decoration: underline;
-}
-
-td a, li a {
-    margin-right: 8px;
-    padding: 4px 10px;
-    border: 1px solid #bbb;
-    border-radius: 4px;
-    font-size: 0.9em;
-    background-color: #f9f9f9;
-}
-
-td a:hover, li a:hover {
-    background-color: #e0e0e0;
-    text-decoration: none;
+tbody tr:last-child td {
+    border-bottom: none;
 }
 
 form {
-    background-color: #fff;
-    padding: 24px;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
-    max-width: 500px;
-    margin: 16px 0;
+    max-width: 720px;
+    margin: 10px 0;
+    display: grid;
+    gap: 10px;
+}
+
+form br {
+    display: none;
+}
+
+form > div {
+    color: var(--danger);
+    font-size: 0.87rem;
+    font-weight: 700;
 }
 
 label {
     display: block;
-    margin-top: 12px;
-    margin-bottom: 4px;
-    color: #444;
-    font-weight: 500;
+    margin-top: 4px;
+    margin-bottom: 2px;
+    color: #1f3a4b;
+    font-weight: 700;
+    font-size: 0.92rem;
 }
 
 input[type="text"],
+input[type="password"],
 input[type="number"],
-input[type="date"] {
+input[type="date"],
+input[type="datetime-local"],
+select,
+textarea {
     width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fafafa;
-    font-size: 0.95em;
-    color: #333;
+    padding: 10px 12px;
+    border: 1px solid #c5d3de;
+    border-radius: 10px;
+    background-color: #ffffff;
+    color: var(--text);
+    font: inherit;
+    transition: border-color 0.16s ease, box-shadow 0.16s ease;
 }
 
 input[type="text"]:focus,
+input[type="password"]:focus,
 input[type="number"]:focus,
-input[type="date"]:focus {
+input[type="date"]:focus,
+input[type="datetime-local"]:focus,
+select:focus,
+textarea:focus {
     outline: none;
-    border-color: #999;
-    background-color: #fff;
+    border-color: #5aa89f;
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.14);
 }
 
 button {
-    margin-top: 18px;
-    padding: 10px 24px;
-    background-color: #666;
-    color: #fff;
+    width: fit-content;
+    margin-top: 6px;
     border: none;
-    border-radius: 4px;
-    font-size: 0.95em;
+    border-radius: 999px;
+    padding: 9px 18px;
+    color: #ffffff;
+    font: inherit;
+    font-size: 0.92rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
     cursor: pointer;
-    transition: background-color 0.2s;
+    background: linear-gradient(130deg, var(--brand), var(--brand-dark));
+    box-shadow: 0 12px 24px -20px rgba(9, 64, 60, 0.9);
+    transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
 }
 
 button:hover {
-    background-color: #444;
+    transform: translateY(-1px);
+    box-shadow: 0 15px 24px -18px rgba(7, 65, 61, 0.8);
+    filter: saturate(1.05);
+}
+
+button:active {
+    transform: translateY(0);
 }
 
 ul {
     list-style: none;
     margin: 12px 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
 }
 
 li {
-    padding: 10px 14px;
-    border-bottom: 1px solid #eee;
-    color: #444;
-}
-
-li:last-child {
-    border-bottom: none;
+    padding: 10px 12px;
+    border: 1px solid #d2dde6;
+    border-radius: 10px;
+    background: #fcfeff;
+    color: #2d4858;
 }
 
 footer {
-    margin-top: 40px;
-    padding: 16px 0;
-    border-top: 1px solid #ddd;
-    color: #999;
-    font-size: 0.85em;
+    margin-top: 26px;
     text-align: center;
+    color: #50636f;
+    font-size: 0.84rem;
 }
 
-section div {
-    padding: 12px 16px;
+section div,
+.reservation-summary,
+.cart-entry {
+    padding: 12px 14px;
     margin-bottom: 10px;
-    background-color: #fafafa;
-    border: 1px solid #eee;
-    border-radius: 4px;
+    border: 1px solid #d7e0e7;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #ffffff, #f4f9fc);
+}
+
+.screening-inline {
+    margin: 0 0 8px;
+    padding: 8px 10px;
+    border: 1px solid #d6e1e9;
+    border-radius: 10px;
+    background: #f8fcff;
+    font-size: 0.92rem;
+}
+
+.screening-inline:last-child {
+    margin-bottom: 0;
+}
+
+.expired-screening {
+    margin-left: 5px;
+    color: #8a5a18;
+    font-style: italic;
+    font-weight: 600;
+}
+
+.warning-row {
+    color: var(--danger);
+    font-weight: 700;
+}
+
+.inline-form {
+    display: inline;
+    margin: 0;
+    max-width: none;
+}
+
+.inline-form button {
+    margin-top: 0;
+    padding: 6px 11px;
+    font-size: 0.82rem;
+}
+
+.entry-actions,
+.checkout-box,
+.confirm-actions,
+.seat-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.checkout-box form,
+.entry-actions form {
+    margin: 0;
+}
+
+.confirm-form,
+.seat-reservation-form {
+    max-width: 100%;
+}
+
+.cancel-link,
+.seat-back-link {
+    margin-top: 6px;
+}
+
+.reservation-summary p {
+    margin: 0 0 6px;
+}
+
+.reservation-summary p:last-child {
+    margin-bottom: 0;
+}
+
+.seat-map {
+    display: grid;
+    gap: 7px;
+    padding: 12px;
+    border: 1px solid #ccd8e1;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff, #f2f7fa);
+    overflow-x: auto;
+}
+
+.seat-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 3px 1px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    transition: transform 0.16s ease, border-color 0.16s ease, background-color 0.16s ease;
+}
+
+.seat-option.is-selectable {
+    cursor: pointer;
+}
+
+.seat-option.is-selectable:hover {
+    transform: translateY(-1px);
+    background-color: #e9f8f5;
+    border-color: #65a89f;
+}
+
+.seat-option.is-reserved,
+.seat-option.is-readonly {
+    opacity: 0.95;
+}
+
+.seat-checkbox {
+    margin: 0;
+    width: 12px;
+    height: 12px;
+    accent-color: var(--brand);
+}
+
+.seat-checkbox:disabled {
+    cursor: not-allowed;
+}
+
+.seat-path {
+    fill: #4d857f;
+    transition: fill 0.18s ease-in-out;
+}
+
+.seat-option.is-reserved .seat-path,
+.seat-option.is-readonly .seat-path {
+    fill: #a9b2b8;
+}
+
+.seat-checkbox:checked + .seat-shape .seat-path {
+    fill: var(--accent);
+}
+
+.seat-code {
+    font-size: 10px;
+    line-height: 1;
+}
+
+@keyframes fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 900px) {
+    body {
+        padding: 14px 10px 24px;
+    }
+
+    header {
+        border-radius: 16px;
+    }
+
+    nav {
+        gap: 8px;
+    }
+
+    nav a {
+        padding: 8px 12px;
+        font-size: 0.86rem;
+    }
+
+    main > div[th\:fragment="content"] {
+        border-radius: 16px;
+        padding: 14px;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 620px) {
+    h1 {
+        font-size: 1.38rem;
+    }
+
+    h2 {
+        font-size: 1.1rem;
+    }
+
+    .entry-actions,
+    .checkout-box,
+    .confirm-actions,
+    .seat-actions {
+        align-items: stretch;
+    }
+
+    .entry-actions a,
+    .checkout-box a,
+    .confirm-actions a,
+    .seat-actions a,
+    button {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .inline-form button {
+        width: auto;
+    }
 }
 </style>
 

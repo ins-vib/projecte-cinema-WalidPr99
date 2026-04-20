@@ -44,19 +44,25 @@ public class OrderController {
             return "redirect:/home";
         }
 
-        Optional<Comanda> optional = comandaRepository.findById(id);
-        if (optional.isEmpty()) {
+        try {
+            Optional<Comanda> optional = comandaRepository.findById(id);
+            if (optional.isEmpty()) {
+                return "redirect:/client/orders";
+            }
+
+            Comanda comanda = optional.get();
+
+            if (!comanda.getClientName().equals(user.getUsername())) {
+                return "redirect:/client/orders";
+            }
+
+            model.addAttribute("comanda", comanda);
+            return "client/order-detail";
+        } catch (Exception ex) {
+            System.out.println("[COMANDA GET ERROR] Error al recuperar la comanda con id=" + id);
+            System.out.println("[COMANDA GET ERROR] " + ex.getMessage());
             return "redirect:/client/orders";
         }
-
-        Comanda comanda = optional.get();
-
-        if (!comanda.getClientName().equals(user.getUsername())) {
-            return "redirect:/client/orders";
-        }
-
-        model.addAttribute("comanda", comanda);
-        return "client/order-detail";
     }
 
     private boolean isClient(CustomUserDetails user) {
