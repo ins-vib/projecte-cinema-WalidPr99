@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Read(//c/Users/walid/OneDSpace/Escritorio/cinemadaw/cinemadaw/src/main/java/com/daw/cinemadaw/domain/cinema/**)"
-    ]
-  }
-}

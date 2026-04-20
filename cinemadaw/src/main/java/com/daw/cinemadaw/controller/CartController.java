@@ -1,6 +1,5 @@
 package com.daw.cinemadaw.controller;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -12,24 +11,21 @@ import java.util.Optional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.daw.cinemadaw.domain.cinema.Comanda;
-import com.daw.cinemadaw.domain.cinema.OrderStatus;
 import com.daw.cinemadaw.domain.cinema.Screening;
 import com.daw.cinemadaw.domain.cinema.Seat;
-import com.daw.cinemadaw.domain.cinema.Ticket;
 import com.daw.cinemadaw.domain.cinema.user.Role;
 import com.daw.cinemadaw.dto.CartEntryDTO;
-import com.daw.cinemadaw.repository.ComandaRepository;
 import com.daw.cinemadaw.repository.ScreeningRepository;
 import com.daw.cinemadaw.repository.SeatRepository;
 import com.daw.cinemadaw.service.CartSessionService;
 import com.daw.cinemadaw.service.CustomUserDetails;
+import com.daw.cinemadaw.service.TicketService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -39,14 +35,14 @@ public class CartController {
     private final ScreeningRepository screeningRepository;
     private final SeatRepository seatRepository;
     private final CartSessionService cartSessionService;
-    private final ComandaRepository comandaRepository;
+    private final TicketService ticketService;
 
     public CartController(ScreeningRepository screeningRepository, SeatRepository seatRepository,
-                          CartSessionService cartSessionService, ComandaRepository comandaRepository) {
+                          CartSessionService cartSessionService, TicketService ticketService) {
         this.screeningRepository = screeningRepository;
         this.seatRepository = seatRepository;
         this.cartSessionService = cartSessionService;
-        this.comandaRepository = comandaRepository;
+        this.ticketService = ticketService;
     }
 
     @GetMapping("/client/cart")
@@ -116,7 +112,6 @@ public class CartController {
     }
 
     @PostMapping("/client/cart/checkout")
-    @Transactional
     public String checkout(@AuthenticationPrincipal CustomUserDetails user, HttpSession session) {
 
         if (!isClient(user)) {
@@ -124,74 +119,47 @@ public class CartController {
         }
 
         HashMap<Long, ArrayList<Long>> cart = cartSessionService.getOrCreateCart(session);
+        int requestedSeats = countRequestedSeats(cart);
 
-        int reservedCount = 0;
-        int skippedCount = 0;
+        if (requestedSeats == 0) {
+            return "redirect:/client/cart";
+        }
 
-        Comanda comanda = new Comanda();
-        comanda.setDateTime(LocalDateTime.now());
-        comanda.setClientName(user.getUsername());
-        comanda.setEmail(user.getUsername());
-        comanda.setStatus(OrderStatus.CONFIRMADA);
-        comanda.setTotalAmount(0);
+        HashMap<Long, List<Long>> checkoutCart = new HashMap<>();
+        for (Map.Entry<Long, ArrayList<Long>> entry : cart.entrySet()) {
+            checkoutCart.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+        }
 
-        List<Ticket> tickets = new ArrayList<>();
+        try {
+            Comanda comanda = ticketService.createOrder(checkoutCart, user.getUsername(), user.getUsername());
+            int reservedCount = comanda.getTickets() != null ? comanda.getTickets().size() : 0;
 
-        for (Map.Entry<Long, ArrayList<Long>> cartEntry : cart.entrySet()) {
-            Long screeningId = cartEntry.getKey();
-            ArrayList<Long> seatIds = new ArrayList<>(new LinkedHashSet<>(cartEntry.getValue()));
+            cartSessionService.clearCart(session);
 
-            if (seatIds.isEmpty()) {
+            if (reservedCount > 0) {
+                return "redirect:/client/cart?reservedCount=" + reservedCount;
+            }
+
+            return "redirect:/client/cart";
+        } catch (IllegalArgumentException | IllegalStateException | DataIntegrityViolationException ex) {
+            System.out.println("[CHECKOUT ERROR] No s'ha pogut completar la compra: " + ex.getMessage());
+            return "redirect:/client/cart?checkoutSkippedCount=" + requestedSeats;
+        }
+    }
+
+    private int countRequestedSeats(HashMap<Long, ArrayList<Long>> cart) {
+
+        int total = 0;
+
+        for (ArrayList<Long> seatIds : cart.values()) {
+            if (seatIds == null || seatIds.isEmpty()) {
                 continue;
             }
 
-            Optional<Screening> optionalScreening = screeningRepository.findById(screeningId);
-            if (optionalScreening.isEmpty() || optionalScreening.get().getRoom() == null) {
-                skippedCount += seatIds.size();
-                continue;
-            }
-
-            Screening screening = optionalScreening.get();
-            Long roomId = screening.getRoom().getId();
-            List<Seat> seats = seatRepository.findByRoomIdAndIdIn(roomId, seatIds);
-
-            for (Seat seat : seats) {
-                if (seat.isState()) {
-                    seat.setState(false);
-                    Ticket ticket = new Ticket(screening.getPrice(), seat, screening, comanda);
-                    tickets.add(ticket);
-                    reservedCount++;
-                } else {
-                    skippedCount++;
-                }
-            }
-
-            seatRepository.saveAll(seats);
+            total += new LinkedHashSet<>(seatIds).size();
         }
 
-        if (reservedCount > 0) {
-            double total = tickets.stream().mapToDouble(Ticket::getPrice).sum();
-            comanda.setTotalAmount(total);
-            comanda.setTickets(tickets);
-            tickets.forEach(t -> t.setComanda(comanda));
-            try {
-                comandaRepository.saveAndFlush(comanda);
-            } catch (DataIntegrityViolationException ex) {
-                System.out.println("[CHECKOUT ERROR] Compra rechazada por conflicto de concurrencia: asiento ya vendido.");
-                System.out.println("[CHECKOUT ERROR] " + ex.getMessage());
-                return "redirect:/client/cart";
-            }
-        } else if (skippedCount > 0) {
-            System.out.println("[CHECKOUT ERROR] No se han podido reservar asientos: ya estaban vendidos o no disponibles.");
-        }
-
-        cartSessionService.clearCart(session);
-
-        if (reservedCount > 0) {
-            return "redirect:/client/cart?reservedCount=" + reservedCount;
-        }
-
-        return "redirect:/client/cart";
+        return total;
     }
 
     private List<CartEntryDTO> buildCartEntries(HttpSession session) {
