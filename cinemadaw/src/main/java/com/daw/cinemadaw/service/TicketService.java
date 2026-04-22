@@ -35,7 +35,7 @@ public class TicketService {
         this.seatRepository = seatRepository;
         this.comandaRepository = comandaRepository;
     }
-
+    
     @Transactional
     public Comanda createOrder(Map<Long, List<Long>> cart, String clientName, String email) {
         return crearOrdreTickets(cart, clientName, email);

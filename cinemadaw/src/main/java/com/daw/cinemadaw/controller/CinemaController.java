@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.daw.cinemadaw.domain.cinema.Cinema;
 import com.daw.cinemadaw.dto.ServicesListDTO;
@@ -54,14 +55,21 @@ public class CinemaController {
     }
 
     @GetMapping("/cinema/delete/{id}")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
 
         Optional<Cinema> optional = cinemaRepository.findById(id);
 
-        if(optional.isPresent()) {
-
-           cinemaRepository.deleteById(id);
-
+        if (optional.isPresent()) {
+            try {
+                cinemaRepository.deleteById(id);
+                redirectAttributes.addFlashAttribute("successMessage",
+                        "Cinema '" + optional.get().getName() + "' eliminat correctament.");
+            } catch (Exception e) {
+                redirectAttributes.addFlashAttribute("errorMessage",
+                        "No s'ha pogut eliminar el cinema: " + e.getMessage());
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "El cinema no existeix.");
         }
 
         return "redirect:/cinemes";

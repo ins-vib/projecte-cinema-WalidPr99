@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"C:/Users/walid/OneDrive/Escritorio/cinemadaw\" log --oneline)",
+      "Bash(git -C \"C:/Users/walid/OneDrive/Escritorio/cinemadaw\" log --format=\"%ad %s\" --date=short)",
+      "Bash(awk NR==69 { for \\(i=1;i<=length\\($0\\);i++\\) { c=substr\\($0,i,1\\); if \\(c==\"\\\\t\"\\) printf \"\\\\\\\\t\"; else printf \"%s\", c } print \"\" } *)",
+      "Bash(./mvnw.cmd -q compile)",
+      "Bash(./mvnw.cmd compile *)",
+      "Bash(./mvnw.cmd clean *)"
+    ]
+  }
+}

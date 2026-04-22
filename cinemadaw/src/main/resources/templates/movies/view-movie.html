@@ -99,7 +99,8 @@
 
                     <td th:if="${isAdmin}">
                         <a th:href="@{/screening/edit/{id}(id=${screening.id})}">Editar</a>
-                        <a th:href="@{/screening/delete/{id}(id=${screening.id})}">Esborrar</a>
+                        <a th:href="@{/screening/delete/{id}(id=${screening.id})}"
+                           onclick="return confirm('Segur que vols eliminar aquesta projecció?');">Esborrar</a>
                     </td>
 
                 </tr>

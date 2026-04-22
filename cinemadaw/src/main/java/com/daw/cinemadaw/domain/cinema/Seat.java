@@ -116,6 +116,10 @@ public class Seat {
         return room;
     }
 
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
     @Override
     public String toString() {
         return "Seat [id=" + id + ", seatRow=" + seatRow + ", number=" + number + ", x=" + x + ", y=" + y + ", type=" + type

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.daw.cinemadaw.domain.cinema.Movie;
 import com.daw.cinemadaw.repository.MovieRepository;
@@ -64,13 +65,22 @@ public class MovieController {
     }
 
     @GetMapping("/movie/delete/{id}")
-    public String deleteMovie(@PathVariable Long id) {
+    public String deleteMovie(@PathVariable Long id, RedirectAttributes redirectAttributes) {
 
         Optional<Movie> optional = movieRepository.findById(id);
 
-        if(optional.isPresent()) {
-            screeningRepository.deleteByMovieId(id);
-            movieRepository.deleteById(id);
+        if (optional.isPresent()) {
+            try {
+                screeningRepository.deleteByMovieId(id);
+                movieRepository.deleteById(id);
+                redirectAttributes.addFlashAttribute("successMessage",
+                        "Pel·lícula '" + optional.get().getTitle() + "' eliminada correctament.");
+            } catch (Exception e) {
+                redirectAttributes.addFlashAttribute("errorMessage",
+                        "No s'ha pogut eliminar la pel·lícula: " + e.getMessage());
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "La pel·lícula no existeix.");
         }
 
         return "redirect:/movies";
@@ -87,7 +97,11 @@ public class MovieController {
     }
 
     @PostMapping("/movie/create")
-    public String createMovie(@ModelAttribute Movie movie) {
+    public String createMovie(@Valid @ModelAttribute Movie movie, BindingResult result) {
+
+        if (result.hasErrors()) {
+            return "movies/create-movie";
+        }
 
         movieRepository.save(movie);
         return "redirect:/movies";

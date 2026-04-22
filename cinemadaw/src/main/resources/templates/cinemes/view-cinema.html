@@ -9,6 +9,9 @@
 
         <h1>Detalls del cinema: <span th:text="${cinema.name}"></span></h1>
 
+        <p th:if="${successMessage}" style="color:#166534;font-weight:700;" th:text="${successMessage}"></p>
+        <p th:if="${errorMessage}" style="color:#b91c1c;font-weight:700;" th:text="${errorMessage}"></p>
+
         <a th:if="${isAdmin}" th:href="@{/room/create/{id}(id=${cinema.id})}">Afegir sala</a>
 
         <table>
@@ -47,7 +50,7 @@
 
         </table>
 
-        <h2>Sales</h2>
+        <h2>Sales (<span th:text="${cinema.rooms != null ? #lists.size(cinema.rooms) : 0}">0</span>)</h2>
 
         <ul>
 
@@ -56,7 +59,8 @@
                 <span th:text="${sala.name} + ' - Capacitat: ' + ${sala.capacity}"></span>
                 <a th:href="@{/room/view/{id}(id=${sala.id})}">Veure Detall</a>
                 <a th:if="${isAdmin}" th:href="@{/room/edit/{id}(id=${sala.id})}">Editar</a>
-                <a th:if="${isAdmin}" th:href="@{/room/delete/{id}(id=${sala.id})}">Esborrar</a>
+                <a th:if="${isAdmin}" th:href="@{/room/delete/{id}(id=${sala.id})}"
+                   onclick="return confirm('Segur que vols eliminar aquesta sala? S\'eliminaran també tots els seients associats.');">Esborrar</a>
                 <a th:href="@{/seats/{id}(id=${sala.id})}">Veure Seients</a>
 
             </li>

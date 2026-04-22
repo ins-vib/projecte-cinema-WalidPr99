@@ -9,7 +9,11 @@
 
         <h1>Detalls de la sala: <span th:text="${room.name}"></span></h1>
 
+        <a th:href="@{/seats/{id}(id=${room.id})}">Veure seients</a>
+        <a th:if="${room.cinema != null}" th:href="@{/cinema/{id}(id=${room.cinema.id})}">Tornar al cinema</a>
         <a th:if="${isAdmin}" th:href="@{/room/edit/{id}(id=${room.id})}">Editar sala</a>
+        <a th:if="${isAdmin}" th:href="@{/room/delete/{id}(id=${room.id})}"
+           onclick="return confirm('Segur que vols eliminar aquesta sala? S\'eliminaran també tots els seients associats.');">Esborrar sala</a>
 
         <table>
 
@@ -20,6 +24,10 @@
                     <th>Nom</th>
 
                     <th>Capacitat</th>
+
+                    <th>Cinema</th>
+
+                    <th>Nº seients</th>
 
                 </tr>
 
@@ -32,6 +40,10 @@
                     <td th:text="${room.name}">Nom</td>
 
                     <td th:text="${room.capacity}">Capacitat</td>
+
+                    <td th:text="${room.cinema != null ? room.cinema.name : '-'}">Cinema</td>
+
+                    <td th:text="${room.seats != null ? #lists.size(room.seats) : 0}">0</td>
 
                 </tr>
 

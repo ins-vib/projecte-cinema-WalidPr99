@@ -9,6 +9,9 @@
 
 		<h1>Projeccions de la pel-licula: <span th:text="${movie.title}"></span></h1>
 
+		<p th:if="${successMessage}" style="color:#166534;font-weight:700;" th:text="${successMessage}"></p>
+		<p th:if="${errorMessage}" style="color:#b91c1c;font-weight:700;" th:text="${errorMessage}"></p>
+
 		<a th:if="${isAdmin}" th:href="@{/movie/{movieId}/screening/create(movieId=${movie.id})}">Afegir projeccio</a>
 		<a th:href="@{/movies}">Tornar al llistat de pel-licules</a>
 
@@ -58,7 +61,8 @@
 
 					<td th:if="${isAdmin}">
 						<a th:href="@{/screening/edit/{id}(id=${screening.id})}">Editar</a>
-						<a th:href="@{/screening/delete/{id}(id=${screening.id})}">Esborrar</a>
+						<a th:href="@{/screening/delete/{id}(id=${screening.id})}"
+						   onclick="return confirm('Segur que vols eliminar aquesta projecció?');">Esborrar</a>
 					</td>
 
 				</tr>

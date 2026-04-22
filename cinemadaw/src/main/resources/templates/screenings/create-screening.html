@@ -20,6 +20,7 @@
 			<br>
 
 			<input type="datetime-local" th:field="*{dateTime}" required>
+			<div th:if="${#fields.hasErrors('dateTime')}" th:errors="*{dateTime}"></div>
 
 			<br>
 
@@ -28,6 +29,7 @@
 			<br>
 
 			<input type="number" step="0.01" min="0" th:field="*{price}" required>
+			<div th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
 
 			<br>
 
@@ -40,6 +42,7 @@
 				<option th:each="room : ${rooms}" th:value="${room.id}"
 						th:text="${room.name + ' - ' + room.cinema.name}"></option>
 			</select>
+			<div th:if="${#fields.hasErrors('room')}" th:errors="*{room}"></div>
 
 			<br>
 

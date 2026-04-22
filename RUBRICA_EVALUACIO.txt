@@ -1,0 +1,343 @@
+================================================================
+RÚBRICA D'AVALUACIÓ - PROJECTE CINEMADAW
+================================================================
+OBJECTIU: Aconseguir 3 punts en cada criteri (nota màxima)
+================================================================
+
+----------------------------------------------------------------
+SEGUIMENT DEL PROJECTE (OBLIGATORI - sense això 0 en tot)
+----------------------------------------------------------------
+0 pts - No s'ha pujat cap versió al repositori o commits < 20% sessions
+2 pts - S'ha pujat al repositori GitHub
+3 pts - S'ha pujat al repositori GITHUB la versió modificada a cada sessió
+         de classe i aquestes contenen canvis significatius
+
+----------------------------------------------------------------
+ASSISTÈNCIA (OBLIGATORI - sense això 0 en tot)
+----------------------------------------------------------------
+0 pts - No s'ha assistit al 80% de les sessions de classe
+2 pts - S'ha assistit al 80% de les sessions de classe
+3 pts - S'ha assistit al 80% de les sessions de classe
+
+----------------------------------------------------------------
+LANDING PAGE
+----------------------------------------------------------------
+3 pts - Mostra informació general de la cadena de cinemes
+      - Conté botons per Registrar-se o Iniciar sessió segons el rol
+
+----------------------------------------------------------------
+SEGURETAT
+----------------------------------------------------------------
+3 pts - En iniciar sessió correctament, es redirigeix a la interfície
+         corresponent (client o administrador)
+      - En cas contrari es mostra error d'autentificació
+      - Es pot fer logout
+
+================================================================
+CINEMES
+================================================================
+
+CINEMA - Llistat (READ)
+----------------------------------------------------------------
+0 pts - No funciona o mostra errors
+0 pts - Mostra dades incompletes o poc clares
+2 pts - Mostra dades correctes però amb format millorable
+3 pts - Mostra totes les dades rellevants, amb bon format (taula/cards),
+         opcions d'acció clares
+
+CINEMA - Detall (READ)
+----------------------------------------------------------------
+0 pts - No funciona
+0 pts - Mostra dades incompletes o poc clares
+2 pts - Mostra dades correctes però amb format millorable
+3 pts - Mostrar nombre de sales del cinema + Navegació cap a sales
+
+CINEMA - Alta (CREATE)
+----------------------------------------------------------------
+0 pts - No permet crear o falla
+0 pts - Formulari incomplet o amb errors de validació
+2 pts - Formulari funcional amb alguna validació bàsica
+3 pts - Formulari complet, validacions correctes, UX clara
+
+CINEMA - Edició (UPDATE)
+----------------------------------------------------------------
+0 pts - No funciona
+0 pts - Edició parcial o poc fiable
+2 pts - Edició funcional però amb algun problema menor
+3 pts - Edició completa amb dades carregades correctament i validació
+
+CINEMA - Eliminació (DELETE)
+----------------------------------------------------------------
+0 pts - No funciona
+0 pts - Eliminació amb problemes
+2 pts - Eliminació funcional sense confirmació
+3 pts - Eliminació amb confirmació i control d'errors
+
+CINEMA - Validacions (Backend + Frontend)
+----------------------------------------------------------------
+0 pts - Sense validació
+0 pts - Validacions mínimes o incorrectes
+2 pts - Validacions bàsiques
+3 pts - Validacions completes, missatges clars
+
+CINEMA - Gestió de relacions
+----------------------------------------------------------------
+0 pts - No funciona
+0 pts - Relacions poc clares o limitades
+2 pts - Relacions funcionals amb algun error menor
+3 pts - Relacions ben implementades (selects, llistats dependents...)
+
+CINEMA - Experiència d'usuari (UX/UI)
+----------------------------------------------------------------
+0 pts - Difícil d'utilitzar
+0 pts - Interfície confusa
+2 pts - Interfície correcta
+3 pts - Interfície clara, intuïtiva i agradable
+
+CINEMA - Gestió d'errors
+----------------------------------------------------------------
+0 pts - Errors sense control
+0 pts - Errors poc controlats
+2 pts - Alguns errors controlats
+3 pts - Control complet d'errors (missatges útils)
+
+================================================================
+SALES
+================================================================
+
+SALES - Llistat (READ)
+----------------------------------------------------------------
+0 pts - No funciona o mostra errors
+0 pts - Mostra dades incompletes o poc clares
+2 pts - Mostra dades correctes però amb format millorable
+3 pts - Mostra totes les dades rellevants, amb bon format (taula/cards),
+         opcions d'acció clares
+
+SALES - Detall (READ)
+----------------------------------------------------------------
+0 pts - No funciona
+0 pts - Mostra dades incompletes o poc clares
+2 pts - Mostra dades correctes però amb format millorable
+3 pts - Navegació cap a seients
+
+SALES - Alta (CREATE)
+----------------------------------------------------------------
+0 pts - No permet crear o falla
+0 pts - Formulari incomplet o amb errors de validació
+2 pts - Formulari funcional amb alguna validació bàsica
+3 pts - Formulari complet, validacions correctes, UX clara
+
+SALES - Edició (UPDATE)
+----------------------------------------------------------------
+0 pts - No funciona
+0 pts - Edició parcial o poc fiable
+2 pts - Edició funcional però amb algun problema menor
+3 pts - Edició completa amb dades carregades correctament i validació
+
+SALES - Eliminació (DELETE)
+----------------------------------------------------------------
+0 pts - No funciona
+0 pts - Eliminació amb problemes
+2 pts - Eliminació funcional sense confirmació
+3 pts - Eliminació amb confirmació i control d'errors
+
+SALES - Validacions (Backend + Frontend)
+----------------------------------------------------------------
+0 pts - Sense validació
+0 pts - Validacions mínimes o incorrectes
+2 pts - Validacions bàsiques
+3 pts - Validacions completes, missatges clars
+
+SALES - Experiència d'usuari (UX/UI)
+----------------------------------------------------------------
+0 pts - Difícil d'utilitzar
+0 pts - Interfície confusa
+2 pts - Interfície correcta
+3 pts - Interfície clara, intuïtiva i agradable
+
+SALES - Gestió d'errors
+----------------------------------------------------------------
+0 pts - Errors sense control
+0 pts - Errors poc controlats
+2 pts - Alguns errors controlats
+3 pts - Control complet d'errors (missatges útils)
+
+================================================================
+SEIENTS
+================================================================
+
+SEIENTS - Llistat (READ)
+----------------------------------------------------------------
+0 pts - No funciona o mostra errors
+0 pts - Mostra dades incompletes o poc clares
+2 pts - Mostra dades correctes però amb format millorable
+3 pts - Visualització gràfica (SVG) + Tipus de seient (badge/color)
+         + Estat actiu/inactiu
+
+SEIENTS - Alta (CREATE)
+----------------------------------------------------------------
+0 pts - No permet crear o falla
+0 pts - Formulari incomplet o amb errors de validació
+2 pts - Formulari funcional amb alguna validació bàsica
+3 pts - Formulari complet, validacions correctes, UX clara
+
+SEIENTS - Edició (UPDATE)
+----------------------------------------------------------------
+0 pts - No funciona
+0 pts - Edició parcial o poc fiable
+2 pts - Edició funcional però amb algun problema menor
+3 pts - Edició completa amb dades carregades correctament i validació
+
+SEIENTS - Eliminació (DELETE)
+----------------------------------------------------------------
+0 pts - No funciona
+0 pts - Eliminació amb problemes
+2 pts - Eliminació funcional sense confirmació
+3 pts - Eliminació amb confirmació i control d'errors
+
+SEIENTS - Validacions (Backend + Frontend)
+----------------------------------------------------------------
+0 pts - Sense validació
+0 pts - Validacions mínimes o incorrectes
+2 pts - Validacions bàsiques
+3 pts - Validacions completes, missatges clars
+
+SEIENTS - Experiència d'usuari (UX/UI)
+----------------------------------------------------------------
+0 pts - Difícil d'utilitzar
+0 pts - Interfície confusa
+2 pts - Interfície correcta
+3 pts - Interfície clara, intuïtiva i agradable
+
+SEIENTS - Gestió d'errors
+----------------------------------------------------------------
+0 pts - Errors sense control
+0 pts - Errors poc controlats
+2 pts - Alguns errors controlats
+3 pts - Control complet d'errors (missatges útils)
+
+================================================================
+PEL·LÍCULES
+================================================================
+
+PEL·LÍCULES - Llistat (READ)
+----------------------------------------------------------------
+0 pts - No funciona o mostra errors
+0 pts - Mostra dades incompletes o poc clares
+2 pts - Mostra dades correctes però amb format millorable
+3 pts - Mostra totes les dades rellevants, amb bon format (taula/cards),
+         opcions d'acció clares
+
+PEL·LÍCULES - Detall (READ)
+----------------------------------------------------------------
+0 pts - No funciona
+0 pts - Mostra dades incompletes o poc clares
+2 pts - Mostra dades correctes però amb format millorable
+3 pts - Informació completa de la pel·lícula ben presentada
+
+PEL·LÍCULES - Alta (CREATE)
+----------------------------------------------------------------
+0 pts - No permet crear o falla
+0 pts - Formulari incomplet o amb errors de validació
+2 pts - Formulari funcional amb alguna validació bàsica
+3 pts - Formulari complet, validacions correctes, UX clara
+
+PEL·LÍCULES - Edició (UPDATE)
+----------------------------------------------------------------
+0 pts - No funciona
+0 pts - Edició parcial o poc fiable
+2 pts - Edició funcional però amb algun problema menor
+3 pts - Edició completa amb dades carregades correctament i validació
+
+PEL·LÍCULES - Eliminació (DELETE)
+----------------------------------------------------------------
+0 pts - No funciona
+0 pts - Eliminació amb problemes
+2 pts - Eliminació funcional sense confirmació
+3 pts - Eliminació amb confirmació i control d'errors
+
+PEL·LÍCULES - Validacions (Backend + Frontend)
+----------------------------------------------------------------
+0 pts - Sense validació
+0 pts - Validacions mínimes o incorrectes
+2 pts - Validacions bàsiques
+3 pts - Validacions completes, missatges clars
+
+PEL·LÍCULES - Experiència d'usuari (UX/UI)
+----------------------------------------------------------------
+0 pts - Difícil d'utilitzar
+0 pts - Interfície confusa
+2 pts - Interfície correcta
+3 pts - Interfície clara, intuïtiva i agradable
+
+PEL·LÍCULES - Gestió d'errors
+----------------------------------------------------------------
+0 pts - Errors sense control
+0 pts - Errors poc controlats
+2 pts - Alguns errors controlats
+3 pts - Control complet d'errors (missatges útils)
+
+================================================================
+PROJECCIONS
+================================================================
+
+PROJECCIONS - Llistat (READ)
+----------------------------------------------------------------
+0 pts - No funciona o mostra errors
+0 pts - Mostra dades incompletes o poc clares
+2 pts - Mostra dades correctes però amb format millorable
+3 pts - Mostra totes les dades rellevants, amb bon format (taula/cards),
+         opcions d'acció clares
+
+PROJECCIONS - Detall (READ)
+----------------------------------------------------------------
+0 pts - No funciona
+0 pts - Mostra dades incompletes o poc clares
+2 pts - Mostra dades correctes però amb format millorable
+3 pts - Informació completa de la projecció ben presentada
+
+PROJECCIONS - Alta (CREATE)
+----------------------------------------------------------------
+0 pts - No permet crear o falla
+0 pts - Formulari incomplet o amb errors de validació
+2 pts - Formulari funcional amb alguna validació bàsica
+3 pts - Formulari complet, validacions correctes, UX clara
+
+PROJECCIONS - Edició (UPDATE)
+----------------------------------------------------------------
+0 pts - No funciona
+0 pts - Edició parcial o poc fiable
+2 pts - Edició funcional però amb algun problema menor
+3 pts - Edició completa amb dades carregades correctament i validació
+
+PROJECCIONS - Eliminació (DELETE)
+----------------------------------------------------------------
+0 pts - No funciona
+0 pts - Eliminació amb problemes
+2 pts - Eliminació funcional sense confirmació
+3 pts - Eliminació amb confirmació i control d'errors
+
+PROJECCIONS - Validacions (Backend + Frontend)
+----------------------------------------------------------------
+0 pts - Sense validació
+0 pts - Validacions mínimes o incorrectes
+2 pts - Validacions bàsiques
+3 pts - Validacions completes, missatges clars
+
+PROJECCIONS - Experiència d'usuari (UX/UI)
+----------------------------------------------------------------
+0 pts - Difícil d'utilitzar
+0 pts - Interfície confusa
+2 pts - Interfície correcta
+3 pts - Interfície clara, intuïtiva i agradable
+
+PROJECCIONS - Gestió d'errors
+----------------------------------------------------------------
+0 pts - Errors sense control
+0 pts - Errors poc controlats
+2 pts - Alguns errors controlats
+3 pts - Control complet d'errors (missatges útils)
+
+================================================================
+FI DE LA RÚBRICA
+================================================================

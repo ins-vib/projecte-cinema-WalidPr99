@@ -9,6 +9,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 
@@ -18,14 +21,19 @@ public class Screening {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "La data i hora de la projecció és obligatòria")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime dateTime;
 
+    @Positive(message = "El preu ha de ser superior a 0")
+    @DecimalMax(value = "1000.0", message = "El preu no pot superar els 1000€")
     private double price;
 
+    @NotNull(message = "La pel·lícula és obligatòria")
     @ManyToOne
     private Movie movie;
 
+    @NotNull(message = "La sala és obligatòria")
     @ManyToOne
     private Room room;
 

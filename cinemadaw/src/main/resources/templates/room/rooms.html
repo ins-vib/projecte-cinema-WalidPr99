@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:replace="~{layout :: layout(~{::content})}">
+
+    <div th:fragment="content">
+
+        <h1>Llistat global de sales</h1>
+
+        <p th:if="${successMessage}" style="color:#166534;font-weight:700;" th:text="${successMessage}"></p>
+        <p th:if="${errorMessage}" style="color:#b91c1c;font-weight:700;" th:text="${errorMessage}"></p>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Capacitat</th>
+                    <th>Cinema</th>
+                    <th>Accions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:if="${#lists.isEmpty(llista)}">
+                    <td colspan="4">No hi ha sales registrades.</td>
+                </tr>
+                <tr th:each="room : ${llista}">
+                    <td th:text="${room.name}">Nom</td>
+                    <td th:text="${room.capacity}">Capacitat</td>
+                    <td th:text="${room.cinema != null ? room.cinema.name : '-'}">Cinema</td>
+                    <td>
+                        <a th:href="@{/room/view/{id}(id=${room.id})}">Veure detall</a>
+                        <a th:href="@{/seats/{id}(id=${room.id})}">Veure seients</a>
+                        <a th:if="${isAdmin}" th:href="@{/room/edit/{id}(id=${room.id})}">Editar</a>
+                        <a th:if="${isAdmin}" th:href="@{/room/delete/{id}(id=${room.id})}"
+                           onclick="return confirm('Segur que vols eliminar aquesta sala? S\'eliminaran també tots els seients associats.');">Esborrar</a>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>

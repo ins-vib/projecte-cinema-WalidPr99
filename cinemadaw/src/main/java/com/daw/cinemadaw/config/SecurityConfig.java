@@ -62,7 +62,8 @@ public class SecurityConfig {
                 "/screening/edit",
                 "/screening/delete/**",
                 "/seat/edit/**",
-                "/seat/delete/**"
+                "/seat/delete/**",
+                "/seat/create/**"
             ).hasRole("ADMIN")
 
             // Rutes de consulta accessibles a CLIENT i ADMIN
@@ -72,6 +73,7 @@ public class SecurityConfig {
                 "/movies",
                 "/movies/**",
                 "/movie/**",
+                "/rooms",
                 "/room/**",
                 "/seat/**",
                 "/seats/**",

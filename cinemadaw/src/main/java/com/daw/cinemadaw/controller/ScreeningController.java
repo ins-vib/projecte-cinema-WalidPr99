@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import org.springframework.validation.BindingResult;
 
 import com.daw.cinemadaw.domain.cinema.Movie;
 import com.daw.cinemadaw.domain.cinema.Room;
@@ -15,6 +18,8 @@ import com.daw.cinemadaw.domain.cinema.Screening;
 import com.daw.cinemadaw.repository.MovieRepository;
 import com.daw.cinemadaw.repository.RoomRepository;
 import com.daw.cinemadaw.repository.ScreeningRepository;
+
+import jakarta.validation.Valid;
 
 @Controller
 public class ScreeningController {
@@ -61,7 +66,8 @@ public class ScreeningController {
 	}
 
 	@PostMapping("/movie/{movieId}/screening/create")
-	public String createScreening(@PathVariable Long movieId, @ModelAttribute Screening screening, Model model) {
+	public String createScreening(@PathVariable Long movieId, @Valid @ModelAttribute Screening screening,
+			BindingResult result, Model model) {
 
 		Optional<Movie> optionalMovie = movieRepository.findById(movieId);
 
@@ -69,7 +75,7 @@ public class ScreeningController {
 			return "redirect:/home";
 		}
 
-		if (screening.getRoom() == null || screening.getRoom().getId() == null) {
+		if (result.hasErrors() || screening.getRoom() == null || screening.getRoom().getId() == null) {
 			screening.setMovie(optionalMovie.get());
 			model.addAttribute("screening", screening);
 			model.addAttribute("rooms", roomRepository.findAll());
@@ -106,10 +112,10 @@ public class ScreeningController {
 	}
 
 	@PostMapping("/screening/edit")
-	public String editScreening(@ModelAttribute Screening screening, Model model) {
+	public String editScreening(@Valid @ModelAttribute Screening screening, BindingResult result, Model model) {
 
-		if (screening.getMovie() == null || screening.getMovie().getId() == null || screening.getRoom() == null
-				|| screening.getRoom().getId() == null) {
+		if (result.hasErrors() || screening.getMovie() == null || screening.getMovie().getId() == null
+				|| screening.getRoom() == null || screening.getRoom().getId() == null) {
 			model.addAttribute("screening", screening);
 			model.addAttribute("rooms", roomRepository.findAll());
 			return "screenings/edit-screeining";
@@ -131,18 +137,30 @@ public class ScreeningController {
 	}
 
 	@GetMapping("/screening/delete/{id}")
-	public String deleteScreening(@PathVariable Long id) {
+	public String deleteScreening(@PathVariable Long id, RedirectAttributes redirectAttributes) {
 
 		Optional<Screening> optionalScreening = screeningRepository.findById(id);
 
 		if (optionalScreening.isPresent()) {
 			Screening screening = optionalScreening.get();
-			Long movieId = screening.getMovie().getId();
-			screeningRepository.deleteById(id);
-			return "redirect:/movie/" + movieId + "/screenings";
+			Long movieId = screening.getMovie() != null ? screening.getMovie().getId() : null;
+
+			try {
+				screeningRepository.deleteById(id);
+				redirectAttributes.addFlashAttribute("successMessage", "Projecció eliminada correctament.");
+			} catch (Exception e) {
+				redirectAttributes.addFlashAttribute("errorMessage",
+						"No s'ha pogut eliminar la projecció: " + e.getMessage());
+			}
+
+			if (movieId != null) {
+				return "redirect:/movie/" + movieId + "/screenings";
+			}
+			return "redirect:/movies";
 		}
 
-		return "redirect:/home";
+		redirectAttributes.addFlashAttribute("errorMessage", "La projecció no existeix.");
+		return "redirect:/movies";
 	}
 
 }

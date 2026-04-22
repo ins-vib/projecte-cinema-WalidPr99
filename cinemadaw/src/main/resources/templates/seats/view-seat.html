@@ -8,6 +8,9 @@
 	<div th:fragment="content">
 
 		<h1>Mapa de seients</h1>
+
+		<p th:if="${successMessage}" style="color:#166534;font-weight:700;" th:text="${successMessage}"></p>
+		<p th:if="${errorMessage}" style="color:#b91c1c;font-weight:700;" th:text="${errorMessage}"></p>
 		<h2 th:text="${room.name} + ' - Capacitat: ' + ${room.capacity}">Sala i capacitat</h2>
 		<p th:if="${screening != null}">
 			Projeccio:
@@ -35,6 +38,7 @@
 				<label th:each="seat : ${llista}"
 					   class="seat-option"
 					   th:classappend="${!seat.state} ? ' is-reserved' : (${isClient and !isAdmin} ? ' is-selectable' : ' is-readonly')"
+					   th:attr="data-seat-type=${seat.type}"
 					   th:style="'grid-column:' + (${seat.x} + 1) + ';grid-row:' + (${seat.y} + 1) + ';'">
 
 					<input class="seat-checkbox"
@@ -63,12 +67,22 @@
 		</form>
 
 		<p>Verd: disponible | Taronja: seleccionat | Gris: reservat o no seleccionable</p>
+		<p>
+			Tipus:
+			<span class="seat-badge seat-badge-standard">Standard</span>
+			<span class="seat-badge seat-badge-premium">Premium</span>
+			<span class="seat-badge seat-badge-adapted">Adapted</span>
+		</p>
 
 		<div th:if="${isAdmin}">
 			<h3>Gestio de seients</h3>
+			<a th:href="@{/seat/create/{roomId}(roomId=${room.id})}">Afegir seient</a>
 			<ul>
 				<li th:each="seat : ${llista}">
 					<span th:text="'Fila: ' + ${seat.seatRow} + ' | Numero: ' + ${seat.number} + ' | Estat: ' + (${seat.state} ? 'Disponible' : 'Reservat')"></span>
+					<span class="seat-badge"
+						  th:classappend="${seat.type.name() == 'Premium'} ? ' seat-badge-premium' : (${seat.type.name() == 'Adapted'} ? ' seat-badge-adapted' : ' seat-badge-standard')"
+						  th:text="${seat.type}">Tipus</span>
 					|
 					<a th:href="@{/seat/{id}(id=${seat.id})}">Detall</a>
 					|

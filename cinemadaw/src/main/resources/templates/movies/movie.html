@@ -9,6 +9,9 @@
 
         <h1>Llistat de pel·lícules</h1>
 
+        <p th:if="${successMessage}" style="color:#166534;font-weight:700;" th:text="${successMessage}"></p>
+        <p th:if="${errorMessage}" style="color:#b91c1c;font-weight:700;" th:text="${errorMessage}"></p>
+
         <a th:if="${isAdmin}" th:href="@{/movie/create}">Afegir pel·lícula</a>
 
         <table>
@@ -21,11 +24,21 @@
 
                     <th>Gènere</th>
 
+                    <th>Durada (min)</th>
+
+                    <th>Data estrena</th>
+
+                    <th>Accions</th>
+
                 </tr>
 
             </thead>
 
             <tbody>
+
+                <tr th:if="${#lists.isEmpty(llista)}">
+                    <td colspan="5">No hi ha pel·lícules registrades.</td>
+                </tr>
 
                 <tr th:each="movie : ${llista}">
 
@@ -33,11 +46,16 @@
 
                     <td th:text="${movie.genre}">Gènere</td>
 
+                    <td th:text="${movie.duration}">Durada</td>
+
+                    <td th:text="${movie.releaseDate}">Data</td>
+
                     <td>
 
                         <a th:href="@{/movie/{id}(id=${movie.id})}">Veure detall</a>
                         <a th:href="@{/movie/{movieId}/screenings(movieId=${movie.id})}">Projeccions</a>
-                        <a th:if="${isAdmin}" th:href="@{/movie/delete/{id}(id=${movie.id})}">Esborrar</a>
+                        <a th:if="${isAdmin}" th:href="@{/movie/delete/{id}(id=${movie.id})}"
+                           onclick="return confirm('Segur que vols eliminar aquesta pel·lícula? S\'eliminaran també totes les projeccions associades.');">Esborrar</a>
                         <a th:if="${isAdmin}" th:href="@{/movie/edit/{id}(id=${movie.id})}">Editar</a>
 
                     </td>

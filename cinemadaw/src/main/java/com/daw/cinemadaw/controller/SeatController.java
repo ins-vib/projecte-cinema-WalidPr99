@@ -28,6 +28,9 @@ import com.daw.cinemadaw.repository.SeatRepository;
 import com.daw.cinemadaw.service.CartSessionService;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class SeatController {
@@ -252,6 +255,48 @@ public class SeatController {
         return "redirect:/movies";
     }
 
+    @GetMapping("/seat/create/{roomId}")
+    public String showCreateSeat(@PathVariable Long roomId, Model model) {
+
+        Optional<Room> optionalRoom = roomRepository.findById(roomId);
+        if (optionalRoom.isEmpty()) {
+            return "redirect:/home";
+        }
+
+        Seat seat = new Seat();
+        seat.setType(SeatType.Standard);
+        seat.setState(true);
+
+        model.addAttribute("seat", seat);
+        model.addAttribute("room", optionalRoom.get());
+        model.addAttribute("types", SeatType.values());
+        return "seats/create-seat";
+    }
+
+    @PostMapping("/seat/create/{roomId}")
+    public String createSeat(@PathVariable Long roomId,
+                             @Valid @ModelAttribute("seat") Seat seat,
+                             BindingResult result,
+                             Model model) {
+
+        Optional<Room> optionalRoom = roomRepository.findById(roomId);
+        if (optionalRoom.isEmpty()) {
+            return "redirect:/home";
+        }
+
+        if (result.hasErrors()) {
+            model.addAttribute("room", optionalRoom.get());
+            model.addAttribute("types", SeatType.values());
+            return "seats/create-seat";
+        }
+
+        Room room = optionalRoom.get();
+        seat.setRoom(room);
+        seatRepository.save(seat);
+
+        return "redirect:/seats/" + roomId;
+    }
+
     @GetMapping("/seat/edit/{id}")
 
     public String editSeat(@PathVariable Long id, Model model) {
@@ -304,18 +349,26 @@ public class SeatController {
     }
 
     @GetMapping("/seat/delete/{id}")
-    public String deleteSeat(@PathVariable Long id) {
+    public String deleteSeat(@PathVariable Long id, RedirectAttributes redirectAttributes) {
 
         Optional<Seat> optionalSeat = seatRepository.findById(id);
 
         if (optionalSeat.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "El seient no existeix.");
             return "redirect:/home";
         }
 
         Seat seat = optionalSeat.get();
         Long roomId = seat.getRoom() != null ? seat.getRoom().getId() : null;
 
-        seatRepository.deleteById(id);
+        try {
+            seatRepository.deleteById(id);
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Seient " + seat.getSeatRow() + seat.getNumber() + " eliminat correctament.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "No s'ha pogut eliminar el seient: " + e.getMessage());
+        }
 
         if (roomId != null) {
             return "redirect:/seats/" + roomId;

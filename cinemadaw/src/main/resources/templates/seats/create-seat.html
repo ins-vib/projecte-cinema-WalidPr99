@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+<div th:replace="~{layout :: layout(~{::content})}">
+
+	<div th:fragment="content">
+
+		<h1>Crear nou seient</h1>
+		<h2 th:text="'Sala: ' + ${room.name}">Sala</h2>
+
+		<form th:action="@{/seat/create/{roomId}(roomId=${room.id})}" th:object="${seat}" method="post">
+
+			<label>Fila</label>
+			<br>
+			<input type="text" th:field="*{seatRow}" required>
+			<div th:if="${#fields.hasErrors('seatRow')}" th:errors="*{seatRow}"></div>
+
+			<br>
+
+			<label>Número</label>
+			<br>
+			<input type="number" th:field="*{number}" min="1" max="500" required>
+			<div th:if="${#fields.hasErrors('number')}" th:errors="*{number}"></div>
+
+			<br>
+
+			<label>Posició X</label>
+			<br>
+			<input type="number" th:field="*{x}" required>
+
+			<br>
+
+			<label>Posició Y</label>
+			<br>
+			<input type="number" th:field="*{y}" required>
+
+			<br>
+
+			<label>Tipus</label>
+			<br>
+			<select th:field="*{type}">
+				<option th:each="seatType : ${types}" th:value="${seatType}" th:text="${seatType}"></option>
+			</select>
+
+			<br>
+
+			<label>
+				<input type="checkbox" th:field="*{state}">
+				Disponible
+			</label>
+
+			<br><br>
+
+			<button type="submit">Crear seient</button>
+			<a th:href="@{/seats/{id}(id=${room.id})}">Cancel·lar</a>
+
+		</form>
+
+	</div>
+
+</div>
+
+</body>
+</html>

@@ -9,6 +9,9 @@
 
         <h1>Llistat de cinemes</h1>
 
+        <p th:if="${successMessage}" style="color:#166534;font-weight:700;" th:text="${successMessage}"></p>
+        <p th:if="${errorMessage}" style="color:#b91c1c;font-weight:700;" th:text="${errorMessage}"></p>
+
         <a th:if="${isAdmin}" th:href="@{/cinema/create}">Afegir cinema</a>
 
         <table>
@@ -21,11 +24,23 @@
 
                     <th>Ciutat</th>
 
+                    <th>Adreça</th>
+
+                    <th>Codi postal</th>
+
+                    <th>Nº sales</th>
+
+                    <th>Accions</th>
+
                 </tr>
 
             </thead>
 
             <tbody>
+
+                <tr th:if="${#lists.isEmpty(llista)}">
+                    <td colspan="6">No hi ha cinemes registrats.</td>
+                </tr>
 
                 <tr th:each="cinema : ${llista}">
 
@@ -33,10 +48,17 @@
 
                     <td th:text="${cinema.city}">Ciutat</td>
 
+                    <td th:text="${cinema.address}">Adreça</td>
+
+                    <td th:text="${cinema.postalCode}">CP</td>
+
+                    <td th:text="${cinema.rooms != null ? #lists.size(cinema.rooms) : 0}">0</td>
+
                     <td>
 
                         <a th:href="@{/cinema/{id}(id=${cinema.id})}">Veure detall</a>
-                        <a th:if="${isAdmin}" th:href="@{/cinema/delete/{id}(id=${cinema.id})}">Esborrar</a>
+                        <a th:if="${isAdmin}" th:href="@{/cinema/delete/{id}(id=${cinema.id})}"
+                           onclick="return confirm('Segur que vols eliminar aquest cinema? S\'eliminaran també totes les sales i seients associats.');">Esborrar</a>
                         <a th:if="${isAdmin}" th:href="@{/cinema/edit/{id}(id=${cinema.id})}">Editar</a>
 
                     </td>
