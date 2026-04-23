@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Canviar punts</title>
+</head>
+<body>
+<div th:replace="~{layout :: layout(~{::content})}">
+<div th:fragment="content">
+
+    <section>
+        <h1>Canviar punts per descompte</h1>
+
+        <div th:if="${successMessage}" style="color: var(--ok); font-weight: 700;" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage}" style="color: var(--danger); font-weight: 700;" th:text="${errorMessage}"></div>
+
+        <p>
+            Tens <strong th:text="${account.points}">0</strong> punts.
+            Pots canviar punts en blocs de <strong th:text="${redeemBlockPoints}">100</strong>
+            = <strong th:text="${#numbers.formatDecimal(redeemBlockDiscount, 1, 2) + ' €'}">5,00 €</strong> de descompte.
+        </p>
+    </section>
+
+    <section th:if="${redeemableBlocks > 0}">
+        <form th:action="@{/loyalty/redeem}" method="post">
+            <label for="points">Quants punts vols canviar?</label>
+            <select id="points" name="points" required>
+                <option th:each="i : ${#numbers.sequence(1, redeemableBlocks)}"
+                        th:value="${i * redeemBlockPoints}"
+                        th:text="${i * redeemBlockPoints} + ' punts = ' + ${#numbers.formatDecimal(i * redeemBlockDiscount, 1, 2)} + ' €'">
+                </option>
+            </select>
+            <button type="submit">Canviar punts</button>
+        </form>
+    </section>
+
+    <section th:if="${redeemableBlocks == 0}">
+        <p>
+            Encara no tens prou punts per canviar.
+            Necessites com a mínim <strong th:text="${redeemBlockPoints}">100</strong> punts.
+        </p>
+    </section>
+
+    <section>
+        <div class="entry-actions">
+            <a href="/loyalty">Tornar al panell</a>
+            <a href="/loyalty/history">Veure historial</a>
+        </div>
+    </section>
+
+</div>
+</div>
+</body>
+</html>

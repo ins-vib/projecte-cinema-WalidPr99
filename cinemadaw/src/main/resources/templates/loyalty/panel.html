@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>El meu programa de fidelitat</title>
+    <style>
+        .tier-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 0.88rem;
+        }
+        .tier-BRONZE { background: #f5e6d3; color: #7c4a1a; }
+        .tier-SILVER { background: #e5e7eb; color: #374151; }
+        .tier-GOLD   { background: #fef3c7; color: #92400e; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin: 14px 0;
+        }
+        .stat-card {
+            padding: 14px;
+            border: 1px solid #d7e0e7;
+            border-radius: 14px;
+            background: linear-gradient(180deg, #ffffff, #f4f9fc);
+        }
+        .stat-card .label { font-size: 0.82rem; color: #5e6e7b; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
+        .stat-card .value { font-size: 1.6rem; font-weight: 800; color: #102838; margin-top: 4px; }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e6edf2;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+        .progress-bar > div {
+            height: 100%;
+            background: linear-gradient(90deg, #0f766e, #d97706);
+        }
+    </style>
+</head>
+<body>
+<div th:replace="~{layout :: layout(~{::content})}">
+<div th:fragment="content">
+
+    <section>
+        <h1>El meu programa de fidelitat</h1>
+        <p>Guanya punts amb cada compra i canvia'ls per descomptes.</p>
+    </section>
+
+    <section>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">Punts actuals</div>
+                <div class="value" th:text="${account.points}">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Total gastat</div>
+                <div class="value" th:text="${#numbers.formatDecimal(account.totalSpent, 1, 2) + ' €'}">0,00 €</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Nivell actual</div>
+                <div class="value">
+                    <span class="tier-badge" th:classappend="'tier-' + ${account.tier}" th:text="${account.tier}">BRONZE</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Descompte màxim</div>
+                <div class="value" th:text="${#numbers.formatDecimal(maxDiscount, 1, 2) + ' €'}">0,00 €</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Descompte total canviat</div>
+                <div class="value" th:text="${#numbers.formatDecimal(totalRedeemed, 1, 2) + ' €'}">0,00 €</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Saldo disponible per gastar</div>
+                <div class="value" th:text="${#numbers.formatDecimal(account.availableDiscount, 1, 2) + ' €'}">0,00 €</div>
+            </div>
+        </div>
+    </section>
+
+    <section th:if="${amountToNext > 0}">
+        <h2>Següent nivell</h2>
+        <p>
+            Et falten
+            <strong th:text="${#numbers.formatDecimal(amountToNext, 1, 2) + ' €'}">0,00 €</strong>
+            de compra per arribar a
+            <span class="tier-badge" th:classappend="'tier-' + ${nextTier}" th:text="${nextTier}">SILVER</span>.
+        </p>
+        <div class="progress-bar">
+            <div th:with="target=${nextTier.name() == 'SILVER' ? silverThreshold : goldThreshold},
+                          pct=${target > 0 ? (account.totalSpent * 100 / target) : 0}"
+                 th:style="'width: ' + ${pct > 100 ? 100 : pct} + '%;'"></div>
+        </div>
+    </section>
+
+    <section th:if="${amountToNext == 0}">
+        <h2>Enhorabona!</h2>
+        <p>Ja has arribat al nivell màxim GOLD. Gràcies per la teva fidelitat.</p>
+    </section>
+
+    <section>
+        <h2>Com funciona?</h2>
+        <ul>
+            <li>Guanyes <strong th:text="${pointsPerEuro}">1</strong> punt per cada euro gastat.</li>
+            <li>Cada <strong th:text="${redeemBlockPoints}">100</strong> punts equivalen a
+                <strong th:text="${#numbers.formatDecimal(redeemBlockDiscount, 1, 2) + ' €'}">5,00 €</strong> de descompte.</li>
+            <li>Nivells: BRONZE (menys de
+                <span th:text="${#numbers.formatDecimal(silverThreshold, 1, 0) + ' €'}">100 €</span>),
+                SILVER (fins a
+                <span th:text="${#numbers.formatDecimal(goldThreshold, 1, 0) + ' €'}">500 €</span>),
+                GOLD (a partir d'aquí).</li>
+        </ul>
+    </section>
+
+    <section>
+        <div class="entry-actions">
+            <a th:if="${redeemableBlocks > 0}" href="/loyalty/redeem">Canviar punts per descompte</a>
+            <a href="/loyalty/history">Veure historial</a>
+            <a href="/client">Tornar a la cartellera</a>
+        </div>
+    </section>
+
+</div>
+</div>
+</body>
+</html>

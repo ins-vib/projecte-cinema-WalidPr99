@@ -1,0 +1,323 @@
+================================================================
+SISTEMA DE FIDELITZACIÓ PER PUNTS - EXPLICACIÓ SENZILLA
+================================================================
+Projecte: CinemaDAW
+Autor: Walid
+Data: 2026-04-23
+================================================================
+
+
+QUÈ ÉS AIXÒ?
+----------------------------------------------------------------
+És com la targeta de punts del súper, però per al cinema.
+Cada vegada que un client compra entrades, guanya punts.
+Després pot canviar aquests punts per euros de descompte,
+i aplicar-los en la seva propera compra.
+També té un "nivell" (BRONZE, SILVER, GOLD) segons quant ha gastat
+en total.
+
+Exemple ràpid:
+  - El Joan compra entrades per 20 €  -> guanya 20 punts.
+  - Continua comprant fins a gastar 100 € -> passa a nivell SILVER.
+  - Quan té 100 punts, els pot canviar per 5 € de saldo.
+  - La pròxima compra, marca "Aplicar 5 € de descompte"
+    i el total del carret baixa 5 €.
+
+
+COM FUNCIONA (LES REGLES DEL JOC)
+----------------------------------------------------------------
+1 euro gastat  = 1 punt
+100 punts      = 5 € de saldo (descompte)
+
+Nivells:
+  BRONZE  -> has gastat menys de 100 €
+  SILVER  -> has gastat entre 100 € i 499 €
+  GOLD    -> has gastat 500 € o més
+
+Aquestes regles estan escrites com a constants a una sola
+classe (LoyaltyService), perquè si algú vol canviar-les,
+només cal tocar un lloc.
+
+
+EL CICLE COMPLET DELS PUNTS (MOLT IMPORTANT)
+----------------------------------------------------------------
+El sistema té TRES estats diferents pels punts/euros:
+
+  1) PUNTS -> el que guanyes comprant.
+              Es guarda al camp "points" del LoyaltyAccount.
+
+  2) SALDO DISPONIBLE -> els euros que ja has "desbloquejat"
+                         en canviar punts, però que encara no
+                         has gastat.
+                         Es guarda al camp "availableDiscount".
+
+  3) APLICAT -> quan fas una compra amb el checkbox marcat,
+                el saldo es resta del total i desapareix.
+                La comanda queda amb el preu rebaixat.
+
+Flux: guanyar punts  ->  canviar per saldo  ->  aplicar al carret
+
+
+QUÈ HE AFEGIT AL PROJECTE (ARXIUS NOUS)
+----------------------------------------------------------------
+He creat una carpeta nova "loyalty" dins del paquet
+domain/cinema, per tenir tot el codi nou ben separat i no
+barrejar-ho amb el que ja funcionava.
+
+1) ENTITATS (les classes que es guarden a la base de dades)
+
+   - LoyaltyAccount.java
+       És el "compte de punts" d'un usuari.
+       Conté:
+         * points            -> punts actuals
+         * totalSpent        -> total gastat en euros
+         * tier              -> nivell (BRONZE/SILVER/GOLD)
+         * availableDiscount -> euros de saldo per gastar
+         * createdAt         -> quan es va crear
+       Està lligada a un User amb una relació @OneToOne
+       (cada usuari té UN compte de fidelitat).
+
+   - PointTransaction.java
+       És cada moviment de punts (guanyar o canviar).
+       Conté: tipus (EARN / REDEEM), quants punts,
+              descripció, data i la comanda associada (si n'hi ha).
+       Està lligada amb @ManyToOne a LoyaltyAccount
+       (un compte té MOLTS moviments).
+
+   - LoyaltyTier.java
+       Enum amb els 3 nivells: BRONZE, SILVER, GOLD.
+
+   - TransactionType.java
+       Enum amb dos valors:
+         EARN   -> punts guanyats per una compra
+         REDEEM -> punts canviats per saldo, o saldo gastat
+
+
+2) REPOSITORIS (les "caixes" per buscar a la base de dades)
+
+   - LoyaltyAccountRepository.java
+       Pot trobar el compte d'un usuari pel seu username.
+
+   - PointTransactionRepository.java
+       Pot llistar tots els moviments d'un compte,
+       ordenats del més nou al més antic.
+
+
+3) LÒGICA DE NEGOCI (el "cervell" que fa les coses)
+
+   - LoyaltyService.java
+       Aquí està tota la intel·ligència del sistema:
+
+         * getOrCreateAccount(usuari)
+             Si l'usuari no té compte de fidelitat, el crea.
+             Si ja en té, el retorna.
+
+         * earnPointsForOrder(usuari, comanda)
+             Quan algú compra, calcula els punts (1 per euro
+             del total final de la comanda), els suma al compte,
+             actualitza el total gastat, recalcula el nivell,
+             i guarda el moviment.
+
+         * redeemPoints(usuari, punts)
+             Comprova que l'usuari té prou punts i que demana
+             un múltiple de 100. Resta els punts, SUMA els euros
+             corresponents al saldo disponible (availableDiscount)
+             i guarda el moviment REDEEM.
+
+         * applyDiscountToOrder(usuari, comanda)
+             S'executa quan el client marca el checkbox al
+             carret. Agafa el saldo disponible, el resta del
+             total de la comanda, posa el saldo a 0, guarda
+             la comanda i deixa un moviment REDEEM a l'historial
+             amb la descripció "Descompte de X € aplicat".
+
+         * getTotalRedeemedDiscount(usuari)
+             Suma quants euros de saldo ha desbloquejat mai
+             (per mostrar al panell).
+
+         * getAvailableDiscount(usuari)
+             Quants euros de saldo té ara mateix per gastar.
+
+         * calculateTier / amountToNextTier / nextTier
+             Càlculs auxiliars pel nivell i el progrés.
+
+
+4) CONTROLADOR (el que rep les peticions del navegador)
+
+   - LoyaltyController.java
+       Quatre endpoints nous:
+         GET  /loyalty          -> panell principal
+         GET  /loyalty/redeem   -> formulari per canviar punts
+         POST /loyalty/redeem   -> processa el canvi de punts
+         GET  /loyalty/history  -> historial de moviments
+
+       Totes comproven que l'usuari és un CLIENT (no un admin).
+
+
+5) VISTES (el que veu l'usuari al navegador, en HTML)
+
+   Carpeta nova: templates/loyalty/
+
+   - panel.html
+       Pàgina principal. Mostra 5 targetes:
+         * Punts actuals
+         * Total gastat
+         * Nivell actual (amb insígnia de colors)
+         * Descompte màxim (el que es pot canviar ara)
+         * Descompte total canviat (historial acumulat)
+         * Saldo disponible per gastar
+       A sota: barra de progrés cap al següent nivell,
+       explicació de com funciona i botons d'acció.
+
+   - redeem.html
+       Formulari per triar quants punts vol canviar.
+       Mostra un desplegable amb totes les opcions
+       (100 punts = 5 €, 200 punts = 10 €, etc).
+       Avisa amb missatges d'error si alguna cosa va malament.
+
+   - history.html
+       Taula amb tot l'historial: data, tipus (guanyats o
+       canviats), punts, descripció. Els guanyats surten
+       en verd i els canviats en vermell.
+
+
+QUÈ HE MODIFICAT DEL CODI QUE JA EXISTIA (MOLT POC)
+----------------------------------------------------------------
+He tocat només 4 arxius que ja existien, i amb canvis petits:
+
+1) SecurityConfig.java
+   Afegida una sola línia:
+     les rutes /loyalty i /loyalty/** només per a CLIENT.
+
+2) layout.html
+   Afegit un enllaç "Fidelitat" al menú de navegació,
+   que només es mostra als clients.
+
+3) CartController.java
+   - Injectat LoyaltyService.
+   - Al viewCart: passo al model "availableDiscount",
+     "effectiveDiscount" (el que realment s'aplicaria) i
+     "finalPrice" (total - descompte).
+   - Al checkout:
+       * Rebo el paràmetre opcional "applyDiscount".
+       * Si està marcat, crido applyDiscountToOrder(...).
+       * Sempre crido earnPointsForOrder(...) perquè es
+         sumin punts per la compra (sobre el total final).
+     Tot dins try-catch per si la fidelitat fallés, que NO
+     trenqui el checkout.
+
+4) client/cart.html
+   Afegit un checkbox just abans del botó de confirmar compra,
+   que només surt si el client té saldo disponible.
+   Permet marcar "Aplicar X € de descompte de fidelitat".
+
+IMPORTANT: NO he tocat User.java, Comanda.java, Ticket.java
+ni TicketService.java. La integració és "cap enfora":
+el sistema de fidelitat depèn d'aquestes entitats, però
+aquestes entitats NO saben que existeix el sistema de fidelitat.
+
+
+FLUX COMPLET D'UN USUARI (EXEMPLE REAL)
+----------------------------------------------------------------
+1. La Maria es registra com a CLIENT.
+
+2. Entra per primer cop a "Fidelitat" del menú.
+   -> El sistema li crea automàticament un LoyaltyAccount
+      amb 0 punts, nivell BRONZE i 0 € de saldo.
+
+3. Compra entrades per 30 €.
+   -> Al fer checkout, earnPointsForOrder suma 30 punts
+      i guarda un PointTransaction de tipus EARN.
+
+4. Compra més vegades fins a gastar 100 € en total.
+   -> El sistema recalcula el nivell a SILVER automàticament.
+
+5. Ja té 100 punts. Va a "Fidelitat" > "Canviar punts".
+   -> Tria "100 punts = 5 €" i clica el botó.
+   -> redeemPoints resta 100 punts, suma 5 € al saldo
+      disponible i guarda un PointTransaction REDEEM.
+
+6. Al panell veu:
+       Punts: 0
+       Saldo disponible: 5,00 €
+       Nivell: SILVER
+
+7. Fa una altra compra. Al carret veu:
+       Total estimat: 12,00 €
+       [x] Aplicar 5,00 € de descompte de fidelitat
+       [Confirmar compra]
+
+8. Confirma. El sistema:
+   -> Crea la comanda amb total 12 €.
+   -> applyDiscountToOrder resta 5 € (total queda a 7 €).
+   -> Guarda la comanda modificada.
+   -> earnPointsForOrder li dona 7 punts (1 per euro real).
+   -> Saldo disponible queda a 0 €.
+
+9. A l'historial veu:
+   + 30 punts (compra #1)
+   + ... altres compres
+   -100 punts (canvi per saldo)
+     0 punts (descompte de 5 € aplicat a la compra #N)
+   + 7 punts (compra #N)
+
+
+PER QUÈ COMPLEIX ELS REQUISITS DEL PROFESSOR?
+----------------------------------------------------------------
+El profe demanava una funcionalitat extra que complís:
+
+[X] Utilitat clara dins del sistema
+    -> Fidelitza clients i els dona un motiu per tornar.
+       El cicle complet (guanyar -> canviar -> aplicar) els
+       fa estalviar diners de veritat.
+
+[X] Com a mínim una nova entitat
+    -> N'he fet DUES: LoyaltyAccount i PointTransaction.
+
+[X] Persistència a BD
+    -> Totes dues es guarden amb JPA (taules
+       loyalty_accounts i point_transactions).
+
+[X] Nous mètodes en controllers
+    -> 4 endpoints nous a LoyaltyController.
+
+[X] Interfície d'usuari
+    -> 3 vistes Thymeleaf noves (panel, redeem, history).
+    -> A més, checkbox integrat al carret.
+
+[X] Integració amb entitats existents
+    -> @OneToOne amb User
+    -> @ManyToOne amb Comanda
+    -> Acreditació automàtica després del checkout
+    -> Descompte real aplicat al total de la comanda
+
+[X] Lògica de negoci real
+    -> Càlcul de punts (multiplicació i arrodoniment)
+    -> Càlcul de nivells amb condicions
+    -> Validació de canvis (múltiples de 100, prou saldo)
+    -> Càlcul de progrés cap al següent nivell
+    -> Aplicar saldo sense passar-se del total
+    -> Acreditar punts sobre el TOTAL FINAL (amb descompte)
+
+[X] Relacions entre entitats
+    -> @OneToOne (LoyaltyAccount - User)
+    -> @ManyToOne (PointTransaction - LoyaltyAccount)
+    -> @ManyToOne (PointTransaction - Comanda)
+
+[X] Procés amb múltiples passos
+    -> Comprar -> guanyar punts -> canviar tier
+       -> canjar punts per saldo -> aplicar saldo al carret
+       -> veure descompte real aplicat -> historial
+
+
+RESUM EN UNA FRASE
+----------------------------------------------------------------
+He afegit un programa de fidelitat complet (guanyar punts,
+canviar-los per euros, i aplicar-los a compres reals) al
+cinema, amb 2 entitats noves, 3 vistes noves, 1 checkbox
+integrat al carret i sense trencar ni una línia del codi
+que ja funcionava.
+
+================================================================
+FI DEL DOCUMENT
+================================================================

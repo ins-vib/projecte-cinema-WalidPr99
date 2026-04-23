@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Historial de punts</title>
+    <style>
+        .tx-EARN   { color: var(--ok); font-weight: 800; }
+        .tx-REDEEM { color: var(--danger); font-weight: 800; }
+    </style>
+</head>
+<body>
+<div th:replace="~{layout :: layout(~{::content})}">
+<div th:fragment="content">
+
+    <section>
+        <h1>Historial de punts</h1>
+        <p>Totes les operacions del teu compte de fidelitat.</p>
+    </section>
+
+    <section>
+        <table>
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Tipus</th>
+                    <th>Punts</th>
+                    <th>Descripció</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${transactions.isEmpty()}">
+                    <td colspan="4" style="text-align: center; color: var(--muted);">
+                        Encara no hi ha moviments. Fes la teva primera compra per guanyar punts!
+                    </td>
+                </tr>
+                <tr th:each="tx : ${transactions}">
+                    <td th:text="${#temporals.format(tx.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</td>
+                    <td>
+                        <span th:classappend="'tx-' + ${tx.type.name()}"
+                              th:text="${tx.type.name() == 'EARN'} ? 'GUANYATS' : 'CANVIATS'">
+                            GUANYATS
+                        </span>
+                    </td>
+                    <td th:classappend="'tx-' + ${tx.type.name()}"
+                        th:text="${tx.points > 0} ? '+' + ${tx.points} : ${tx.points}">+10</td>
+                    <td th:text="${tx.description}">Descripcio</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <div class="entry-actions">
+            <a href="/loyalty">Tornar al panell</a>
+        </div>
+    </section>
+
+</div>
+</div>
+</body>
+</html>

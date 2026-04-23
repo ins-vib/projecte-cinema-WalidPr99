@@ -25,6 +25,7 @@ import com.daw.cinemadaw.repository.ScreeningRepository;
 import com.daw.cinemadaw.repository.SeatRepository;
 import com.daw.cinemadaw.service.CartSessionService;
 import com.daw.cinemadaw.service.CustomUserDetails;
+import com.daw.cinemadaw.service.LoyaltyService;
 import com.daw.cinemadaw.service.TicketService;
 
 import jakarta.servlet.http.HttpSession;
@@ -36,13 +37,16 @@ public class CartController {
     private final SeatRepository seatRepository;
     private final CartSessionService cartSessionService;
     private final TicketService ticketService;
+    private final LoyaltyService loyaltyService;
 
     public CartController(ScreeningRepository screeningRepository, SeatRepository seatRepository,
-                          CartSessionService cartSessionService, TicketService ticketService) {
+                          CartSessionService cartSessionService, TicketService ticketService,
+                          LoyaltyService loyaltyService) {
         this.screeningRepository = screeningRepository;
         this.seatRepository = seatRepository;
         this.cartSessionService = cartSessionService;
         this.ticketService = ticketService;
+        this.loyaltyService = loyaltyService;
     }
 
     @GetMapping("/client/cart")
@@ -71,9 +75,16 @@ public class CartController {
             totalPrice += entry.getSubtotal();
         }
 
+        double availableDiscount = loyaltyService.getAvailableDiscount(user.getUsername());
+        double effectiveDiscount = Math.min(availableDiscount, totalPrice);
+        double finalPrice = Math.max(0, totalPrice - effectiveDiscount);
+
         model.addAttribute("entries", entries);
         model.addAttribute("seatCount", seatCount);
         model.addAttribute("totalPrice", totalPrice);
+        model.addAttribute("availableDiscount", availableDiscount);
+        model.addAttribute("effectiveDiscount", effectiveDiscount);
+        model.addAttribute("finalPrice", finalPrice);
         model.addAttribute("addedCount", Math.max(addedCount, 0));
         model.addAttribute("alreadyInCartCount", Math.max(alreadyInCartCount, 0));
         model.addAttribute("skippedCount", Math.max(skippedCount, 0));
@@ -112,7 +123,9 @@ public class CartController {
     }
 
     @PostMapping("/client/cart/checkout")
-    public String checkout(@AuthenticationPrincipal CustomUserDetails user, HttpSession session) {
+    public String checkout(@RequestParam(value = "applyDiscount", required = false, defaultValue = "false") boolean applyDiscount,
+                           @AuthenticationPrincipal CustomUserDetails user,
+                           HttpSession session) {
 
         if (!isClient(user)) {
             return "redirect:/home";
@@ -133,6 +146,20 @@ public class CartController {
         try {
             Comanda comanda = ticketService.createOrder(checkoutCart, user.getUsername(), user.getUsername());
             int reservedCount = comanda.getTickets() != null ? comanda.getTickets().size() : 0;
+
+            if (applyDiscount) {
+                try {
+                    loyaltyService.applyDiscountToOrder(user.getUsername(), comanda);
+                } catch (Exception discEx) {
+                    System.out.println("[LOYALTY WARN] No s'ha pogut aplicar descompte: " + discEx.getMessage());
+                }
+            }
+
+            try {
+                loyaltyService.earnPointsForOrder(user.getUsername(), comanda);
+            } catch (Exception loyaltyEx) {
+                System.out.println("[LOYALTY WARN] No s'han pogut acreditar punts: " + loyaltyEx.getMessage());
+            }
 
             cartSessionService.clearCart(session);
 

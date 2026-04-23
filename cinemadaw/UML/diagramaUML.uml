@@ -96,6 +96,37 @@ enum Role {
 	CLIENT
 }
 
+class LoyaltyAccount {
+	- id: Long
+	- user: User
+	- points: int
+	- totalSpent: double
+	- tier: LoyaltyTier
+	- availableDiscount: double
+	- createdAt: LocalDateTime
+}
+
+class PointTransaction {
+	- id: Long
+	- loyaltyAccount: LoyaltyAccount
+	- comanda: Comanda
+	- type: TransactionType
+	- points: int
+	- description: String
+	- createdAt: LocalDateTime
+}
+
+enum LoyaltyTier {
+	BRONZE
+	SILVER
+	GOLD
+}
+
+enum TransactionType {
+	EARN
+	REDEEM
+}
+
 Cinema "1" *-- "0..*" Room : rooms
 Room "1" *-- "0..*" Seat : seats
 Movie "1" <-- "0..*" Screening : movie
@@ -106,5 +137,11 @@ Screening "1" <-- "0..*" Ticket : screening
 Role "1" <-- "0..*" User : role
 SeatType "1" <-- "0..*" Seat : type
 OrderStatus "1" <-- "0..*" Comanda : status
+
+User "1" <-- "1" LoyaltyAccount : user
+LoyaltyAccount "1" *-- "0..*" PointTransaction : transactions
+Comanda "1" <-- "0..*" PointTransaction : comanda
+LoyaltyTier "1" <-- "0..*" LoyaltyAccount : tier
+TransactionType "1" <-- "0..*" PointTransaction : type
 
 @enduml

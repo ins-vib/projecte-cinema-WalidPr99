@@ -37,6 +37,8 @@ public class SecurityConfig {
             // Panell de client visible per CLIENT i ADMIN
             .requestMatchers("/client", "/client/**").hasAnyRole("CLIENT", "ADMIN")
 
+            .requestMatchers("/loyalty", "/loyalty/**").hasRole("CLIENT")
+
             // Reserva de seients només per CLIENT
             .requestMatchers("/seat/*/reserve", "/seats/*/reserve", "/seats/*/reserve/preview").hasRole("CLIENT")
 

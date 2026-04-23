@@ -97,6 +97,16 @@
 
                 <div class="checkout-box">
                     <form th:action="@{/client/cart/checkout}" method="post">
+                        <div th:if="${availableDiscount > 0}" style="margin-bottom: 10px;">
+                            <label style="display:flex; align-items:center; gap:8px;">
+                                <input type="checkbox" name="applyDiscount" value="true" />
+                                Aplicar <strong th:text="${#numbers.formatDecimal(effectiveDiscount, 1, 2) + ' €'}">0,00 €</strong>
+                                de descompte de fidelitat
+                                <span th:if="${availableDiscount > effectiveDiscount}" style="color: var(--muted); font-size: 0.88rem;">
+                                    (tens <span th:text="${#numbers.formatDecimal(availableDiscount, 1, 2) + ' €'}">0,00 €</span> en total)
+                                </span>
+                            </label>
+                        </div>
                         <button type="submit">Confirmar compra del carret</button>
                     </form>
                     <a th:href="@{/client}">Continuar comprant</a>
