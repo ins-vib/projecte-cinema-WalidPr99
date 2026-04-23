@@ -43,7 +43,7 @@ Sistema complet de punts per clients, integrat amb el proces de compra existent.
 | Controlador | `LoyaltyController` (4 endpoints: `/loyalty`, `/loyalty/redeem` GET/POST, `/loyalty/history`) |
 | Vistes | `templates/loyalty/panel.html`, `redeem.html`, `history.html` |
 
-### Integracio amb el codi existent (canvis minims)
+### Integracio amb el codi existent
 
 - `SecurityConfig`: 1 linia per restringir `/loyalty/**` a rol `CLIENT`.
 - `layout.html`: 1 enllac "Fidelitat" al menu de navegacio del client.
