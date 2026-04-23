@@ -15,3 +15,53 @@ Desenvolupat amb **Spring Boot 3.5**, **Thymeleaf**, **Spring Security**, **JPA/
 ## Diagrama de casos dus
 
 ![Diagrama de casos dus](https://www.plantuml.com/plantuml/png/ZL7BRjmm3BphAuISkeVq0ueWo290Yzw2fisTbRaE4LfoIMhx_lTQQw-xGhN5tcpD33cSkLC3iJomSumxyvQyKFzilYF1O9IYqnUA8mWCVeJm0Zq-sdT6Ns28FUC90O8bcM7uYfe6TExmvg-UI6dYsvK7zOUV94ViasOGyf0Der60cRJDzdnaRBk1ulnQlexFzqouZ9m_dIigV_Fh-dfXhlyhOpK-wIdY07uxZbS_dLjS-OdxwdsaG21UKPNIfi8-O4zg0dAjM2FtAMfcctGn6GL2zMF-pFGbesuMRuNtX5dGZoWxuitVvuyGmxfpUQ_7Xc8OjOcDo4mXynbOWo16Ylqf_0wrT5mcf_H2bVH1qXxLTxWQSeT8Q-5ggGagy5a8InqjiBgbXTV7kBdOas03Y24p2lXmm3R_SjQ26en7P0oXibdX3u9xqWnCzcEY22hA7YhATeSzhMeFN4m9rdlMUrhWMuh71I4DewppwruB2B53RTpOeG7pme06OOI84s577J8PMBq2ufvA5xbSCEAXpIurnZoJMX82dhbr42DJ0F4TQZd3y3GBTovA__gsNOD_uszkA0RE7TxUkhCvNpoXaVCaRNJZQrqpuY9jTJEByPjXx2QjEvjjqRUxQHfePF-_2RMBLZLLV8reBWpleltkjtDtqsSU-0y0)
+
+---
+
+## Funcionalitat extra: Sistema de fidelitzacio per punts
+
+Sistema complet de punts per clients, integrat amb el proces de compra existent.
+
+### Que fa
+
+- Cada compra dona **1 punt per euro gastat** (acreditat automaticament al checkout).
+- El client pot **canviar 100 punts per 5 euros** de saldo de descompte.
+- El saldo acumulat es pot **aplicar a la seguent compra** mitjancant un checkbox al carret, que resta l'import del total real de la comanda.
+- Cada client te un **nivell** segons el total gastat:
+  - **BRONZE** (menys de 100 euros)
+  - **SILVER** (entre 100 i 499 euros)
+  - **GOLD** (500 euros o mes)
+- Historial complet amb tots els moviments (punts guanyats i saldo canviat/aplicat).
+
+### Arxius nous
+
+| Capa | Fitxers |
+|------|---------|
+| Entitats | `LoyaltyAccount`, `PointTransaction`, `LoyaltyTier`, `TransactionType` |
+| Repositoris | `LoyaltyAccountRepository`, `PointTransactionRepository` |
+| Servei | `LoyaltyService` (logica de punts, tiers, canjes, aplicacio de descomptes) |
+| Controlador | `LoyaltyController` (4 endpoints: `/loyalty`, `/loyalty/redeem` GET/POST, `/loyalty/history`) |
+| Vistes | `templates/loyalty/panel.html`, `redeem.html`, `history.html` |
+
+### Integracio amb el codi existent (canvis minims)
+
+- `SecurityConfig`: 1 linia per restringir `/loyalty/**` a rol `CLIENT`.
+- `layout.html`: 1 enllac "Fidelitat" al menu de navegacio del client.
+- `CartController`: injeccio de `LoyaltyService` + crida a `earnPointsForOrder` i `applyDiscountToOrder` dins del checkout (amb try-catch per no trencar el flux de compra).
+- `client/cart.html`: checkbox "Aplicar X euros de descompte" just abans del boto de confirmar compra.
+
+No s'ha modificat cap entitat existent (`User`, `Comanda`, `Ticket` ni `TicketService`).
+
+### Requisits del professor que compleix
+
+| Requisit | Com es cumpleix |
+|----------|-----------------|
+| Utilitat clara dins del sistema | Cicle real estalviar -> canviar -> aplicar descompte |
+| Com a minim una entitat nova | 2 entitats (`LoyaltyAccount`, `PointTransaction`) + 2 enums |
+| Persistencia a BD | Taules `loyalty_accounts` i `point_transactions` via JPA |
+| Nous metodes en controllers | 4 endpoints nous a `LoyaltyController` |
+| Interficie d'usuari | 3 vistes Thymeleaf + checkbox integrat al carret |
+| Integracio amb entitats existents | `@OneToOne` amb `User`, `@ManyToOne` amb `Comanda` |
+| Logica de negoci real | Calcul de punts, tiers, validacio de canjes, aplicacio de descompte, progres cap al seguent nivell |
+| Relacions entre entitats | `@OneToOne` (User - LoyaltyAccount), `@ManyToOne` x2 (PointTransaction - LoyaltyAccount i Comanda) |
+| Proces amb multiples passos | Comprar -> guanyar punts -> canviar tier -> canjar per saldo -> aplicar al carret -> veure historial |
