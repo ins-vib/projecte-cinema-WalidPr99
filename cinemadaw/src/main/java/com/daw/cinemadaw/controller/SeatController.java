@@ -294,6 +294,9 @@ public class SeatController {
         seat.setRoom(room);
         seatRepository.save(seat);
 
+        room.setCapacity(room.getCapacity() + 1);
+        roomRepository.save(room);
+
         return "redirect:/seats/" + roomId;
     }
 
@@ -359,10 +362,17 @@ public class SeatController {
         }
 
         Seat seat = optionalSeat.get();
-        Long roomId = seat.getRoom() != null ? seat.getRoom().getId() : null;
+        Room room = seat.getRoom();
+        Long roomId = room != null ? room.getId() : null;
 
         try {
             seatRepository.deleteById(id);
+
+            if (room != null && room.getCapacity() > 0) {
+                room.setCapacity(room.getCapacity() - 1);
+                roomRepository.save(room);
+            }
+
             redirectAttributes.addFlashAttribute("successMessage",
                     "Seient " + seat.getSeatRow() + seat.getNumber() + " eliminat correctament.");
         } catch (Exception e) {

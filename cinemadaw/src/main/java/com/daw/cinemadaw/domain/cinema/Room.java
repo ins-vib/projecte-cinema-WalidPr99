@@ -39,7 +39,10 @@ public class Room {
     private Cinema cinema; //Relació ManyToOne amb Cinema, ja que una sala (Room) pertany a un cinema (Cinema). Aquesta relació es pot implementar utilitzant anotacions de JPA com @ManyToOne i @JoinColumn per establir la clau forana que connecta la sala amb el cinema corresponent a la base de dades.
 
     @OneToMany(mappedBy = "room", cascade= CascadeType.ALL, orphanRemoval=true) //Indica que hi ha una relació OneToMany entre Room i Seat, on una sala (Room) pot tenir molts seients (Seats). El paràmetre mappedBy especifica que la relació està mapejada per l'atribut "room" a la classe Seat, el que significa que la classe Seat és la propietària de la relació i conté la clau forana que connecta els seients amb la sala corresponent a la base de dades.
-    private List<Seat> seats = new ArrayList<>(); 
+    private List<Seat> seats = new ArrayList<>();
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Screening> screenings = new ArrayList<>();
 
     //Constructor buit
 
@@ -61,6 +64,14 @@ public class Room {
 
     public void setSeats(List<Seat> seats) {
         this.seats = seats;
+    }
+
+    public List<Screening> getScreenings() {
+        return screenings;
+    }
+
+    public void setScreenings(List<Screening> screenings) {
+        this.screenings = screenings;
     }
 
     public Long getId() {

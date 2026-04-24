@@ -1,14 +1,18 @@
 package com.daw.cinemadaw.domain.cinema;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -47,8 +51,19 @@ public class Movie {
     @Column(name = "release_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate releaseDate;
-    
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Screening> screenings = new ArrayList<>();
+
     public Movie() {
+    }
+
+    public List<Screening> getScreenings() {
+        return screenings;
+    }
+
+    public void setScreenings(List<Screening> screenings) {
+        this.screenings = screenings;
     }
 
     public Movie(String description, int duration, String genre, LocalDate releaseDate, String title) {

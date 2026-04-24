@@ -121,19 +121,24 @@ public class ScreeningController {
 			return "screenings/edit-screeining";
 		}
 
+		Optional<Screening> optionalExistent = screeningRepository.findById(screening.getId());
 		Optional<Movie> optionalMovie = movieRepository.findById(screening.getMovie().getId());
 		Optional<Room> optionalRoom = roomRepository.findById(screening.getRoom().getId());
 
-		if (optionalMovie.isEmpty() || optionalRoom.isEmpty()) {
+		if (optionalExistent.isEmpty() || optionalMovie.isEmpty() || optionalRoom.isEmpty()) {
 			model.addAttribute("screening", screening);
 			model.addAttribute("rooms", roomRepository.findAll());
 			return "screenings/edit-screeining";
 		}
 
-		screening.setMovie(optionalMovie.get());
-		screening.setRoom(optionalRoom.get());
-		screeningRepository.save(screening);
-		return "redirect:/movie/" + screening.getMovie().getId() + "/screenings";
+		Screening existent = optionalExistent.get();
+		existent.setDateTime(screening.getDateTime());
+		existent.setPrice(screening.getPrice());
+		existent.setMovie(optionalMovie.get());
+		existent.setRoom(optionalRoom.get());
+		screeningRepository.save(existent);
+
+		return "redirect:/movie/" + optionalMovie.get().getId() + "/screenings";
 	}
 
 	@GetMapping("/screening/delete/{id}")

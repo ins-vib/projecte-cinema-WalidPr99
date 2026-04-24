@@ -38,7 +38,6 @@
 				<label th:each="seat : ${llista}"
 					   class="seat-option"
 					   th:classappend="${!seat.state} ? ' is-reserved' : (${isClient and !isAdmin} ? ' is-selectable' : ' is-readonly')"
-					   th:attr="data-seat-type=${seat.type}"
 					   th:style="'grid-column:' + (${seat.x} + 1) + ';grid-row:' + (${seat.y} + 1) + ';'">
 
 					<input class="seat-checkbox"

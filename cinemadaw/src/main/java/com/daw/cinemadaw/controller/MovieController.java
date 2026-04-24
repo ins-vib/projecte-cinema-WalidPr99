@@ -71,7 +71,6 @@ public class MovieController {
 
         if (optional.isPresent()) {
             try {
-                screeningRepository.deleteByMovieId(id);
                 movieRepository.deleteById(id);
                 redirectAttributes.addFlashAttribute("successMessage",
                         "Pel·lícula '" + optional.get().getTitle() + "' eliminada correctament.");
@@ -132,7 +131,18 @@ public class MovieController {
             return "movies/edit-movie";
         }
 
-        movieRepository.save(movie);
+        Optional<Movie> optional = movieRepository.findById(movie.getId());
+
+        if (optional.isPresent()) {
+            Movie existent = optional.get();
+            existent.setTitle(movie.getTitle());
+            existent.setDuration(movie.getDuration());
+            existent.setGenre(movie.getGenre());
+            existent.setDescription(movie.getDescription());
+            existent.setReleaseDate(movie.getReleaseDate());
+            movieRepository.save(existent);
+        }
+
         return "redirect:/movies";
     }
 

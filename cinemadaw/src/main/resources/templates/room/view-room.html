@@ -27,8 +27,6 @@
 
                     <th>Cinema</th>
 
-                    <th>Nº seients</th>
-
                 </tr>
 
             </thead>
@@ -42,8 +40,6 @@
                     <td th:text="${room.capacity}">Capacitat</td>
 
                     <td th:text="${room.cinema != null ? room.cinema.name : '-'}">Cinema</td>
-
-                    <td th:text="${room.seats != null ? #lists.size(room.seats) : 0}">0</td>
 
                 </tr>
 

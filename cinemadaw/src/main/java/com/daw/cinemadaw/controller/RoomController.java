@@ -84,9 +84,22 @@ public class RoomController {
             return "room/edit-room";
         }
 
-       roomRepository.save(room);
+        Optional<Room> optional = roomRepository.findById(room.getId());
 
-        return "redirect:/cinema/" + room.getCinema().getId();
+        Long redirectCinemaId = null;
+
+        if (optional.isPresent()) {
+            Room existent = optional.get();
+            existent.setName(room.getName());
+            existent.setCapacity(room.getCapacity());
+            roomRepository.save(existent);
+            redirectCinemaId = existent.getCinema() != null ? existent.getCinema().getId() : null;
+        }
+
+        if (redirectCinemaId != null) {
+            return "redirect:/cinema/" + redirectCinemaId;
+        }
+        return "redirect:/rooms";
 
     }
 

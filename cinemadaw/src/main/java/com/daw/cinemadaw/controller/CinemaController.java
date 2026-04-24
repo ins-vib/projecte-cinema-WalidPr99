@@ -120,7 +120,16 @@ public class CinemaController {
             return "cinemes/edit-cinema";
         }
 
-       cinemaRepository.save(cinema);
+        Optional<Cinema> optional = cinemaRepository.findById(cinema.getId());
+
+        if (optional.isPresent()) {
+            Cinema existent = optional.get();
+            existent.setName(cinema.getName());
+            existent.setAddress(cinema.getAddress());
+            existent.setCity(cinema.getCity());
+            existent.setPostalCode(cinema.getPostalCode());
+            cinemaRepository.save(existent);
+        }
 
         return "redirect:/cinemes";
 

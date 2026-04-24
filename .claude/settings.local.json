@@ -9,7 +9,9 @@
       "Bash(./mvnw.cmd clean *)",
       "Bash(./mvnw.cmd -q -DskipTests compile)",
       "Bash(echo \"EXIT=$?\")",
-      "Bash(git restore *)"
+      "Bash(git restore *)",
+      "Bash(./mvnw compile *)",
+      "Bash(./mvnw clean *)"
     ]
   }
 }
