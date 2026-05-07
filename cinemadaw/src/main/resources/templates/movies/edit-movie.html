@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
 <body>
@@ -33,12 +33,19 @@
 
             <br>
 
-            <label>Gènere</label>
+            <label>Gèneres (marca'n com a mínim un)</label>
 
             <br>
 
-            <input type="text" th:field="*{genre}">
-            <div th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}"></div>
+            <div class="genres-checkboxes" style="display:flex;flex-wrap:wrap;gap:10px 18px;color:var(--text);font-weight:500;padding:10px 12px;border:1px solid #c5d3de;border-radius:10px;background:#fff;">
+                <label th:each="g : ${allGenres}" style="display:inline-flex;align-items:center;gap:6px;font-weight:500;color:var(--text);">
+                    <input type="checkbox" name="genreIds" style="width:16px;height:16px;accent-color:var(--brand);"
+                           th:value="${g.id}"
+                           th:checked="${movie.genres != null and movie.genres.contains(g)}">
+                    <span th:text="${g.name}">Gènere</span>
+                </label>
+            </div>
+            <div th:if="${#fields.hasErrors('genres')}" th:errors="*{genres}"></div>
 
             <br>
 

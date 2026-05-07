@@ -1,6 +1,8 @@
 package com.daw.cinemadaw.controller;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,9 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.daw.cinemadaw.domain.cinema.Genre;
 import com.daw.cinemadaw.domain.cinema.Movie;
+import com.daw.cinemadaw.repository.GenreRepository;
 import com.daw.cinemadaw.repository.MovieRepository;
 import com.daw.cinemadaw.repository.ScreeningRepository;
 
@@ -23,10 +28,13 @@ public class MovieController {
 
     private final MovieRepository movieRepository;
     private final ScreeningRepository screeningRepository;
+    private final GenreRepository genreRepository;
 
-    public MovieController(MovieRepository movieRepository, ScreeningRepository screeningRepository) {
+    public MovieController(MovieRepository movieRepository, ScreeningRepository screeningRepository,
+            GenreRepository genreRepository) {
         this.movieRepository = movieRepository;
         this.screeningRepository = screeningRepository;
+        this.genreRepository = genreRepository;
     }
 
     @GetMapping("/movies")
@@ -38,9 +46,9 @@ public class MovieController {
     }
 
     @GetMapping("/movies/genero")
-    public String moviesByGenre(String genre, Model model) {
+    public String moviesByGenre(@RequestParam String genre, Model model) {
 
-        List<Movie> movies = movieRepository.findByGenre(genre);
+        List<Movie> movies = movieRepository.findByGenreName(genre);
         model.addAttribute("llista", movies);
         return "movies/movie";
     }
@@ -86,19 +94,28 @@ public class MovieController {
     }
 
     @GetMapping("/movie/create")
-    public String showCreateMovieForm(@Valid Model model, @ModelAttribute Movie movie, BindingResult result) {
+    public String showCreateMovieForm(Model model, @ModelAttribute Movie movie) {
 
         if (movie == null) {
             movie = new Movie();
         }
         model.addAttribute("movie", movie);
+        model.addAttribute("allGenres", genreRepository.findAll());
         return "movies/create-movie";
     }
 
     @PostMapping("/movie/create")
-    public String createMovie(@Valid @ModelAttribute Movie movie, BindingResult result) {
+    public String createMovie(@Valid @ModelAttribute Movie movie, BindingResult result,
+            @RequestParam(value = "genreIds", required = false) List<Long> genreIds, Model model) {
+
+        movie.setGenres(resolveGenres(genreIds));
+
+        if (movie.getGenres().isEmpty()) {
+            result.rejectValue("genres", "genres.empty", "Has de seleccionar com a mínim un gènere");
+        }
 
         if (result.hasErrors()) {
+            model.addAttribute("allGenres", genreRepository.findAll());
             return "movies/create-movie";
         }
 
@@ -115,6 +132,7 @@ public class MovieController {
 
             Movie movie = optional.get();
             model.addAttribute("movie", movie);
+            model.addAttribute("allGenres", genreRepository.findAll());
             return "movies/edit-movie";
 
         } else {
@@ -125,9 +143,17 @@ public class MovieController {
     }
 
     @PostMapping("/movie/edit")
-    public String editMovie(@Valid @ModelAttribute Movie movie, BindingResult result) {
+    public String editMovie(@Valid @ModelAttribute Movie movie, BindingResult result,
+            @RequestParam(value = "genreIds", required = false) List<Long> genreIds, Model model) {
+
+        movie.setGenres(resolveGenres(genreIds));
+
+        if (movie.getGenres().isEmpty()) {
+            result.rejectValue("genres", "genres.empty", "Has de seleccionar com a mínim un gènere");
+        }
 
         if (result.hasErrors()) {
+            model.addAttribute("allGenres", genreRepository.findAll());
             return "movies/edit-movie";
         }
 
@@ -137,13 +163,20 @@ public class MovieController {
             Movie existent = optional.get();
             existent.setTitle(movie.getTitle());
             existent.setDuration(movie.getDuration());
-            existent.setGenre(movie.getGenre());
+            existent.setGenres(movie.getGenres());
             existent.setDescription(movie.getDescription());
             existent.setReleaseDate(movie.getReleaseDate());
             movieRepository.save(existent);
         }
 
         return "redirect:/movies";
+    }
+
+    private Set<Genre> resolveGenres(List<Long> genreIds) {
+        if (genreIds == null || genreIds.isEmpty()) {
+            return new LinkedHashSet<>();
+        }
+        return new LinkedHashSet<>(genreRepository.findAllById(genreIds));
     }
 
 }

@@ -56,22 +56,68 @@ INSERT INTO ROOM(NAME,CAPACITY,CINEMA_ID) VALUES
 ('Sala 3',90,3);
 
 -- =============================================
--- MOVIES (title: 2-110 chars, duration: 1-500, genre: 2-110 chars, description: 10-500 chars, releaseDate: yyyy-MM-dd)
+-- GENRES (initialized at startup)
 -- =============================================
-INSERT INTO MOVIE(TITLE,DURATION,GENRE,DESCRIPTION,RELEASE_DATE) VALUES
-('El Padrino',175,'Drama','La historia de la familia Corleone en el mundo de la mafia de Nueva York','1972-03-24');
+INSERT INTO GENRE(ID,NAME) VALUES (1,'Acció');
+INSERT INTO GENRE(ID,NAME) VALUES (2,'Aventura');
+INSERT INTO GENRE(ID,NAME) VALUES (3,'Comèdia');
+INSERT INTO GENRE(ID,NAME) VALUES (4,'Drama');
+INSERT INTO GENRE(ID,NAME) VALUES (5,'Thriller');
+INSERT INTO GENRE(ID,NAME) VALUES (6,'Ciència ficció');
+INSERT INTO GENRE(ID,NAME) VALUES (7,'Romàntica');
+INSERT INTO GENRE(ID,NAME) VALUES (8,'Terror');
+INSERT INTO GENRE(ID,NAME) VALUES (9,'Animació');
+INSERT INTO GENRE(ID,NAME) VALUES (10,'Fantasia');
+INSERT INTO GENRE(ID,NAME) VALUES (11,'Documental');
+INSERT INTO GENRE(ID,NAME) VALUES (12,'Musical');
 
-INSERT INTO MOVIE(TITLE,DURATION,GENRE,DESCRIPTION,RELEASE_DATE) VALUES
-('Inception',148,'Ciencia ficción','Un ladrón que roba secretos corporativos a través de la tecnología de los sueños compartidos','2010-07-16');
+-- =============================================
+-- MOVIES (title: 2-110 chars, duration: 25-500, description: 10-500 chars, releaseDate: yyyy-MM-dd)
+-- Els gèneres s'associen a la taula MOVIE_GENRES
+-- =============================================
+INSERT INTO MOVIE(TITLE,DURATION,DESCRIPTION,RELEASE_DATE) VALUES
+('El Padrino',175,'La historia de la familia Corleone en el mundo de la mafia de Nueva York','1972-03-24');
 
-INSERT INTO MOVIE(TITLE,DURATION,GENRE,DESCRIPTION,RELEASE_DATE) VALUES
-('Interstellar',169,'Ciencia ficción','Un grupo de exploradores viaja a través de un agujero de gusano en busca de un nuevo hogar para la humanidad','2014-11-07');
+INSERT INTO MOVIE(TITLE,DURATION,DESCRIPTION,RELEASE_DATE) VALUES
+('Inception',148,'Un ladrón que roba secretos corporativos a través de la tecnología de los sueños compartidos','2010-07-16');
 
-INSERT INTO MOVIE(TITLE,DURATION,GENRE,DESCRIPTION,RELEASE_DATE) VALUES
-('Pulp Fiction',154,'Thriller','Las vidas de dos mafiosos, un boxeador y una pareja de ladrones se entrelazan en historias de violencia y redención','1994-10-14');
+INSERT INTO MOVIE(TITLE,DURATION,DESCRIPTION,RELEASE_DATE) VALUES
+('Interstellar',169,'Un grupo de exploradores viaja a través de un agujero de gusano en busca de un nuevo hogar para la humanidad','2014-11-07');
 
-INSERT INTO MOVIE(TITLE,DURATION,GENRE,DESCRIPTION,RELEASE_DATE) VALUES
-('The Dark Knight',152,'Acción','Batman se enfrenta al Joker, un criminal que siembra el caos y la destrucción en la ciudad de Gotham','2008-07-18');
+INSERT INTO MOVIE(TITLE,DURATION,DESCRIPTION,RELEASE_DATE) VALUES
+('Pulp Fiction',154,'Las vidas de dos mafiosos, un boxeador y una pareja de ladrones se entrelazan en historias de violencia y redención','1994-10-14');
+
+INSERT INTO MOVIE(TITLE,DURATION,DESCRIPTION,RELEASE_DATE) VALUES
+('The Dark Knight',152,'Batman se enfrenta al Joker, un criminal que siembra el caos y la destrucción en la ciudad de Gotham','2008-07-18');
+
+INSERT INTO MOVIE(TITLE,DURATION,DESCRIPTION,RELEASE_DATE) VALUES
+('Missió Impossible: Sentència Mortal',163,'Ethan Hunt i el seu equip s''enfronten a una nova amenaça tecnològica que pot canviar el destí del món','2023-07-12');
+
+-- =============================================
+-- MOVIE_GENRES (associació pel·lícula <-> gèneres)
+-- =============================================
+-- El Padrino: Drama, Thriller
+INSERT INTO MOVIE_GENRES(MOVIE_ID,GENRE_ID) VALUES (1,4);
+INSERT INTO MOVIE_GENRES(MOVIE_ID,GENRE_ID) VALUES (1,5);
+-- Inception: Acció, Ciència ficció, Thriller
+INSERT INTO MOVIE_GENRES(MOVIE_ID,GENRE_ID) VALUES (2,1);
+INSERT INTO MOVIE_GENRES(MOVIE_ID,GENRE_ID) VALUES (2,6);
+INSERT INTO MOVIE_GENRES(MOVIE_ID,GENRE_ID) VALUES (2,5);
+-- Interstellar: Aventura, Drama, Ciència ficció
+INSERT INTO MOVIE_GENRES(MOVIE_ID,GENRE_ID) VALUES (3,2);
+INSERT INTO MOVIE_GENRES(MOVIE_ID,GENRE_ID) VALUES (3,4);
+INSERT INTO MOVIE_GENRES(MOVIE_ID,GENRE_ID) VALUES (3,6);
+-- Pulp Fiction: Drama, Thriller
+INSERT INTO MOVIE_GENRES(MOVIE_ID,GENRE_ID) VALUES (4,4);
+INSERT INTO MOVIE_GENRES(MOVIE_ID,GENRE_ID) VALUES (4,5);
+-- The Dark Knight: Acció, Drama, Thriller
+INSERT INTO MOVIE_GENRES(MOVIE_ID,GENRE_ID) VALUES (5,1);
+INSERT INTO MOVIE_GENRES(MOVIE_ID,GENRE_ID) VALUES (5,4);
+INSERT INTO MOVIE_GENRES(MOVIE_ID,GENRE_ID) VALUES (5,5);
+-- Missió Impossible: Sentència Mortal: Acció, Aventura, Thriller
+INSERT INTO MOVIE_GENRES(MOVIE_ID,GENRE_ID) VALUES (6,1);
+INSERT INTO MOVIE_GENRES(MOVIE_ID,GENRE_ID) VALUES (6,2);
+INSERT INTO MOVIE_GENRES(MOVIE_ID,GENRE_ID) VALUES (6,5);
 
 -- =============================================
 -- SEATS (seatRow: 1-10 chars, number: 1-500, type: Standard/Premium/Adapted, state: true/false)

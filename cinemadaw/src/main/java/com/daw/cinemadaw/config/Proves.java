@@ -8,7 +8,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.daw.cinemadaw.domain.cinema.Cinema;
-import com.daw.cinemadaw.domain.cinema.Movie;
 import com.daw.cinemadaw.domain.cinema.Room;
 import com.daw.cinemadaw.domain.cinema.Seat;
 import com.daw.cinemadaw.domain.cinema.user.Role;
@@ -58,6 +57,19 @@ public class Proves implements CommandLineRunner { //La classe Proves implementa
         client.setPassword(encoder.encode("client123"));
         client.setRole(Role.CLIENT);
         userRepository.save(client);
+
+        // Usuaris per a la prova de l'examen — password "exam" encriptat amb BCrypt
+        User adminExam = userRepository.findByUsername("adminexam").orElseGet(User::new);
+        adminExam.setUsername("adminexam");
+        adminExam.setPassword(encoder.encode("exam"));
+        adminExam.setRole(Role.ADMIN);
+        userRepository.save(adminExam);
+
+        User clientExam = userRepository.findByUsername("clientexam").orElseGet(User::new);
+        clientExam.setUsername("clientexam");
+        clientExam.setPassword(encoder.encode("exam"));
+        clientExam.setRole(Role.CLIENT);
+        userRepository.save(clientExam);
 
         Cinema cinema1 = new Cinema("Cinemes Girona", "Carrer Girona, 175", "Barcelona", "08037");
         cinemaRepository.save(cinema1);
@@ -150,10 +162,7 @@ public class Proves implements CommandLineRunner { //La classe Proves implementa
             }
         }
 
-        movieRepository.save(new Movie("Una pel·lícula d'acció i aventura que segueix les aventures d'un grup de herois que lluiten contra forces malignes per salvar el món.", 120, "Acció", java.time.LocalDate.of(2023, 5, 15), "Aventura Épica"));
-        movieRepository.save(new Movie("Una comèdia romàntica que narra la història d'amor entre dos personatges que es troben en circumstàncies inesperades.", 90, "Comèdia Romàntica", java.time.LocalDate.of(2023, 6, 10), "Amor Inesperat"));
-        movieRepository.save(new Movie("Un thriller psicològic que explora els límits de la ment humana i les conseqüències de les decisions que es prenen en situacions extremes.", 110, "Thriller Psicològic", java.time.LocalDate.of(2023, 7, 20), "Ments Perverses"));
-        movieRepository.save(new Movie("Una pel·lícula de ciència ficció que presenta un futur distòpic on la tecnologia ha superat el control humà i els protagonistes lluiten per recuperar la llibertat.", 130, "Ciència Ficció", java.time.LocalDate.of(2023, 8, 5), "Futuro Distòpic"));
+        // Les pel·lícules i els seus gèneres s'inicialitzen ara des de data.sql (taula MOVIE_GENRES)
         
 /*
         Seat seat1 = new Seat(true, "A", 1, 0, 0);

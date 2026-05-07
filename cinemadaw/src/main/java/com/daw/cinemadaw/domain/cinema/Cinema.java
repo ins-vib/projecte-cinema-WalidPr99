@@ -110,9 +110,5 @@ public class Cinema {
 
         return "Cinema [id=" + id + ", name=" + name + ", address=" + address + ", city=" + city + ", postalCode=" + postalCode + "]";
 
-    }
-
-    
-    
-    
+    }     
 }

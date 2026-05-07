@@ -44,7 +44,13 @@
 
                     <td th:text="${movie.title}">Títol</td>
 
-                    <td th:text="${movie.genre}">Gènere</td>
+                    <td>
+                        <span th:if="${#lists.isEmpty(movie.genres)}">-</span>
+                        <span th:each="g, it : ${movie.genres}">
+                            <span class="seat-badge seat-badge-standard" th:text="${g.name}">Gènere</span>
+                            <span th:if="${!it.last}"> </span>
+                        </span>
+                    </td>
 
                     <td th:text="${movie.duration}">Durada</td>
 

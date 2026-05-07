@@ -11,7 +11,32 @@
       "Bash(echo \"EXIT=$?\")",
       "Bash(git restore *)",
       "Bash(./mvnw compile *)",
-      "Bash(./mvnw clean *)"
+      "Bash(./mvnw clean *)",
+      "Bash(git *)",
+      "Bash(./mvnw -q -DskipTests compile)",
+      "Bash(rm -f /tmp/spring.log)",
+      "Bash(./mvnw -q spring-boot:run)",
+      "Bash(echo \"Started PID=$!\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8080/login)",
+      "Bash(curl *)",
+      "PowerShell(Get-NetTCPConnection *)",
+      "PowerShell(Get-CimInstance *)",
+      "PowerShell(Stop-Process *)",
+      "Bash(rm -f /tmp/spring2.log)",
+      "Bash(./mvnw -q spring-boot:run -Dspring-boot.run.arguments=\"--server.port=8090\")",
+      "Bash(./mvnw -DskipTests compile)",
+      "Bash(./mvnw -DskipTests clean compile)",
+      "Bash(./mvnw -DskipTests spring-boot:run)",
+      "Bash(tee /tmp/app.log)",
+      "Bash(./mvnw -DskipTests spring-boot:run -Dspring-boot.run.arguments=\"--server.port=8090\")",
+      "Bash(tee /tmp/app2.log)",
+      "Bash(rm -f /tmp/cookies.txt)",
+      "Read(//tmp/**)",
+      "Bash(tee /tmp/app3.log)",
+      "Bash(./mvnw -DskipTests spring-boot:run -Dspring-boot.run.arguments=\"--server.port=8095\")",
+      "Bash(tee /tmp/app4.log)",
+      "Bash(./mvnw -DskipTests spring-boot:run -Dspring-boot.run.arguments=\"--server.port=8097\")",
+      "Bash(tee /tmp/app5.log)"
     ]
   }
 }
